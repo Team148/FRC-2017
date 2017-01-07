@@ -55,6 +55,7 @@ Temporary Items
 .apdisk
 
 .DS_Store
-/sysProps.xml
 .settings/language.settings.xml
 *.prefs
+sysProps.xml
+workbench.xmi
