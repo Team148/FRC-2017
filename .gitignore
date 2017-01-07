@@ -1,9 +1,8 @@
 /Debug/
-/.settings/
 .settings/
 .metadata/
-.settings/language.settings.xml
-.settings/org.eclipse.cdt.core.prefs
+.project
+.cproject
 
 
 # Windows image file caches
@@ -55,7 +54,6 @@ Temporary Items
 .apdisk
 
 .DS_Store
-.settings/language.settings.xml
 *.prefs
 sysProps.xml
 workbench.xmi
