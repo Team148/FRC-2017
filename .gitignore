@@ -57,3 +57,5 @@ Temporary Items
 *.prefs
 sysProps.xml
 workbench.xmi
+/build.properties
+/build.xml
