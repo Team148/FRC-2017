@@ -10,6 +10,16 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 	m_rightMotor2 = new CANTalon(DRIVE_RIGHTMOTOR_2);
 	m_rightMotor3 = new CANTalon(DRIVE_RIGHTMOTOR_3);
 
+	m_leftMotor2->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
+	m_leftMotor3->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
+
+	m_rightMotor2->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
+	m_rightMotor3->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
+
+	m_leftMotor2->Set(DRIVE_LEFTMOTOR_1);
+	m_leftMotor3->Set(DRIVE_LEFTMOTOR_1);
+	m_rightMotor2->Set(DRIVE_RIGHTMOTOR_1);
+	m_rightMotor3->Set(DRIVE_RIGHTMOTOR_1);
 }
 
 void Drivetrain::InitDefaultCommand() {
