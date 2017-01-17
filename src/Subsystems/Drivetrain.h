@@ -2,6 +2,8 @@
 #define Drivetrain_H
 
 #include <Commands/Subsystem.h>
+//#include "Commands/DriveWithJoystick.h"
+#include "WPILib.h"
 #include "CanTalonSRX.h"
 #include "CANTalon.h"
 #include "RobotMap.h"
@@ -16,10 +18,12 @@ private:
 	CANTalon* m_rightMotor2;
 	CANTalon* m_rightMotor3;
 
+	RobotDrive *m_drive;
+
 public:
 	Drivetrain();
 	void InitDefaultCommand();
-
+	void Arcade(float ystick, float xstick);
 };
 
 #endif  // Drivetrain_H

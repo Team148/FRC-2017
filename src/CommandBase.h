@@ -5,8 +5,12 @@
 #include <string>
 
 #include <Commands/Command.h>
-
+#include <Subsystems/Conveyor.h>
+#include <Subsystems/Drivetrain.h>
+#include <Subsystems/Intake.h>
+#include <Subsystems/Shooter.h>
 #include "OI.h"
+
 
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
@@ -22,6 +26,12 @@ public:
 	// Create a single static instance of all of your subsystems
 
 	static std::unique_ptr<OI> oi;
+	static std::unique_ptr<Conveyor> conveyor;
+	static std::unique_ptr<Drivetrain> drivetrain;
+	static std::unique_ptr<Intake> intake;
+	static std::unique_ptr<Shooter> shooter;
+
+
 };
 
 #endif  // COMMAND_BASE_H
