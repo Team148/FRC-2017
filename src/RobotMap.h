@@ -18,4 +18,23 @@
 // constexpr int RANGE_FINDER_PORT = 1;
 // constexpr int RANGE_FINDER_MODULE = 1;
 
+constexpr int DRIVE_LEFTMOTOR_1 	= 0;
+constexpr int DRIVE_LEFTMOTOR_2 	= 1;
+constexpr int DRIVE_LEFTMOTOR_3 	= 2;
+constexpr int DRIVE_RIGHTMOTOR_1	= 3;
+constexpr int DRIVE_RIGHTMOTOR_2 	= 4;
+constexpr int DRIVE_RIGHTMOTOR_3 	= 5;
+
+constexpr int SHOOTER_MOTOR_1 		= 6;
+constexpr int SHOOTER_MOTOR_2 		= 7;
+
+constexpr int CONVEYOR_LOWER_HOPPER = 8;
+constexpr int CONVEYOR_SHOOTER		= 9;
+
+constexpr int INTAKE_BALL_MOTOR		= 10;
+constexpr int INTAKE_GEAR_MOTOR		= 11;
+constexpr int INTAKE_ARM_MOTOR		= 12;
+
+constexpr int HANGER_MOTOR			= 13;
+
 #endif  // ROBOTMAP_H
