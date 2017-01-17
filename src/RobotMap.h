@@ -28,8 +28,8 @@ constexpr int DRIVE_RIGHTMOTOR_3 	= 5;
 constexpr int SHOOTER_MOTOR_1 		= 6;
 constexpr int SHOOTER_MOTOR_2 		= 7;
 
-constexpr int CONVEYOR_LOWER_HOPPER = 8;
-constexpr int CONVEYOR_SHOOTER		= 9;
+constexpr int CONVEYOR_LOWER_MOTOR  = 8;
+constexpr int CONVEYOR_UPPER_MOTOR  = 9;
 
 constexpr int INTAKE_BALL_MOTOR		= 10;
 constexpr int INTAKE_GEAR_MOTOR		= 11;
