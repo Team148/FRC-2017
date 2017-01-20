@@ -3,10 +3,10 @@
 
 #include <Commands/Subsystem.h>
 //#include "Commands/DriveWithJoystick.h"
-#include "WPILib.h"
-#include "CanTalonSRX.h"
+//#include "CanTalonSRX.h"
 #include "CANTalon.h"
 #include "RobotMap.h"
+#include "WPILib.h"
 
 class Drivetrain : public Subsystem {
 private:

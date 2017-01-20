@@ -1,4 +1,5 @@
 #include "Drivetrain.h"
+#include "Commands/DriveWithJoystick.h"
 #include "../RobotMap.h"
 
 Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
@@ -27,7 +28,8 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 void Drivetrain::InitDefaultCommand() {
 	// Set the default command for a subsystem here.
 	// SetDefaultCommand(new MySpecialCommand());
-	//SetDefaultCommand(new DriveWithJoystick());
+	SetDefaultCommand(new DriveWithJoystick());
+
 }
 
 void Drivetrain::Arcade(float ystick, float xstick) {
