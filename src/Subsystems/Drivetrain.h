@@ -2,8 +2,6 @@
 #define Drivetrain_H
 
 #include <Commands/Subsystem.h>
-//#include "Commands/DriveWithJoystick.h"
-//#include "CanTalonSRX.h"
 #include "CANTalon.h"
 #include "RobotMap.h"
 #include "WPILib.h"
