@@ -1,5 +1,5 @@
 #include <memory>
-
+#include <iostream>
 #include <Commands/Command.h>
 #include <Commands/Scheduler.h>
 #include <IterativeRobot.h>
@@ -7,15 +7,24 @@
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 
-//#include "Commands/ExampleCommand.h"
 #include "CommandBase.h"
 
 class Robot: public frc::IterativeRobot {
 public:
+
+	Drivetrain *drivetrain = 0;
+	OI* oi = 0;
+
 	void RobotInit() override {
+		std::cout << "starting RobotInit" << std::endl;
+		oi = OI::GetInstance();
+		drivetrain = Drivetrain::GetInstance();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
 		frc::SmartDashboard::PutData("Auto Modes", &chooser);
+
+
+
 	}
 
 	/**
@@ -25,10 +34,13 @@ public:
 	 */
 	void DisabledInit() override {
 
+
+
 	}
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+
 	}
 
 	/**
@@ -67,13 +79,19 @@ public:
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		std::cout << "starting TeleopInit" << std::endl;
+
+
+
 		if (autonomousCommand != nullptr) {
 			autonomousCommand->Cancel();
 		}
+
 	}
 
 	void TeleopPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+
 	}
 
 	void TestPeriodic() override {

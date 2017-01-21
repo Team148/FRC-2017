@@ -2,6 +2,8 @@
 
 #include <WPILib.h>
 
+OI *OI::m_instance = 0;
+
 OI::OI() {
 
 	std::cout << "info: creating operator interface." << std::endl;
@@ -24,6 +26,14 @@ OI::OI() {
 	m_opButton4 = new JoystickButton(opStick, 4);
 	m_opButton5 = new JoystickButton(opStick, 5);
 	m_opButton6 = new JoystickButton(opStick, 6);
+}
+
+OI* OI::GetInstance() {
+	if (m_instance ==  0) {
+		std::cout << "info: GetInstance Creating OperatorInterface Class" << std::endl;
+		m_instance = new OI();
+	}
+	return m_instance;
 }
 
 

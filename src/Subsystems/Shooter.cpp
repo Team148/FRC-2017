@@ -3,7 +3,7 @@
 
 
 Shooter::Shooter() : Subsystem("Shooter") {
-
+	std::cout << "Creating Shooter Subsystem" << std::endl;
 	m_Motor1 = new CANTalon(SHOOTER_MOTOR_1);
 	m_Motor2 = new CANTalon(SHOOTER_MOTOR_2);
 

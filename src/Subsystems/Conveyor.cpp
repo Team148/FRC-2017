@@ -3,6 +3,7 @@
 
 Conveyor::Conveyor() : Subsystem("Conveyor") {
 
+	std::cout << "creating Conveyor Subsystem" << std::endl;
 	m_lowerMotor = new CANTalon(CONVEYOR_LOWER_MOTOR);
 	m_upperMotor = new CANTalon(CONVEYOR_UPPER_MOTOR);
 }

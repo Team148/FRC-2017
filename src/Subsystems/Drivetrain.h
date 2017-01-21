@@ -17,11 +17,15 @@ private:
 	CANTalon* m_rightMotor3;
 
 	RobotDrive *m_drive;
-
-public:
 	Drivetrain();
+	static Drivetrain *m_instance;
+public:
+
+	static Drivetrain* GetInstance();
 	void InitDefaultCommand();
 	void Arcade(float ystick, float xstick);
+	void SetBrakeMode(bool on);
+	void Reenable();
 };
 
 #endif  // Drivetrain_H

@@ -2,6 +2,7 @@
 #define Conveyor_H
 
 #include <Commands/Subsystem.h>
+#include <iostream>
 #include "CANTalon.h"
 #include "CanTalonSRX.h"
 
