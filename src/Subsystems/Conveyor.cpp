@@ -9,6 +9,10 @@ Conveyor::Conveyor() : Subsystem("Conveyor") {
 	m_lowerMotor = new CANTalon(CONVEYOR_LOWER_MOTOR);
 	m_upperMotor = new CANTalon(CONVEYOR_UPPER_MOTOR);
 
+	m_lowerMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
+	m_upperMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
+
+
 	m_lowerMotor->SetSafetyEnabled(false);
 	m_upperMotor->SetSafetyEnabled(false);
 }
@@ -28,3 +32,12 @@ void Conveyor::InitDefaultCommand() {
 
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
+void Conveyor::SetLower(float voltage) {
+	m_lowerMotor->Set(voltage);
+
+}
+void Conveyor::SetUpper(float voltage) {
+	m_upperMotor->Set(voltage);
+
+
+}

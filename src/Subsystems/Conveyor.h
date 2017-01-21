@@ -17,6 +17,8 @@ private:
 public:
 	static Conveyor* GetInstance();
 	void InitDefaultCommand();
+	void SetLower(float voltage);
+	void SetUpper(float voltage);
 };
 
 #endif  // Conveyor_H
