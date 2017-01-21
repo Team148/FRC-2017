@@ -11,8 +11,11 @@ private:
 	CANTalon* m_lowerMotor;
 	CANTalon* m_upperMotor;
 
-public:
 	Conveyor();
+	static Conveyor *m_instance;
+
+public:
+	static Conveyor* GetInstance();
 	void InitDefaultCommand();
 };
 

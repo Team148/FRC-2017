@@ -5,9 +5,9 @@
 #include <string>
 
 #include <Commands/Command.h>
-//#include <Subsystems/Conveyor.h>
+#include <Subsystems/Conveyor.h>
 #include <Subsystems/Drivetrain.h>
-//#include <Subsystems/Intake.h>
+#include <Subsystems/Intake.h>
 //#include <Subsystems/Shooter.h>
 #include "OI.h"
 

@@ -2,6 +2,7 @@
 #define Intake_H
 
 #include <Commands/Subsystem.h>
+#include <iostream>
 #include "CANTalon.h"
 #include "CanTalonSRX.h"
 
@@ -13,8 +14,11 @@ private:
 	CANTalon* m_GearMotor;
 	CANTalon* m_BallMotor;
 
-public:
 	Intake();
+	static Intake *m_instance;
+public:
+
+	static Intake* GetInstance();
 	void InitDefaultCommand();
 };
 
