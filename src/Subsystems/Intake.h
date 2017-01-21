@@ -13,7 +13,11 @@ private:
 	CANTalon* m_ArmMotor;
 	CANTalon* m_GearMotor;
 	CANTalon* m_BallMotor;
+	//ball motor2
 
+	//integrated encoder
+	//beaM break
+	//2 limit switches
 	Intake();
 	static Intake *m_instance;
 public:

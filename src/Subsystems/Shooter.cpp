@@ -1,6 +1,8 @@
 #include "Shooter.h"
 #include "../RobotMap.h"
 
+Shooter *Shooter::m_instance = 0;
+
 
 Shooter::Shooter() : Subsystem("Shooter") {
 	std::cout << "Creating Shooter Subsystem" << std::endl;
@@ -10,7 +12,19 @@ Shooter::Shooter() : Subsystem("Shooter") {
 	m_Motor2->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
 
 	m_Motor2->Set(SHOOTER_MOTOR_1);
+
+	m_Motor1->SetSafetyEnabled(false);
+	m_Motor2->SetSafetyEnabled(false);
 }
+
+Shooter* Shooter::GetInstance() {
+	if (m_instance ==  0) {
+		std::cout << "info: GetInstance Creating Shooter Class" << std::endl;
+		m_instance = new Shooter();
+	}
+	return m_instance;
+}
+
 
 void Shooter::InitDefaultCommand() {
 	// Set the default command for a subsystem here.

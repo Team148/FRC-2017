@@ -10,8 +10,13 @@ class Shooter : public Subsystem {
 private:
 	CANTalon* m_Motor1;
 	CANTalon* m_Motor2;
-public:
+
 	Shooter();
+	static Shooter* m_instance;
+
+public:
+
+	static Shooter* GetInstance();
 	void InitDefaultCommand();
 };
 

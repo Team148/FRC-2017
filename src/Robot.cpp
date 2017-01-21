@@ -16,6 +16,7 @@ public:
 	OI* oi = 0;
 	Conveyor* conveyor = 0;
 	Intake* intake = 0;
+	Shooter* shooter = 0;
 
 	void RobotInit() override {
 		std::cout << "starting RobotInit" << std::endl;
@@ -23,6 +24,7 @@ public:
 		drivetrain = Drivetrain::GetInstance();
 		conveyor = Conveyor::GetInstance();
 		intake = Intake::GetInstance();
+		shooter = Shooter::GetInstance();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
 		frc::SmartDashboard::PutData("Auto Modes", &chooser);
