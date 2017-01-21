@@ -47,6 +47,23 @@ private:
 	JoystickButton* m_dsiSw3;
 	JoystickButton* m_dsiSw4;
 	JoystickButton* m_dsiSw5;
+
+	JoystickButton* m_drvButton1;
+		JoystickButton* m_drvButton2;
+		JoystickButton* m_drvButton3;
+		JoystickButton* m_drvButton4;
+		JoystickButton* m_drvButton5;
+		JoystickButton* m_drvButton6;
+		JoystickButton* m_drvButton7;
+		JoystickButton* m_drvButton8;
+
+		JoystickButton* m_opButton1;
+		JoystickButton* m_opButton2;
+		JoystickButton* m_opButton3;
+		JoystickButton* m_opButton4;
+		JoystickButton* m_opButton5;
+		JoystickButton* m_opButton6;
+		JoystickButton* m_opButton7;
 };
 
 #endif  // OI_H
