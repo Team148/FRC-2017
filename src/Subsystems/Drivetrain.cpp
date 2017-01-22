@@ -36,6 +36,9 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 
 	m_drive = new RobotDrive(m_leftMotor1, m_rightMotor1);
 	m_drive->SetSafetyEnabled(false);
+
+	//PDP
+	m_pdp = new PowerDistributionPanel();
 }
 
 Drivetrain* Drivetrain::GetInstance() {

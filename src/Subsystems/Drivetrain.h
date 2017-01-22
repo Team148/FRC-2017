@@ -17,6 +17,8 @@ private:
 	CANTalon* m_rightMotor3;
 
 	RobotDrive *m_drive;
+	PowerDistributionPanel* m_pdp;
+
 	Drivetrain();
 	static Drivetrain *m_instance;
 public:
