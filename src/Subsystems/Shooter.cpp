@@ -10,7 +10,6 @@ Shooter::Shooter() : Subsystem("Shooter") {
 	m_Motor2 = new CANTalon(SHOOTER_MOTOR_2);
 
 	m_Motor2->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
-
 	m_Motor2->Set(SHOOTER_MOTOR_1);
 
 	m_Motor1->SetSafetyEnabled(false);
@@ -33,3 +32,13 @@ void Shooter::InitDefaultCommand() {
 
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
+void Shooter::ConfigureOpenLoop() {
+	m_Motor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	m_Motor1->Set(0);
+}
+
+
+void Shooter::SetOpenLoop(float value) {
+	m_Motor1->Set(value);
+}
+

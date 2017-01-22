@@ -18,6 +18,8 @@ public:
 
 	static Shooter* GetInstance();
 	void InitDefaultCommand();
+	void ConfigureOpenLoop();
+	void SetOpenLoop(float value);
 };
 
 #endif  // Shooter_H

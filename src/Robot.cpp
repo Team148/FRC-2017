@@ -27,7 +27,7 @@ public:
 		shooter = Shooter::GetInstance();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
-		frc::SmartDashboard::PutData("Auto Modes", &chooser);
+		//frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
 
 
@@ -87,7 +87,8 @@ public:
 		// this line or comment it out.
 		std::cout << "starting TeleopInit" << std::endl;
 
-
+		//Set Shooter for OpenLoop
+		shooter->ConfigureOpenLoop();
 
 		if (autonomousCommand != nullptr) {
 			autonomousCommand->Cancel();
@@ -98,6 +99,35 @@ public:
 	void TeleopPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 
+
+		//Manual Open Loop Controls
+		//Drive control is in Commands/DriveWithJoystick
+		ballin=0;
+		gear=0;
+		shooteron=false;
+		conveyorX=0;
+		if(oi->opStick->GetRawButton(1)){ ballin=1;}		//Ball Intake
+		intake->SetBall(ballin);
+
+		if(oi->opStick->GetRawButton(2)) {gear=1;}		//GearIntake
+		if(oi->opStick->GetRawButton(3)) {gear=-1;}		//GearIntake Out
+		intake->SetGear(gear);
+
+		intake->SetArm(oi->opStick->GetRawAxis(1));		//Intake Arm
+
+
+		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
+		conveyor->SetLower(conveyorX);
+		conveyor->SetUpper(conveyorX);
+
+
+		if(oi->opStick->GetRawButton(6)){shooteron=true;}	//Run Shooter
+
+		if(shooteron) { shooter->SetOpenLoop(0.8); }  	//setShooter to ShooterSetpoint
+		else {shooter->SetOpenLoop(0); }					//SetShooter 0
+
+
+		//adjust ShooterRPM up & down
 	}
 
 	void TestPeriodic() override {
@@ -107,6 +137,11 @@ public:
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
+	float ballin,gear;
+	int conveyorX;
+	bool shooteron;
+
+	int shootersetpoint = 2800;
 };
 
 START_ROBOT_CLASS(Robot)
