@@ -39,6 +39,9 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 
 	//PDP
 	m_pdp = new PowerDistributionPanel();
+
+	//Gyro
+	m_gyro = new ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
 }
 
 Drivetrain* Drivetrain::GetInstance() {

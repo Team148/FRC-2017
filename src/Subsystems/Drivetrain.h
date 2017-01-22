@@ -18,6 +18,7 @@ private:
 
 	RobotDrive *m_drive;
 	PowerDistributionPanel* m_pdp;
+	ADXRS450_Gyro *m_gyro;
 
 	Drivetrain();
 	static Drivetrain *m_instance;
