@@ -12,18 +12,21 @@ private:
 	// for methods that implement subsystem capabilities
 	CANTalon* m_ArmMotor;
 	CANTalon* m_GearMotor;
-	CANTalon* m_BallMotor;
-	//ball motor2
+	CANTalon* m_BallMotor_1;
+	CANTalon* m_BallMotor_2;
 
-	//integrated encoder
-	//beaM break
-	//2 limit switches
 	Intake();
 	static Intake *m_instance;
 public:
 
 	static Intake* GetInstance();
 	void InitDefaultCommand();
+
+	void SetArm(float val);
+	void SetGear(float val);
+	void SetBall(float val);
+
+	void SetBrakeMode(bool on);
 };
 
 #endif  // Intake_H

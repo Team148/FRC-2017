@@ -26,6 +26,14 @@ OI::OI() {
 	m_opButton4 = new JoystickButton(opStick, 4);
 	m_opButton5 = new JoystickButton(opStick, 5);
 	m_opButton6 = new JoystickButton(opStick, 6);
+
+
+
+	//-----------------DRIVER CONTROLS---------------------
+
+	//-----------------OPERATOR CONTROLS---------------------
+
+
 }
 
 OI* OI::GetInstance() {

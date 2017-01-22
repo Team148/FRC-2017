@@ -18,6 +18,7 @@
 // constexpr int RANGE_FINDER_PORT = 1;
 // constexpr int RANGE_FINDER_MODULE = 1;
 
+//CAN TALON IDs
 constexpr int DRIVE_LEFTMOTOR_1 	= 0;
 constexpr int DRIVE_LEFTMOTOR_2 	= 1;
 constexpr int DRIVE_LEFTMOTOR_3 	= 2;
@@ -31,10 +32,10 @@ constexpr int SHOOTER_MOTOR_2 		= 7;
 constexpr int CONVEYOR_LOWER_MOTOR  = 8;
 constexpr int CONVEYOR_UPPER_MOTOR  = 9;
 
-constexpr int INTAKE_BALL_MOTOR		= 10;
-constexpr int INTAKE_GEAR_MOTOR		= 11;
-constexpr int INTAKE_ARM_MOTOR		= 12;
+constexpr int INTAKE_BALL_MOTOR_1	= 10;
+constexpr int INTAKE_BALL_MOTOR_2	= 11;
+constexpr int INTAKE_GEAR_MOTOR		= 12;
+constexpr int INTAKE_ARM_MOTOR		= 13;
 
-constexpr int HANGER_MOTOR			= 13;
 
 #endif  // ROBOTMAP_H
