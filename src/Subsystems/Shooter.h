@@ -20,6 +20,8 @@ public:
 	void InitDefaultCommand();
 	void ConfigureOpenLoop();
 	void SetOpenLoop(float value);
+	void ConfigureClosedLoop();
+	void SetClosedLoop(float speed);
 };
 
 #endif  // Shooter_H
