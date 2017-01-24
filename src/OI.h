@@ -1,6 +1,7 @@
 #ifndef OI_H
 #define OI_H
 #include "WPILib.h"
+#include "Commands/ClosedShooterSpeed.h"
 
 class OI {
 public:

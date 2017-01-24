@@ -7,6 +7,7 @@
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 
+
 #include "CommandBase.h"
 
 class Robot: public frc::IterativeRobot {
@@ -128,6 +129,9 @@ public:
 
 
 		//adjust ShooterRPM up & down
+		frc::SmartDashboard::PutNumber("Talon speed_graph: ", shooter->m_Motor1->GetSpeed());
+		frc::SmartDashboard::PutNumber("talon Voltage", shooter->m_Motor1->GetOutputVoltage());
+
 	}
 
 	void TestPeriodic() override {
