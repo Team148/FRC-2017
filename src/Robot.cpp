@@ -6,9 +6,12 @@
 #include <LiveWindow/LiveWindow.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
+#include "Util/Logger.h"
 
 
 #include "CommandBase.h"
+
+Logger* l;
 
 class Robot: public frc::IterativeRobot {
 public:
@@ -19,6 +22,7 @@ public:
 	Intake* intake = 0;
 	Shooter* shooter = 0;
 
+
 	void RobotInit() override {
 		std::cout << "starting RobotInit" << std::endl;
 		oi = OI::GetInstance();
@@ -26,6 +30,8 @@ public:
 		conveyor = Conveyor::GetInstance();
 		intake = Intake::GetInstance();
 		shooter = Shooter::GetInstance();
+		l = new Logger();
+		l->Start();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
 		//frc::SmartDashboard::PutData("Auto Modes", &chooser);
@@ -132,6 +138,11 @@ public:
 		frc::SmartDashboard::PutNumber("Talon speed_graph: ", shooter->m_Motor1->GetSpeed());
 		frc::SmartDashboard::PutNumber("talon Voltage", shooter->m_Motor1->GetOutputVoltage());
 
+		//Log
+		Drivetrain::GetInstance()->LogPDP();
+		l->AddtoBuffer("shooterRPM",shooter->m_Motor1->GetSpeed());
+		l->AddtoBuffer("shooterRPM",shooter->m_Motor1->GetOutputVoltage());
+		l->WriteBuffertoFile();
 	}
 
 	void TestPeriodic() override {

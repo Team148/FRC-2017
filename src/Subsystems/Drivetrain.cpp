@@ -1,8 +1,10 @@
 #include "Drivetrain.h"
 #include "Commands/DriveWithJoystick.h"
 #include "../RobotMap.h"
+#include "Util/Logger.h"
 
 Drivetrain *Drivetrain::m_instance = 0;
+extern Logger *l;
 
 Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 
@@ -90,5 +92,14 @@ void Drivetrain::Reenable() {
 	m_rightMotor1->EnableControl();
 	m_rightMotor2->EnableControl();
 	m_rightMotor3->EnableControl();
+
+}
+
+void Drivetrain::LogPDP() {
+	string name;
+	for(int i=0;i<=15;i++) {
+		name = "Channel " + std::to_string(i);
+		l->AddtoBuffer(name, m_pdp->GetCurrent(i));
+	}
 
 }

@@ -29,6 +29,9 @@ public:
 	void Arcade(float ystick, float xstick);
 	void SetBrakeMode(bool on);
 	void Reenable();
+
+	void Log();
+	void LogPDP();
 };
 
 #endif  // Drivetrain_H
