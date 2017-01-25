@@ -34,7 +34,7 @@ void Shooter::InitDefaultCommand() {
 // here. Call these from Commands.
 void Shooter::ConfigureOpenLoop() {
 	m_Motor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
-	m_Motor1->Set(0);
+	m_Motor1->Set(0.0);
 }
 
 

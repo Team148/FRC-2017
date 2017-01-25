@@ -44,7 +44,9 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 	m_gyro = new ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
 
 	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_rightMotor1->ConfigEncoderCodesPerRev(256); //Set ticks per Revolution
 	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_leftMotor1->ConfigEncoderCodesPerRev(256); //Set ticks per Revolution
 
 }
 
@@ -88,10 +90,18 @@ void Drivetrain::SetBrakeMode(bool on) {
 }
 
 void Drivetrain::ConfigureOpenLoop() {
+	m_leftMotor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	m_leftMotor1->Set(0.0);
 
+	m_rightMotor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	m_rightMotor1->Set(0.0);
 }
 void Drivetrain::ConfigureClosedLoop() {
+	m_leftMotor1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
+	m_leftMotor1->Set(0.0);
 
+	m_rightMotor1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
+	m_rightMotor1->Set(0.0);
 }
 
 void Drivetrain::Reenable() {

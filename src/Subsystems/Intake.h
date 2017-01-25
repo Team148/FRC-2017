@@ -27,6 +27,8 @@ public:
 	void SetBall(float val);
 
 	void SetBrakeMode(bool on);
+	void ConfigureOpenLoop();
+	void ConfigureClosedLoop();
 };
 
 #endif  // Intake_H

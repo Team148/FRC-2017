@@ -14,6 +14,9 @@ Intake::Intake() : Subsystem("Intake") {
 	m_GearMotor->SetSafetyEnabled(false);
 	m_BallMotor_1->SetSafetyEnabled(false);
 	m_BallMotor_2->SetSafetyEnabled(false);
+
+	m_ArmMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+	m_ArmMotor->ConfigEncoderCodesPerRev(4096);
 }
 
 
@@ -44,4 +47,13 @@ void Intake::SetGear(float val) {
 void Intake::SetBall(float val) {
 	m_BallMotor_1->Set(val);
 	m_BallMotor_2->Set(-val);
+}
+void Intake::ConfigureOpenLoop() {
+	m_ArmMotor->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	m_ArmMotor->Set(0.0);
+}
+
+void Intake::ConfigureClosedLoop() {
+	m_ArmMotor->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
+	m_ArmMotor->Set(0.0);
 }
