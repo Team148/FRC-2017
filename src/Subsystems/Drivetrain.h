@@ -20,6 +20,7 @@ private:
 	PowerDistributionPanel* m_pdp;
 	ADXRS450_Gyro *m_gyro;
 
+
 	Drivetrain();
 	static Drivetrain *m_instance;
 public:
@@ -28,6 +29,8 @@ public:
 	void InitDefaultCommand();
 	void Arcade(float ystick, float xstick);
 	void SetBrakeMode(bool on);
+	void ConfigureOpenLoop();
+	void ConfigureClosedLoop();
 	void Reenable();
 };
 

@@ -42,6 +42,10 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 
 	//Gyro
 	m_gyro = new ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
+
+	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+
 }
 
 Drivetrain* Drivetrain::GetInstance() {
@@ -81,6 +85,13 @@ void Drivetrain::SetBrakeMode(bool on) {
 		m_rightMotor2->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 		m_rightMotor3->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	}
+}
+
+void Drivetrain::ConfigureOpenLoop() {
+
+}
+void Drivetrain::ConfigureClosedLoop() {
+
 }
 
 void Drivetrain::Reenable() {
