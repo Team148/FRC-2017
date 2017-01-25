@@ -14,8 +14,10 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 	m_rightMotor2 = new CANTalon(DRIVE_RIGHTMOTOR_2);
 	m_rightMotor3 = new CANTalon(DRIVE_RIGHTMOTOR_3);
 
+	//Set All motors to coast
 	SetBrakeMode(0);
 
+	//Set Motors 2&3 on both sides to follow Left/Right motor 1
 	m_leftMotor2->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
 	m_leftMotor2->Set(DRIVE_LEFTMOTOR_1);
 	m_leftMotor3->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
@@ -42,6 +44,7 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 
 	//Gyro
 	m_gyro = new ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
+	m_gyro->Reset();
 }
 
 Drivetrain* Drivetrain::GetInstance() {
@@ -53,8 +56,6 @@ Drivetrain* Drivetrain::GetInstance() {
 }
 
 void Drivetrain::InitDefaultCommand() {
-	// Set the default command for a subsystem here.
-	// SetDefaultCommand(new MySpecialCommand());
 	SetDefaultCommand(new DriveWithJoystick());
 
 }
@@ -83,12 +84,26 @@ void Drivetrain::SetBrakeMode(bool on) {
 	}
 }
 
-void Drivetrain::Reenable() {
-	m_leftMotor1->EnableControl();
-	m_leftMotor2->EnableControl();
-	m_leftMotor3->EnableControl();
-	m_rightMotor1->EnableControl();
-	m_rightMotor2->EnableControl();
-	m_rightMotor3->EnableControl();
 
+double Drivetrain::GetAngle() {
+	return m_gyro->GetAngle();
+}
+
+
+void Drivetrain::configClosedLoop() {
+	m_leftMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
+	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_leftMotor1->ConfigEncoderCodesPerRev(256);
+	m_leftMotor1->Set(0);
+	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
+	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_rightMotor1->ConfigEncoderCodesPerRev(256);
+	m_rightMotor1->Set(0);
+}
+
+void Drivetrain::configOpenLoop() {
+	m_leftMotor1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	m_leftMotor1->Set(0);
+	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	m_rightMotor1->Set(0);
 }

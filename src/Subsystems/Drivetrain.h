@@ -28,7 +28,13 @@ public:
 	void InitDefaultCommand();
 	void Arcade(float ystick, float xstick);
 	void SetBrakeMode(bool on);
+	void SetLeft();
+	void SetRight();
 	void Reenable();
+	double GetAngle();
+
+	void configClosedLoop();
+	void configOpenLoop();
 };
 
 #endif  // Drivetrain_H
