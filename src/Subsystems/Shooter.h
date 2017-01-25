@@ -6,6 +6,7 @@
 #include "CANTalon.h"
 #include "CanTalonSRX.h"
 
+
 class Shooter : public Subsystem {
 private:
 
@@ -22,6 +23,8 @@ public:
 	void SetOpenLoop(float value);
 	void ConfigureClosedLoop();
 	void SetClosedLoop(float speed);
+
+	float cur_speed =0;
 };
 
 #endif  // Shooter_H

@@ -1,6 +1,8 @@
 #include "Shooter.h"
 #include "../RobotMap.h"
 
+#include "Commands/ShooterUpdate.h"
+
 Shooter *Shooter::m_instance = 0;
 
 
@@ -34,6 +36,8 @@ Shooter::Shooter() : Subsystem("Shooter") {
 	m_Motor1->SetI(k_I);  //I-gain
 	m_Motor1->SetD(k_D);  //D-gain
 
+
+
 }
 
 Shooter* Shooter::GetInstance() {
@@ -47,7 +51,8 @@ Shooter* Shooter::GetInstance() {
 
 void Shooter::InitDefaultCommand() {
 	// Set the default command for a subsystem here.
-	// SetDefaultCommand(new MySpecialCommand());
+	SetDefaultCommand(new ShooterUpdate());
+
 }
 
 // Put methods for controlling this subsystem
@@ -64,8 +69,10 @@ void Shooter::SetOpenLoop(float value) {
 void Shooter::ConfigureClosedLoop() {
 	m_Motor1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
 	m_Motor1->Set(0.0);
+	SetDefaultCommand(new ShooterUpdate());
 }
 void Shooter::SetClosedLoop(float speed) {
+	cur_speed = speed;
 	m_Motor1->Set(speed);
 }
 

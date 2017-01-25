@@ -30,10 +30,11 @@ OI::OI() {
 
 
 	//-----------------DRIVER CONTROLS---------------------
-	m_drvButton1->WhenPressed(new ClosedShooterSpeed(100));
-	m_drvButton2->WhenPressed(new ClosedShooterSpeed(10));
-	m_drvButton3->WhenPressed(new ClosedShooterSpeed(-100));
-	m_drvButton4->WhenPressed(new ClosedShooterSpeed(-10));
+	//m_drvButton1->WhenPressed(new ShooterUpdate(100));
+	//m_drvButton2->WhenPressed(new ShooterUpdate(10));
+	//m_drvButton3->WhenPressed(new ShooterUpdate(-100));
+	//m_drvButton4->WhenPressed(new ShooterUpdate(-10));
+
 
 
 

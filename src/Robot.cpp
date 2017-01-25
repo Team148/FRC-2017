@@ -95,7 +95,7 @@ public:
 		std::cout << "starting TeleopInit" << std::endl;
 
 		//Set Shooter for OpenLoop
-		shooter->ConfigureOpenLoop();
+		//shooter->ConfigureOpenLoop();
 
 		if (autonomousCommand != nullptr) {
 			autonomousCommand->Cancel();
@@ -109,7 +109,7 @@ public:
 
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
-		ballin=0;
+		/*ballin=0;
 		gear=0;
 		shooteron=false;
 		conveyorX=0;
@@ -132,6 +132,12 @@ public:
 
 		if(shooteron) { shooter->SetOpenLoop(0.8); }  	//setShooter to ShooterSetpoint
 		else {shooter->SetOpenLoop(0); }					//SetShooter 0
+		*/
+
+		if(oi->drvStick->GetRawButton(1)){Shooter::GetInstance()->cur_speed += 100;}
+		if(oi->drvStick->GetRawButton(2)){Shooter::GetInstance()->cur_speed += 10;}
+		if(oi->drvStick->GetRawButton(3)){Shooter::GetInstance()->cur_speed -= 100;}
+		if(oi->drvStick->GetRawButton(4)){Shooter::GetInstance()->cur_speed -= 10;}
 
 
 		//adjust ShooterRPM up & down
