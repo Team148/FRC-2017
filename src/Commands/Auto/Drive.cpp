@@ -88,7 +88,22 @@ void Drive::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void Drive::Execute() {
 
+	float cur_vel = m_output.front();
 
+
+	//after setting, remove from queue
+	m_output.pop();
+
+	//todo: add heading hold compensation
+
+
+	//SetLeft and SetRight to current queue
+	Drivetrain::GetInstance()->SetLeft(cur_vel);
+	Drivetrain::GetInstance()->SetRight(cur_vel);
+
+	//once the queue is empty, set isFinished
+	if(m_output.empty())
+		m_isFinished=true;
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -98,7 +113,8 @@ bool Drive::IsFinished() {
 
 // Called once after isFinished returns true
 void Drive::End() {
-
+	Drivetrain::GetInstance()->SetLeft(0);
+	Drivetrain::GetInstance()->SetRight(0);
 }
 
 // Called when another command which requires one or more of the same

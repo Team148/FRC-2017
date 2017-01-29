@@ -30,8 +30,8 @@ public:
 	void InitDefaultCommand();
 	void Arcade(float ystick, float xstick);
 	void SetBrakeMode(bool on);
-	void SetLeft();
-	void SetRight();
+	void SetLeft(float val);
+	void SetRight(float val);
 	void Reenable();
 	double GetAngle();
 

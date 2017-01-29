@@ -125,3 +125,12 @@ void Drivetrain::configOpenLoop() {
 	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 	m_rightMotor1->Set(0);
 }
+
+void Drivetrain::SetLeft(float val) {
+	m_leftMotor1->Set(val);
+}
+
+
+void Drivetrain::SetRight(float val) {
+	m_rightMotor1->Set(val);
+}
