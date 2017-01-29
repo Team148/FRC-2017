@@ -3,7 +3,6 @@
 #include <Commands/Command.h>
 #include <Commands/Scheduler.h>
 #include <IterativeRobot.h>
-#include <LiveWindow/LiveWindow.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 
@@ -30,8 +29,6 @@ public:
 		// chooser.AddObject("My Auto", new MyAutoCommand());
 		//frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
-
-
 	}
 
 	/**
@@ -40,8 +37,6 @@ public:
 	 * the robot is disabled.
 	 */
 	void DisabledInit() override {
-
-
 
 	}
 
@@ -135,7 +130,7 @@ public:
 	}
 
 	void TestPeriodic() override {
-		frc::LiveWindow::GetInstance()->Run();
+
 	}
 
 private:

@@ -5,6 +5,7 @@
 #include "CANTalon.h"
 #include "RobotMap.h"
 #include "WPILib.h"
+#include "Constants.h"
 
 class Drivetrain : public Subsystem {
 private:
