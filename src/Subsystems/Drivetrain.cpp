@@ -134,3 +134,9 @@ void Drivetrain::SetLeft(float val) {
 void Drivetrain::SetRight(float val) {
 	m_rightMotor1->Set(val);
 }
+
+float Drivetrain::IPStoRPM(float val) {
+	return val*60/(M_PI*4);
+
+}
+

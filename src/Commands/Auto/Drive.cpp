@@ -97,6 +97,9 @@ void Drive::Execute() {
 	//todo: add heading hold compensation
 
 
+	//convert IPS to RPM
+	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
+
 	//SetLeft and SetRight to current queue
 	Drivetrain::GetInstance()->SetLeft(cur_vel);
 	Drivetrain::GetInstance()->SetRight(cur_vel);
