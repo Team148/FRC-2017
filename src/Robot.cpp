@@ -101,7 +101,7 @@ public:
 		// Max Jerk:            60 m/s/s/s
 		pathfinder_prepare(points, POINT_LENGTH, FIT_HERMITE_CUBIC, PATHFINDER_SAMPLES_HIGH, 0.001, 15.0, 10.0, 60.0, &candidate);
 		int length = candidate.length;
-		Segment *trajectory = malloc(length*sizeof(Segment));
+		Segment *trajectory = (Segment*)malloc(sizeof(Segment) * length);
 
 		int result = pathfinder_generate(&candidate, trajectory);
 		if(result < 0)
