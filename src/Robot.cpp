@@ -8,6 +8,7 @@
 
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
+#include "Pathfinder.h"
 
 class Robot: public frc::IterativeRobot {
 public:
@@ -72,7 +73,47 @@ public:
 		//}
 
 		//TESTING Drive command (distance in inches, and velocity in inches per second)
-		frc::Scheduler::GetInstance()->AddCommand(new Drive(120,20));
+		//frc::Scheduler::GetInstance()->AddCommand(new Drive(120,20));
+
+		//TEST PATHFINDER
+		int POINT_LENGTH = 3;
+
+		Waypoint *points = (Waypoint*)malloc(sizeof(Waypoint) * POINT_LENGTH);
+		Waypoint p1 = { 0, 12, 0 };			// Waypoint @ x=0, y=12, exit angle=45 degrees
+		Waypoint p2 = { -12, 12, d2r(-90) };// Waypoint @ x=-12, y= 12, exit angle= -90 radians
+		Waypoint p3 = { -12, 0, d2r(-180) };// Waypoint @ x= -12, y= 0, exit angle= 180 radians
+		points[0] = p1;
+		points[1] = p2;
+		points[2] = p3;
+
+		TrajectoryCandidate candidate;
+
+		// Prepare the Trajectory for Generation.
+		//
+		// Arguments:
+		// Fit Function:        FIT_HERMITE_CUBIC or FIT_HERMITE_QUINTIC
+		// Sample Count:        PATHFINDER_SAMPLES_HIGH (100 000)
+		//                      PATHFINDER_SAMPLES_LOW  (10 000)
+		//                      PATHFINDER_SAMPLES_FAST (1 000)
+		// Time Step:           0.001 Seconds
+		// Max Velocity:        15 m/s
+		// Max Acceleration:    10 m/s/s
+		// Max Jerk:            60 m/s/s/s
+		pathfinder_prepare(points, POINT_LENGTH, FIT_HERMITE_CUBIC, PATHFINDER_SAMPLES_HIGH, 0.001, 15.0, 10.0, 60.0, &candidate);
+		int length = candidate.length;
+		Segment *trajectory = malloc(length*sizeof(Segment));
+
+		int result = pathfinder_generate(&candidate, trajectory);
+		if(result < 0)
+			cout <<"error: could not generate a trajectory" << endl;
+
+		Segment *leftTrajectory = (Segment*)malloc(sizeof(Segment) * length);
+		Segment *rightTrajectory = (Segment*)malloc(sizeof(Segment) * length);
+
+		double wheelbase_width = 0.6; //in meters
+
+		pathfinder_modify_tank(trajectory, length, leftTrajectory, rightTrajectory, wheelbase_width);
+
 	}
 
 	void AutonomousPeriodic() override {
