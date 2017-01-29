@@ -84,8 +84,6 @@ void Drive::Initialize() {
 
 		cout<<"info: generated profile with"<< accel_segments*2+hold_segments << " Points. time: " << accel_segments*2*m_dt+hold_time <<"sec"<< endl;
 	}
-
-
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -98,7 +96,7 @@ void Drive::Execute() {
 	m_output.pop();
 
 	//todo: add heading hold compensation
-	float cur_angle = m_initangle - Drivetrain::GetInstance()->GetAngle();
+	float cur_angle = Drivetrain::GetInstance()->GetAngle() - m_initangle;
 
 	//convert IPS to RPM
 	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
@@ -126,6 +124,10 @@ void Drive::End() {
 	Drivetrain::GetInstance()->SetLeft(0);
 	Drivetrain::GetInstance()->SetRight(0);
 	cout <<"info: set drivetrain to " << 0 <<" RPM" << endl;
+
+	//empty the queue if interrupted
+	while(!m_output.empty())
+		m_output.pop();
 }
 
 // Called when another command which requires one or more of the same
