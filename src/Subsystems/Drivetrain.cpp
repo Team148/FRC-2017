@@ -94,11 +94,29 @@ void Drivetrain::configClosedLoop() {
 	m_leftMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
 	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 	m_leftMotor1->ConfigEncoderCodesPerRev(256);
+	m_leftMotor1->SetAllowableClosedLoopErr(0);
 	m_leftMotor1->Set(0);
 	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
 	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 	m_rightMotor1->ConfigEncoderCodesPerRev(256);
+	m_rightMotor1->SetAllowableClosedLoopErr(0);
 	m_rightMotor1->Set(0);
+
+
+	//Setup Ramp Rate
+	m_leftMotor1->SetVoltageRampRate(24);
+	m_rightMotor1->SetVoltageRampRate(24);
+
+	//Set some PIDF values
+	m_leftMotor1->SetF(0.5645);
+	m_rightMotor1->SetF(0.5645);
+	m_leftMotor1->SetP(.1);
+	m_rightMotor1->SetP(.1);
+	m_closedLoop = true;
+}
+
+bool Drivetrain::isClosedLoop() {
+	return m_closedLoop;
 }
 
 void Drivetrain::configOpenLoop() {

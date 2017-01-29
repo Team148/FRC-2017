@@ -22,6 +22,8 @@ private:
 
 	Drivetrain();
 	static Drivetrain *m_instance;
+
+	bool m_closedLoop = 0;
 public:
 
 	static Drivetrain* GetInstance();
@@ -34,6 +36,7 @@ public:
 	double GetAngle();
 
 	void configClosedLoop();
+	bool isClosedLoop();
 	void configOpenLoop();
 };
 
