@@ -65,7 +65,11 @@ void Drive::Initialize() {
 		//generate acceleration curve
 		for(int i = 0;i <= accel_segments;i++) {
 			float t = m_dt*i;
-			m_output.push(m_maxAccelRate*t);
+			float accvelocity = m_maxAccelRate*t;
+			if(accvelocity > m_cruiseVelocity)
+				m_output.push(m_cruiseVelocity);
+			else
+				m_output.push(accvelocity);
 		}
 
 		//generate the hold
@@ -76,7 +80,14 @@ void Drive::Initialize() {
 		//generate deceleration curve
 		for(int i=0 ;i < accel_segments;i++) {
 			float t = m_dt*i;
-			m_output.push(m_cruiseVelocity+(-m_maxAccelRate*t));
+			float decvelocity = m_cruiseVelocity+(-m_maxAccelRate*t);
+
+			//check for undershoot
+			if(decvelocity < 0)
+				m_output.push(0);
+			else
+				m_output.push(decvelocity);
+
 		}
 		//push last point
 		m_output.push(0);
