@@ -13,6 +13,9 @@ void Drive::Initialize() {
 	//reset isFinished
 	m_isFinished=0;
 
+	//check where we pointing
+	m_initangle = Drivetrain::GetInstance()->GetAngle();
+
 	//check that the Drivetrain is in closed loop
 	if(!Drivetrain::GetInstance()->isClosedLoop())
 		Drivetrain::GetInstance()->configClosedLoop();
@@ -95,7 +98,7 @@ void Drive::Execute() {
 	m_output.pop();
 
 	//todo: add heading hold compensation
-
+	float cur_angle = m_initangle - Drivetrain::GetInstance()->GetAngle();
 
 	//convert IPS to RPM
 	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
@@ -106,6 +109,7 @@ void Drive::Execute() {
 
 	//for Testing
 	cout <<"info: set drivetrain to " << cur_vel <<" RPM" << endl;
+	cout <<"info: heading error is " << cur_angle << "Degrees" << endl;
 
 	//once the queue is empty, set isFinished
 	if(m_output.empty())

@@ -45,6 +45,7 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 	//Gyro
 	m_gyro = new ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
 	m_gyro->Reset();
+	m_gyro->Calibrate();
 }
 
 Drivetrain* Drivetrain::GetInstance() {
@@ -104,8 +105,8 @@ void Drivetrain::configClosedLoop() {
 
 
 	//Setup Ramp Rate
-	m_leftMotor1->SetVoltageRampRate(24);
-	m_rightMotor1->SetVoltageRampRate(24);
+	//m_leftMotor1->SetVoltageRampRate(24);
+	//m_rightMotor1->SetVoltageRampRate(24);
 
 	//Set some PIDF values
 	m_leftMotor1->SetF(0.5645);

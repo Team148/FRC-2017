@@ -19,6 +19,7 @@ private:
 	float m_travelDistance;
 	float m_cruiseVelocity;
 	bool m_isFinished=0;
+	float m_initangle = 0;
 
 	//drivetrain constraints
 	float m_maxAccelRate = 80; 		//Inches per sec^2
