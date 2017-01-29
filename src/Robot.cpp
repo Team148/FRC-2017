@@ -8,6 +8,7 @@
 #include <SmartDashboard/SmartDashboard.h>
 
 #include "CommandBase.h"
+#include "Commands/Auto/Drive.h"
 
 class Robot: public frc::IterativeRobot {
 public:
@@ -69,11 +70,14 @@ public:
 			autonomousCommand.reset(new ExampleCommand());
 		} */
 
-		autonomousCommand.reset(chooser.GetSelected());
+		//autonomousCommand.reset(chooser.GetSelected());
 
-		if (autonomousCommand.get() != nullptr) {
-			autonomousCommand->Start();
-		}
+		//if (autonomousCommand.get() != nullptr) {
+		//	autonomousCommand->Start();
+		//}
+
+		//TESTING Drive command (distance in inches, and velocity in inches per second)
+		frc::Scheduler::GetInstance()->AddCommand(new Drive(120,20));
 	}
 
 	void AutonomousPeriodic() override {
@@ -90,9 +94,9 @@ public:
 		//Set Shooter for OpenLoop
 		shooter->ConfigureOpenLoop();
 
-		if (autonomousCommand != nullptr) {
-			autonomousCommand->Cancel();
-		}
+		//if (autonomousCommand != nullptr) {
+		//	autonomousCommand->Cancel();
+		//}
 
 	}
 

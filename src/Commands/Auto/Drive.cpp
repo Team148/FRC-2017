@@ -104,6 +104,9 @@ void Drive::Execute() {
 	Drivetrain::GetInstance()->SetLeft(cur_vel);
 	Drivetrain::GetInstance()->SetRight(cur_vel);
 
+	//for Testing
+	cout <<"info: set drivetrain to " << cur_vel <<" RPM" << endl;
+
 	//once the queue is empty, set isFinished
 	if(m_output.empty())
 		m_isFinished=true;
@@ -118,6 +121,7 @@ bool Drive::IsFinished() {
 void Drive::End() {
 	Drivetrain::GetInstance()->SetLeft(0);
 	Drivetrain::GetInstance()->SetRight(0);
+	cout <<"info: set drivetrain to " << 0 <<" RPM" << endl;
 }
 
 // Called when another command which requires one or more of the same

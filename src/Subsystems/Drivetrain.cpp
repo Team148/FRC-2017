@@ -110,8 +110,8 @@ void Drivetrain::configClosedLoop() {
 	//Set some PIDF values
 	m_leftMotor1->SetF(0.5645);
 	m_rightMotor1->SetF(0.5645);
-	m_leftMotor1->SetP(.1);
-	m_rightMotor1->SetP(.1);
+	m_leftMotor1->SetP(0.0);
+	m_rightMotor1->SetP(0.0);
 	m_closedLoop = true;
 }
 
@@ -136,7 +136,7 @@ void Drivetrain::SetRight(float val) {
 }
 
 float Drivetrain::IPStoRPM(float val) {
+	//RPM = IPS*60/(circumference of the wheel)
 	return val*60/(M_PI*4);
-
 }
 
