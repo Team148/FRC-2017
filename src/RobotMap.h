@@ -19,23 +19,23 @@
 // constexpr int RANGE_FINDER_MODULE = 1;
 
 //CAN TALON IDs
-constexpr int DRIVE_LEFTMOTOR_1 	= 0;
-constexpr int DRIVE_LEFTMOTOR_2 	= 1;
-constexpr int DRIVE_LEFTMOTOR_3 	= 2;
-constexpr int DRIVE_RIGHTMOTOR_1	= 3;
-constexpr int DRIVE_RIGHTMOTOR_2 	= 4;
-constexpr int DRIVE_RIGHTMOTOR_3 	= 5;
+constexpr int DRIVE_LEFTMOTOR_1 	= 8;
+constexpr int DRIVE_LEFTMOTOR_2 	= 9;
+constexpr int DRIVE_LEFTMOTOR_3 	= 10;
+constexpr int DRIVE_RIGHTMOTOR_1	= 0;
+constexpr int DRIVE_RIGHTMOTOR_2 	= 1;
+constexpr int DRIVE_RIGHTMOTOR_3 	= 2;
 
 constexpr int SHOOTER_MOTOR_1 		= 6;
 constexpr int SHOOTER_MOTOR_2 		= 7;
 
-constexpr int CONVEYOR_LOWER_MOTOR  = 8;
-constexpr int CONVEYOR_UPPER_MOTOR  = 9;
+constexpr int CONVEYOR_LOWER_MOTOR  = 11;
+constexpr int CONVEYOR_UPPER_MOTOR  = 12;
 
-constexpr int INTAKE_BALL_MOTOR_1	= 10;
-constexpr int INTAKE_BALL_MOTOR_2	= 11;
-constexpr int INTAKE_GEAR_MOTOR		= 12;
-constexpr int INTAKE_ARM_MOTOR		= 13;
+constexpr int INTAKE_BALL_MOTOR_1	= 13;
+constexpr int INTAKE_BALL_MOTOR_2	= 14;
+constexpr int INTAKE_GEAR_MOTOR		= 15;
+constexpr int INTAKE_ARM_MOTOR		= 16;
 
 //Sensors
 

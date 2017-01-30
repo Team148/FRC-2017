@@ -27,6 +27,8 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 	m_rightMotor3->Set(DRIVE_RIGHTMOTOR_1);
 
 
+
+
 	m_leftMotor1->SetSafetyEnabled(false);
 	m_leftMotor2->SetSafetyEnabled(false);
 	m_leftMotor3->SetSafetyEnabled(false);
