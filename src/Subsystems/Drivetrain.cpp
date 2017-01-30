@@ -128,7 +128,7 @@ void Drivetrain::configOpenLoop() {
 }
 
 void Drivetrain::SetLeft(float val) {
-	m_leftMotor1->Set(val);
+	m_leftMotor1->Set(-val);
 }
 
 
