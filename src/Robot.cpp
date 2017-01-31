@@ -72,11 +72,17 @@ public:
 		//}
 
 		//TESTING Drive command (distance in inches, and velocity in inches per second)
-		frc::Scheduler::GetInstance()->AddCommand(new Drive(240,160));
+		drivetrain->configClosedLoop();
+		frc::Scheduler::GetInstance()->AddCommand(new Drive(240,100));
+//		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,160));
+//		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,40));
+
 	}
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
+
 	}
 
 	void TeleopInit() override {
@@ -88,6 +94,7 @@ public:
 
 		//Set Shooter for OpenLoop
 		shooter->ConfigureOpenLoop();
+		drivetrain->configOpenLoop();
 
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
@@ -130,6 +137,7 @@ public:
 	}
 
 	void TestPeriodic() override {
+
 
 	}
 

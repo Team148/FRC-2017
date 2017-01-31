@@ -35,6 +35,7 @@ public:
 	void SetRight(float val);
 	void Reenable();
 	double GetAngle();
+	int GetEncoderVelocity();
 
 	void configClosedLoop();
 	bool isClosedLoop();

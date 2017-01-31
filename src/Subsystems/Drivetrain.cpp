@@ -89,16 +89,25 @@ void Drivetrain::SetBrakeMode(bool on) {
 double Drivetrain::GetAngle() {
 	return m_gyro->GetAngle();
 }
+int Drivetrain::GetEncoderVelocity() {
+
+	std::cout << "Left enc: "<< m_leftMotor1->GetEncVel() << std::endl;
+	std::cout << "Right enc: " << m_rightMotor1->GetEncVel() << std::endl;
+	return (m_leftMotor1->GetEncVel() + m_rightMotor1->GetEncVel())/2;
+
+}
 
 
 void Drivetrain::configClosedLoop() {
 	m_leftMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
 	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_leftMotor1->SetSensorDirection(true);
 	m_leftMotor1->ConfigEncoderCodesPerRev(256);
 	m_leftMotor1->SetAllowableClosedLoopErr(0);
 	m_leftMotor1->Set(0);
 	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
 	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_rightMotor1->SetSensorDirection(true);
 	m_rightMotor1->ConfigEncoderCodesPerRev(256);
 	m_rightMotor1->SetAllowableClosedLoopErr(0);
 	m_rightMotor1->Set(0);
