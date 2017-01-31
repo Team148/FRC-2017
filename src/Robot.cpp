@@ -72,7 +72,7 @@ public:
 		//}
 
 		//TESTING Drive command (distance in inches, and velocity in inches per second)
-		frc::Scheduler::GetInstance()->AddCommand(new Drive(120,20));
+		frc::Scheduler::GetInstance()->AddCommand(new Drive(240,160));
 	}
 
 	void AutonomousPeriodic() override {
