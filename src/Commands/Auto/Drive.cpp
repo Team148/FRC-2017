@@ -106,19 +106,21 @@ void Drive::Execute() {
 	//after setting, remove from queue
 	m_output.pop();
 
-	//todo: add heading hold compensation
-	float cur_angle = Drivetrain::GetInstance()->GetAngle() - m_initangle;
+	//compute heading hold compensation
+	float cur_angle = Drivetrain::GetInstance()->GetAngle();
+	float cur_angle_err = cur_angle - m_initangle;
+	float gyro_comp = DRIVE_GYRO_P*cur_angle_err;
 
 	//convert IPS to RPM
 	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
 
-	//SetLeft and SetRight to current queue
-	Drivetrain::GetInstance()->SetLeft(cur_vel);
-	Drivetrain::GetInstance()->SetRight(cur_vel);
+	//SetLeft and SetRight to current queue with gyro compensation
+	Drivetrain::GetInstance()->SetLeft(cur_vel-gyro_comp);
+	Drivetrain::GetInstance()->SetRight(cur_vel+gyro_comp);
 
 	//for Testing
 	cout <<"info: set drivetrain to " << cur_vel <<" RPM" << endl;
-	cout <<"info: heading error is " << cur_angle << "Degrees" << endl;
+	cout <<"info: heading error is " << cur_angle_err << "Degrees" << endl;
 
 	//once the queue is empty, set isFinished
 	if(m_output.empty())

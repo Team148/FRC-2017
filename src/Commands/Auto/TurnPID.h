@@ -18,8 +18,8 @@ private:
 	float m_setpoint;
 	bool m_isFinished = 0;
 	//PIDController* m_controller;
-	float m_Kp = DRIVETRAIN_TURN_P;
-	float m_Ki = DRIVETRAIN_TURN_I;
+	float m_Kp = DRIVE_TURN_P;
+	float m_Ki = DRIVE_TURN_I;
 	float m_initalAngle = 0;
 };
 
