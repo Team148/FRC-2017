@@ -41,7 +41,7 @@ void TurnPID::Execute() {
 	prev_err = curr_err;
 
 	//check if we're finished
-	if(curr_err<=DRIVE_TURN_TOLERANCE)
+	if(abs(curr_err)<=DRIVE_TURN_TOLERANCE)
 		m_isFinished=true;
 }
 
