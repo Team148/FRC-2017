@@ -21,6 +21,8 @@ private:
 	float m_Kp = DRIVE_TURN_P;
 	float m_Ki = DRIVE_TURN_I;
 	float m_initalAngle = 0;
+	float m_i_err=0;
+	float prev_err=0;
 };
 
 #endif  // TurnPID_H
