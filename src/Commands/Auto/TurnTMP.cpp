@@ -21,8 +21,8 @@ void TurnTMP::Initialize() {
 	//calculate the final destination angle
 	m_finalangle = m_initangle+m_deg_input;
 
-	//convert to radians
-	m_rad_distance = (M_PI/180) * m_deg_input;
+	//convert to radians, then inches
+	m_rad_distance = ((M_PI/180) * m_deg_input)*(DRIVETRAIN_BASE_RADIUS/2);
 
 	//ensure queue is empty
 	while(!m_output.empty())
