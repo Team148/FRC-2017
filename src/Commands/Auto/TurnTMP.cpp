@@ -1,8 +1,9 @@
 #include "TurnTMP.h"
 
-TurnTMP::TurnTMP(float degrees) {
+TurnTMP::TurnTMP(float degrees, float velocity) {
 	Requires(Drivetrain::GetInstance());
 	m_deg_input = degrees;
+	m_cruiseVelocity = velocity;
 }
 
 // Called just before this Command runs the first time

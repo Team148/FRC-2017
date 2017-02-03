@@ -8,7 +8,7 @@
 using namespace std;
 class TurnTMP : public CommandBase {
 public:
-	TurnTMP(float degrees);
+	TurnTMP(float degrees, float velocity);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
