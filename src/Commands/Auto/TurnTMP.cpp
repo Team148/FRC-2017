@@ -121,6 +121,9 @@ void TurnTMP::Execute() {
 	//once the queue is empty, set isFinished
 	if(m_output.empty())
 		m_isFinished=true;
+
+	//debug
+	cout << "info: heading error: " << Drivetrain::GetInstance()->GetAngle() - m_finalangle << endl;
 }
 
 
