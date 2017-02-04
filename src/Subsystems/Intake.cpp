@@ -17,6 +17,8 @@ Intake::Intake() : Subsystem("Intake") {
 
 	m_ArmMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_ArmMotor->ConfigEncoderCodesPerRev(4096);
+
+	//m_GearMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
 }
 
 

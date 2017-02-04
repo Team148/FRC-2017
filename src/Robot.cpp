@@ -107,8 +107,9 @@ public:
 	void TeleopPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 
-		static float ballin = 0;
-		static float gear = 0;
+		static float ballin = 0.0;
+		static float gear = 0.0;
+		static float armMotor = 0.0;
 		static int conveyorX = 0;
 		static bool shooteron = 0;
 		//Manual Open Loop Controls
@@ -117,6 +118,7 @@ public:
 		gear = 0;
 		shooteron = false;
 		conveyorX = 0;
+		armMotor = 0.0;
 		if(oi->opStick->GetRawButton(1))
 		{
 			ballin=1;
@@ -125,15 +127,20 @@ public:
 
 		if(oi->opStick->GetRawButton(2))
 		{
-			gear= 1.0;
+			gear = 1.0;
 		}		//GearIntake
 		if(oi->opStick->GetRawButton(3))
 		{
-			gear= -1.0;
+			gear = -1.0;
 		}		//GearIntake Out
 		intake->SetGear(gear);
 
-		intake->SetArm(oi->opStick->GetRawAxis(1));		//Intake Arm
+
+		armMotor = oi->opStick->GetRawAxis(3);
+		if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
+		if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
+		intake->SetArm(-armMotor);		//Intake Arm
+
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
