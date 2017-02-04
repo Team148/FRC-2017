@@ -133,7 +133,7 @@ public:
 		}		//GearIntake Out
 		intake->SetGear(gear);
 
-		intake->SetArm(oi->opStick->GetRawAxis(1));		//Intake Arm
+		intake->SetArm(oi->opStick->GetRawAxis(3));		//Intake Arm
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
@@ -148,6 +148,8 @@ public:
 
 
 		//adjust ShooterRPM up & down
+		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
+
 	}
 
 	void TestPeriodic() override {
