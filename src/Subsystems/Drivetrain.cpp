@@ -110,7 +110,7 @@ void Drivetrain::configClosedLoop() {
 	m_leftMotor1->Set(0);
 	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
 	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-	m_rightMotor1->SetSensorDirection(true);
+	//m_rightMotor1->SetSensorDirection(true);
 	m_rightMotor1->ConfigEncoderCodesPerRev(256);
 	m_rightMotor1->SetAllowableClosedLoopErr(0);
 	m_rightMotor1->Set(0);
