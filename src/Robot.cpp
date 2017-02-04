@@ -107,18 +107,30 @@ public:
 	void TeleopPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 
-
+		static float ballin = 0;
+		static float gear = 0;
+		static int conveyorX = 0;
+		static bool shooteron = 0;
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
-		ballin=0;
-		gear=0;
-		shooteron=false;
-		conveyorX=0;
-		if(oi->opStick->GetRawButton(1)){ ballin=1;}		//Ball Intake
+		ballin = 0;
+		gear = 0;
+		shooteron = false;
+		conveyorX = 0;
+		if(oi->opStick->GetRawButton(1))
+		{
+			ballin=1;
+		}		//Ball Intake
 		intake->SetBall(ballin);
 
-		if(oi->opStick->GetRawButton(2)) {gear=1;}		//GearIntake
-		if(oi->opStick->GetRawButton(3)) {gear=-1;}		//GearIntake Out
+		if(oi->opStick->GetRawButton(2))
+		{
+			gear= 1.0;
+		}		//GearIntake
+		if(oi->opStick->GetRawButton(3))
+		{
+			gear= -1.0;
+		}		//GearIntake Out
 		intake->SetGear(gear);
 
 		intake->SetArm(oi->opStick->GetRawAxis(1));		//Intake Arm
@@ -146,9 +158,7 @@ public:
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
-	float ballin,gear;
-	int conveyorX;
-	bool shooteron;
+
 
 	int shootersetpoint = 2800;
 };
