@@ -14,8 +14,10 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 	m_rightMotor2 = new CANTalon(DRIVE_RIGHTMOTOR_2);
 	m_rightMotor3 = new CANTalon(DRIVE_RIGHTMOTOR_3);
 
+	//Set All motors to coast
 	SetBrakeMode(0);
 
+	//Set Motors 2&3 on both sides to follow Left/Right motor 1
 	m_leftMotor2->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
 	m_leftMotor2->Set(DRIVE_LEFTMOTOR_1);
 	m_leftMotor3->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
@@ -44,12 +46,8 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 
 	//Gyro
 	m_gyro = new ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
-
-	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-	m_rightMotor1->ConfigEncoderCodesPerRev(256); //Set ticks per Revolution
-	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-	m_leftMotor1->ConfigEncoderCodesPerRev(256); //Set ticks per Revolution
-
+	m_gyro->Reset();
+	m_gyro->Calibrate();
 }
 
 Drivetrain* Drivetrain::GetInstance() {
@@ -61,8 +59,6 @@ Drivetrain* Drivetrain::GetInstance() {
 }
 
 void Drivetrain::InitDefaultCommand() {
-	// Set the default command for a subsystem here.
-	// SetDefaultCommand(new MySpecialCommand());
 	SetDefaultCommand(new DriveWithJoystick());
 
 }
@@ -91,27 +87,69 @@ void Drivetrain::SetBrakeMode(bool on) {
 	}
 }
 
-void Drivetrain::ConfigureOpenLoop() {
-	m_leftMotor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
-	m_leftMotor1->Set(0.0);
 
-	m_rightMotor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
-	m_rightMotor1->Set(0.0);
+double Drivetrain::GetAngle() {
+	return m_gyro->GetAngle();
 }
-void Drivetrain::ConfigureClosedLoop() {
-	m_leftMotor1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
-	m_leftMotor1->Set(0.0);
+int Drivetrain::GetEncoderVelocity() {
 
-	m_rightMotor1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
-	m_rightMotor1->Set(0.0);
+	std::cout << "Left enc: "<< m_leftMotor1->GetEncVel() << std::endl;
+	std::cout << "Right enc: " << m_rightMotor1->GetEncVel() << std::endl;
+	return (m_leftMotor1->GetEncVel() + m_rightMotor1->GetEncVel())/2;
+
+
 }
 
-void Drivetrain::Reenable() {
-	m_leftMotor1->EnableControl();
-	m_leftMotor2->EnableControl();
-	m_leftMotor3->EnableControl();
-	m_rightMotor1->EnableControl();
-	m_rightMotor2->EnableControl();
-	m_rightMotor3->EnableControl();
 
+void Drivetrain::configClosedLoop() {
+	m_leftMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
+	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_leftMotor1->SetSensorDirection(true);
+	m_leftMotor1->ConfigEncoderCodesPerRev(256);
+	m_leftMotor1->SetAllowableClosedLoopErr(0);
+	m_leftMotor1->Set(0);
+	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
+	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_rightMotor1->SetSensorDirection(true);
+	m_rightMotor1->ConfigEncoderCodesPerRev(256);
+	m_rightMotor1->SetAllowableClosedLoopErr(0);
+	m_rightMotor1->Set(0);
+
+
+	//Setup Ramp Rate
+	//m_leftMotor1->SetVoltageRampRate(24);
+	//m_rightMotor1->SetVoltageRampRate(24);
+
+	//Set some PIDF values
+	m_leftMotor1->SetF(DRIVETRAIN_F);
+	m_rightMotor1->SetF(DRIVETRAIN_F);
+	m_leftMotor1->SetP(DRIVETRAIN_P);
+	m_rightMotor1->SetP(DRIVETRAIN_P);
+	m_closedLoop = true;
 }
+
+bool Drivetrain::isClosedLoop() {
+	return m_closedLoop;
+}
+
+void Drivetrain::configOpenLoop() {
+	m_leftMotor1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	m_leftMotor1->Set(0);
+	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	m_rightMotor1->Set(0);
+}
+
+void Drivetrain::SetLeft(float val) {
+	m_leftMotor1->Set(-val);
+}
+
+
+void Drivetrain::SetRight(float val) {
+	m_rightMotor1->Set(val);
+}
+
+float Drivetrain::IPStoRPM(float val) {
+	//RPM = IPS*60/(circumference of the wheel)
+	return val*60/(M_PI*DRIVETRAIN_WHEEL_DIAMETER);
+}
+

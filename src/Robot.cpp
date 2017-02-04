@@ -3,11 +3,12 @@
 #include <Commands/Command.h>
 #include <Commands/Scheduler.h>
 #include <IterativeRobot.h>
-#include <LiveWindow/LiveWindow.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 
 #include "CommandBase.h"
+#include "Commands/Auto/Drive.h"
+#include "Commands/Auto/Autonomous.h"
 
 class Robot: public frc::IterativeRobot {
 public:
@@ -29,8 +30,6 @@ public:
 		// chooser.AddObject("My Auto", new MyAutoCommand());
 		//frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
-
-
 	}
 
 	/**
@@ -39,8 +38,6 @@ public:
 	 * the robot is disabled.
 	 */
 	void DisabledInit() override {
-
-
 
 	}
 
@@ -69,15 +66,25 @@ public:
 			autonomousCommand.reset(new ExampleCommand());
 		} */
 
-		autonomousCommand.reset(chooser.GetSelected());
+		//autonomousCommand.reset(chooser.GetSelected());
 
-		if (autonomousCommand.get() != nullptr) {
-			autonomousCommand->Start();
-		}
+		//if (autonomousCommand.get() != nullptr) {
+		//	autonomousCommand->Start();
+		//}
+
+		//TESTING Drive command (distance in inches, and velocity in inches per second)
+		drivetrain->configClosedLoop();
+		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
+//		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,160));
+//		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,40));
+
 	}
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
+
+
 	}
 
 	void TeleopInit() override {
@@ -89,10 +96,11 @@ public:
 
 		//Set Shooter for OpenLoop
 		shooter->ConfigureOpenLoop();
+		drivetrain->configOpenLoop();
 
-		if (autonomousCommand != nullptr) {
-			autonomousCommand->Cancel();
-		}
+		//if (autonomousCommand != nullptr) {
+		//	autonomousCommand->Cancel();
+		//}
 
 	}
 
@@ -131,7 +139,8 @@ public:
 	}
 
 	void TestPeriodic() override {
-		frc::LiveWindow::GetInstance()->Run();
+
+
 	}
 
 private:

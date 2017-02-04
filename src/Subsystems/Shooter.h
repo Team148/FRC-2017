@@ -4,7 +4,6 @@
 #include <Commands/Subsystem.h>
 #include <iostream>
 #include "CANTalon.h"
-#include "CanTalonSRX.h"
 
 class Shooter : public Subsystem {
 private:
@@ -13,6 +12,7 @@ private:
 
 	Shooter();
 	static Shooter* m_instance;
+	int m_rpm=0;
 
 public:
 
@@ -20,6 +20,7 @@ public:
 	void InitDefaultCommand();
 	void ConfigureOpenLoop();
 	void SetOpenLoop(float value);
+	void SetClosedLoop(int rpm);
 };
 
 #endif  // Shooter_H
