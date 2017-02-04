@@ -74,7 +74,7 @@ public:
 
 		//TESTING Drive command (distance in inches, and velocity in inches per second)
 		drivetrain->configClosedLoop();
-		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
+		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 //		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,160));
 //		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,40));
 
@@ -83,6 +83,7 @@ public:
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
+
 
 	}
 
