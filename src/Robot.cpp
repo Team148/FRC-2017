@@ -107,9 +107,9 @@ public:
 	void TeleopPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 
-		static float ballin = 0.0;
-		static float gear = 0.0;
-		static float armMotor = 0.0;
+		static float ballin = 0;
+		static float gear = 0;
+		static float armMotor = 0;
 		static int conveyorX = 0;
 		static bool shooteron = 0;
 		//Manual Open Loop Controls
@@ -118,29 +118,26 @@ public:
 		gear = 0;
 		shooteron = false;
 		conveyorX = 0;
-		armMotor = 0.0;
 		if(oi->opStick->GetRawButton(1))
 		{
-			ballin=1;
+			ballin = 1.0;
 		}		//Ball Intake
 		intake->SetBall(ballin);
 
 		if(oi->opStick->GetRawButton(2))
 		{
-			gear = 1.0;
+			gear= 1.0;
 		}		//GearIntake
 		if(oi->opStick->GetRawButton(3))
 		{
-			gear = -1.0;
+			gear= -1.0;
 		}		//GearIntake Out
 		intake->SetGear(gear);
-
 
 		armMotor = oi->opStick->GetRawAxis(3);
 		if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
 		if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		intake->SetArm(-armMotor);		//Intake Arm
-
+		intake->SetArm(armMotor);		//Intake Arm
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
@@ -155,17 +152,18 @@ public:
 
 
 		//adjust ShooterRPM up & down
+		drivetrain->GetEncoderVelocity();
+		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
+
 	}
 
 	void TestPeriodic() override {
-
 
 	}
 
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
-
 
 	int shootersetpoint = 2800;
 };
