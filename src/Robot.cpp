@@ -152,13 +152,11 @@ public:
 
 	void TestPeriodic() override {
 
-
 	}
 
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
-
 
 	int shootersetpoint = 2800;
 };
