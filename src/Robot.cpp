@@ -137,7 +137,7 @@ public:
 		armMotor = oi->opStick->GetRawAxis(3);
 		if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
 		if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		intake->SetArm(armMotor);		//Intake Arm
+		intake->SetArm(-armMotor);		//Intake Arm
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
