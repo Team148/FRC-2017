@@ -29,8 +29,6 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 	m_rightMotor3->Set(DRIVE_RIGHTMOTOR_1);
 
 
-
-
 	m_leftMotor1->SetSafetyEnabled(false);
 	m_leftMotor2->SetSafetyEnabled(false);
 	m_leftMotor3->SetSafetyEnabled(false);
@@ -60,7 +58,6 @@ Drivetrain* Drivetrain::GetInstance() {
 
 void Drivetrain::InitDefaultCommand() {
 	SetDefaultCommand(new DriveWithJoystick());
-
 }
 
 void Drivetrain::Arcade(float ystick, float xstick) {
@@ -103,17 +100,17 @@ int Drivetrain::GetEncoderVelocity() {
 
 void Drivetrain::configClosedLoop() {
 	m_leftMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
-	m_leftMotor1->Set(0.0);
+	//m_leftMotor1->Set(0.0);
 	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-	m_leftMotor1->SetSensorDirection(true);
 	m_leftMotor1->ConfigEncoderCodesPerRev(256);
+	m_leftMotor1->SetSensorDirection(true);
 	m_leftMotor1->SetAllowableClosedLoopErr(0);
 	m_leftMotor1->Set(0.0);
 	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
-	m_rightMotor1->Set(0.0);
+	//m_rightMotor1->Set(0.0);
 	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-	//m_rightMotor1->SetSensorDirection(false);
 	m_rightMotor1->ConfigEncoderCodesPerRev(256);
+	m_rightMotor1->SetSensorDirection(true);
 	m_rightMotor1->SetAllowableClosedLoopErr(0);
 	m_rightMotor1->Set(0.0);
 

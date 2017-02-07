@@ -19,6 +19,7 @@ private:
 
 	static Turret* m_instance;
 	Turret();
+
 public:
 	static Turret* GetInstance();
 	void InitDefaultCommand();
@@ -26,6 +27,7 @@ public:
 	void ConfigClosedLoop();
 
 	void SetOpen();
+	void SetAngle();
 };
 
 #endif  // Turret_H
