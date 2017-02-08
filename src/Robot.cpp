@@ -138,10 +138,15 @@ public:
 		}		//GearIntake Out
 		intake->SetGear(gear);
 
-		armMotor = oi->opStick->GetRawAxis(3);
-		if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
-		if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		intake->SetArm(-armMotor);		//Intake Arm
+		//armMotor = oi->drvStick->GetRawAxis(3);
+
+		if(oi->drvStick->GetRawButton(5)) armMotor = -0.75;
+		if(oi->drvStick->GetRawButton(6)) armMotor = 0.75;
+
+
+		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
+		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
+		intake->SetArm(armMotor);		//Intake Arm
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)

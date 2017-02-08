@@ -5,6 +5,8 @@
 #include <iostream>
 #include "CANTalon.h"
 #include "CanTalonSRX.h"
+#include "WPIlib.h"
+
 
 class Intake : public Subsystem {
 private:
@@ -13,7 +15,10 @@ private:
 	CANTalon* m_ArmMotor;
 	CANTalon* m_GearMotor;
 	CANTalon* m_BallMotor_1;
-	CANTalon* m_BallMotor_2;
+
+	//2 limit switches 	1 for down 	1 for up
+	DigitalInput* m_DownLimit;
+	DigitalInput* m_UpLimit;
 
 	Intake();
 	static Intake *m_instance;
@@ -29,6 +34,10 @@ public:
 	void SetBrakeMode(bool on);
 	void ConfigureOpenLoop();
 	void ConfigureClosedLoop();
+
+	bool IsIntakeDown();
+	bool IsIntakeUp();
+
 };
 
 #endif  // Intake_H

@@ -105,12 +105,13 @@ void Drivetrain::configClosedLoop() {
 	m_leftMotor1->ConfigEncoderCodesPerRev(256);
 	m_leftMotor1->SetSensorDirection(true);
 	m_leftMotor1->SetAllowableClosedLoopErr(0);
+	m_leftMotor1->SetClosedLoopOutputDirection(true);
 	m_leftMotor1->Set(0.0);
 	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
 	//m_rightMotor1->Set(0.0);
 	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 	m_rightMotor1->ConfigEncoderCodesPerRev(256);
-	m_rightMotor1->SetSensorDirection(true);
+	//m_rightMotor1->SetSensorDirection(true);
 	m_rightMotor1->SetAllowableClosedLoopErr(0);
 	m_rightMotor1->Set(0.0);
 
@@ -139,7 +140,7 @@ void Drivetrain::configOpenLoop() {
 }
 
 void Drivetrain::SetLeft(float val) {
-	m_leftMotor1->Set(-val);
+	m_leftMotor1->Set(val);
 }
 
 

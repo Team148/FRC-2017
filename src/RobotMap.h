@@ -33,7 +33,7 @@ constexpr int CONVEYOR_LOWER_MOTOR  = 99;
 constexpr int CONVEYOR_UPPER_MOTOR  = 99;
 
 constexpr int INTAKE_BALL_MOTOR_1	= 11;
-constexpr int INTAKE_BALL_MOTOR_2	= 5;
+//constexpr int INTAKE_BALL_MOTOR_2	= 5;
 constexpr int INTAKE_GEAR_MOTOR		= 12;
 constexpr int INTAKE_ARM_MOTOR		= 13;
 
