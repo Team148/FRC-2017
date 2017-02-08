@@ -5,6 +5,7 @@
 #include <iostream>
 #include "CANTalon.h"
 #include "CanTalonSRX.h"
+#include "Constants.h"
 #include "WPIlib.h"
 
 
@@ -22,8 +23,9 @@ private:
 
 	Intake();
 	static Intake *m_instance;
+	bool m_isHomed = 0;
+	bool m_isClosedLoop = 0;
 public:
-
 	static Intake* GetInstance();
 	void InitDefaultCommand();
 
@@ -34,9 +36,11 @@ public:
 	void SetBrakeMode(bool on);
 	void ConfigureOpenLoop();
 	void ConfigureClosedLoop();
+	void ResetArm();
 
 	bool IsIntakeDown();
 	bool IsIntakeUp();
+	void SetArmAngle(float angle);
 
 };
 

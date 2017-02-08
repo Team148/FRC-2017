@@ -12,7 +12,7 @@ class Turret : public Subsystem {
 private:
 	//1 CanTalon with integrated encoder feedback
 	CANTalon* m_Motor;
-	//2-4 limit switches  2 for max/min, 1-2 for "home" positions.
+	//2-4 limit switches  2 for max/min, 1-2 for "home" positions.  The Max/Min Switches could be softwareLimits
 	DigitalInput* m_MaxSwitch;
 	DigitalInput* m_MinSwitch;
 	DigitalInput* m_HomeSwitch;
@@ -26,8 +26,9 @@ public:
 	void ConfigOpenLoop();
 	void ConfigClosedLoop();
 
+	void SetActualPosition(double position = 0);
 	void SetOpen();
-	void SetAngle();
+	void SetAngle(float angle);
 };
 
 #endif  // Turret_H

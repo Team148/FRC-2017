@@ -36,6 +36,8 @@ constexpr int INTAKE_BALL_MOTOR_1	= 11;
 //constexpr int INTAKE_BALL_MOTOR_2	= 5;
 constexpr int INTAKE_GEAR_MOTOR		= 12;
 constexpr int INTAKE_ARM_MOTOR		= 13;
+constexpr int INTAKE_ARM_DOWN_LIMIT = 0;
+constexpr int INTAKE_ARM_UP_LIMIT	= 1;
 
 constexpr int TURRET_MOTOR 			= 99;
 constexpr int TURRET_MIN_SWITCH		= 0;

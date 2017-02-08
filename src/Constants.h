@@ -22,6 +22,11 @@ constexpr float DRIVE_TURN_P = 0.009;
 constexpr float DRIVE_TURN_I = 0.0;
 constexpr float DRIVE_TURN_TOLERANCE = 0.05;
 
+//Turret
+constexpr float TURRET_ROTATIONS_PER_TICK = 1;
+
+//Intake
+constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = .1;
 
 
 #endif /* CONSTANTS_H */

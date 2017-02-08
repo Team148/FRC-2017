@@ -34,8 +34,10 @@ void Turret::ConfigClosedLoop() {
 
 	m_Motor->SetSensorDirection(true);
 	m_Motor->SetTalonControlMode(CANTalon::TalonControlMode::kPositionMode);
-	//m_Motor->Set(0);  not sure what to set this to...  home position?
+	m_Motor->Set(0);
 
+	//SetForwardLimit
+	//SetBackwardLimit
 	m_Motor->SetAllowableClosedLoopErr(0);
 	m_Motor->SelectProfileSlot(0);
 	m_Motor->SetF(0.0);
@@ -44,7 +46,18 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetD(0.0);
 }
 
+
 void Turret::ConfigOpenLoop() {
 	m_Motor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 }
 
+
+void Turret::SetActualPosition(double position) {
+	m_Motor->SetPosition(position);
+}
+
+
+void Turret::SetAngle(float angle) {
+	float radians = angle*M_PI/180;
+	m_Motor->Set(radians/(2*M_PI * TURRET_ROTATIONS_PER_TICK));
+}

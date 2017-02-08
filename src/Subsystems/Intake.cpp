@@ -14,7 +14,9 @@ Intake::Intake() : Subsystem("Intake") {
 	m_BallMotor_1->SetSafetyEnabled(false);
 
 	m_ArmMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
-	m_ArmMotor->ConfigEncoderCodesPerRev(4096);
+
+	m_UpLimit = new frc::DigitalInput(INTAKE_ARM_UP_LIMIT);
+	m_DownLimit = new frc::DigitalInput(INTAKE_ARM_DOWN_LIMIT);
 }
 
 
@@ -42,27 +44,54 @@ void Intake::SetGear(float val) {
 void Intake::SetBall(float val) {
 	m_BallMotor_1->Set(val);
 }
+
 void Intake::ConfigureOpenLoop() {
 	m_ArmMotor->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 	m_ArmMotor->Set(0.0);
 }
 
 void Intake::ConfigureClosedLoop() {
-	m_ArmMotor->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
-	m_ArmMotor->Set(0.0);
+	m_ArmMotor->SetTalonControlMode(CANTalon::TalonControlMode::kPositionMode);
+	m_ArmMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+	m_ArmMotor->SetSensorDirection(false);
+	m_ArmMotor->SetAllowableClosedLoopErr(0);
+	m_ArmMotor->SelectProfileSlot(0);
+	m_ArmMotor->SetF(0.0);
+	m_ArmMotor->SetP(0.5);
+	m_ArmMotor->SetI(0.0);
+	m_ArmMotor->SetD(0.0);
+	m_isClosedLoop = 1;
 }
+
 
 bool Intake::IsIntakeUp() {
 
-	if(m_UpLimit) return true; else return false;
+	if(m_UpLimit)
+		return true;
+	else
+		return false;
 }
+
+
 bool Intake::IsIntakeDown() {
-
 	if(m_DownLimit)
-		{
+	{
+		if(m_isClosedLoop) {
 			m_ArmMotor->SetPosition(0.0);
-			return true;
+			m_isHomed = true;
 		}
-	 else return false;
+	return true;
+	}
+	else
+		return false;
+}
 
+
+void Intake::ResetArm() {
+	m_ArmMotor->SetPosition(0.0);
+}
+
+void Intake::SetArmAngle(float angle) {
+	if(m_isHomed && m_isClosedLoop)
+		m_ArmMotor->Set(angle*INTAKE_ARM_ROTATIONS_PER_DEGREE);
 }
