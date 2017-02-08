@@ -140,8 +140,8 @@ public:
 
 		//armMotor = oi->drvStick->GetRawAxis(3);
 
-		if(oi->drvStick->GetRawButton(5)) armMotor = -0.75;
-		if(oi->drvStick->GetRawButton(6)) armMotor = 0.75;
+		if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
+		if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
 
 
 		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
