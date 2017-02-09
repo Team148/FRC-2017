@@ -18,6 +18,7 @@ public:
 
 	static Shooter* GetInstance();
 	void InitDefaultCommand();
+	void ConfigureClosedLoop();
 	void ConfigureOpenLoop();
 	void SetOpenLoop(float value);
 	void SetClosedLoop(int rpm);

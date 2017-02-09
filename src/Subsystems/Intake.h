@@ -41,6 +41,7 @@ public:
 	bool IsIntakeDown();
 	bool IsIntakeUp();
 	void SetArmAngle(float angle);
+	float GetArmAngle();
 
 };
 

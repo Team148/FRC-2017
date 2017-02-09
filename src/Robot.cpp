@@ -97,6 +97,7 @@ public:
 		//Set Shooter for OpenLoop
 		shooter->ConfigureOpenLoop();
 		drivetrain->configOpenLoop();
+		intake->ConfigureClosedLoop();
 
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
@@ -140,13 +141,16 @@ public:
 
 		//armMotor = oi->drvStick->GetRawAxis(3);
 
-		if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
-		if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
+//		if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
+//		if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
 
+		if(oi->drvStick->GetRawButton(5)) intake->SetArmAngle(90.0);
+		if(oi->drvStick->GetRawButton(6)) intake->SetArmAngle(0.0);
+		intake->IsIntakeDown();
 
 		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
 		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		intake->SetArm(armMotor);		//Intake Arm
+		//intake->SetArm(armMotor);		//Intake Arm
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
@@ -162,6 +166,7 @@ public:
 
 		//adjust ShooterRPM up & down
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
+		frc::SmartDashboard::PutNumber("IntakeArm Angle", intake->GetArmAngle());
 
 	}
 
