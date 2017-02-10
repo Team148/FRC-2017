@@ -26,6 +26,7 @@ private:
 	float m_maxdrivevelocity = 200; //Inches per sec
 	float m_dt = 0.02;				//time step set to 20ms(50Hz).
 	queue <float> m_output;
+	queue <float> m_dist;
 };
 
 #endif  // Drive_H

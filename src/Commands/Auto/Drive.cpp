@@ -4,7 +4,6 @@ Drive::Drive(double inches, double velocity) {
 	Requires(Drivetrain::GetInstance());
 	m_travelDistance  = inches; //How far we want to go in inches
 	m_cruiseVelocity = velocity;
-
 }
 
 // Called just before this Command runs the first time
@@ -24,78 +23,62 @@ void Drive::Initialize() {
 	while(!m_output.empty())
 		m_output.pop();
 
+	while(!m_dist.empty())
+		m_dist.pop();
+
 	//to begin, check if a triangle or trapezoid profile is needed.
 	float accel_dist = 0.5*m_cruiseVelocity*m_cruiseVelocity/m_maxAccelRate;
-
+	int accel_segments = ceil(m_cruiseVelocity/m_maxAccelRate/m_dt);
+	bool isTriangular=0;
 	if(accel_dist*2 > m_travelDistance) {
 		//we will never reach the requested speed, so a triangle profile is generated
 		cout << "info: generating Triangle profile" << endl;
-		int accel_segments = ceil(m_cruiseVelocity/m_maxAccelRate/m_dt);
-
-		//generate acceleration curve
-		for(int i = 0;i <= accel_segments;i++) {
-			double t = m_dt*i;
-		    m_output.push(m_maxAccelRate*t);
-		 }
-		float top_speed_reached = m_output.back();
-
-		//generate deceleration curve
-		for(int i=0 ;i < accel_segments;i++) {
-			float t = m_dt*i;
-		    // v = u + at
-		    float velocity = top_speed_reached+(-m_maxAccelRate*t);
-		    if(velocity > 0)
-		    	m_output.push(velocity);
-		 }
-		 //push last point
-		 m_output.push(0);
-
-		cout << "info: generated a profile with "<< accel_segments*2 <<" Points. time: " << accel_segments*2*m_dt << "sec"<< endl;
+		isTriangular=true;
 	}
-	else {
-		//generate a trapezoid profile
-		cout << "info: generating Trapezoid Profile" << endl;
 
-		float hold_distance = m_travelDistance - (accel_dist * 2);
-		float hold_time = hold_distance/m_cruiseVelocity;
+	//generate acceleration curve
+	for(int i = 0;i <= accel_segments;i++) {
+		double t = m_dt*i;
+	    m_output.push(m_maxAccelRate*t);
+	    m_dist.push(0.5*m_maxAccelRate*t*t);
+	 }
+	float top_speed_reached = m_output.back();
+	float acc_distance = m_dist.back();
 
-		int accel_segments = ceil(m_cruiseVelocity / m_maxAccelRate / m_dt);
-		int hold_segments = hold_time / m_dt;
-
-		//generate acceleration curve
-		for(int i = 0;i <= accel_segments;i++) {
-			float t = m_dt*i;
-			float accvelocity = m_maxAccelRate*t;
-			if(accvelocity > m_cruiseVelocity)
-				m_output.push(m_cruiseVelocity);
-			else
-				m_output.push(accvelocity);
-		}
-
+	//If needed, generate hold curve
+	float hold_distance = 0;
+	float hold_time = 0;
+	int hold_segments = 0;
+	if(!isTriangular) {
+		hold_distance = m_travelDistance - (accel_dist * 2);
+		hold_time = hold_distance/m_cruiseVelocity;
+		hold_segments = hold_time / m_dt;
 		//generate the hold
-		for(int y = 0;y < hold_segments;y++) {
+		for(int y = 1;y <= hold_segments;y++) {
+			double t = m_dt*y;
 			m_output.push(m_cruiseVelocity);
+			m_dist.push(acc_distance+m_cruiseVelocity*t);
 		}
-
-		//generate deceleration curve
-		for(int i=0 ;i < accel_segments;i++) {
-			float t = m_dt*i;
-			float decvelocity = m_cruiseVelocity+(-m_maxAccelRate*t);
-
-			//check for undershoot
-			if(decvelocity < 0)
-				m_output.push(0);
-			else
-				m_output.push(decvelocity);
-
-		}
-		//push last point
-		m_output.push(0);
-
-
-		cout<<"info: generated profile with"<< accel_segments*2+hold_segments << " Points. time: " << accel_segments*2*m_dt+hold_time <<"sec"<< endl;
 	}
+	float initial_d = m_dist.back();
+
+
+	//generate deceleration curve
+	for(int i=0 ;i < accel_segments;i++) {
+		float t = m_dt*i;
+	    // v = u + at
+	    float velocity = top_speed_reached+(-m_maxAccelRate*t);
+	    //float dist = initial_d;   DOESN'T WORK YET.
+	    if(velocity > 0)
+	    	m_output.push(velocity);
+	 }
+	 //push last point
+	 m_output.push(0);
+	 m_dist.push(m_travelDistance);
+
+	cout<<"info: generated profile with"<< accel_segments*2+hold_segments << " Points. time: " << accel_segments*2*m_dt+hold_time <<"sec"<< endl;
 }
+
 
 // Called repeatedly when this Command is scheduled to run
 void Drive::Execute() {
@@ -141,6 +124,10 @@ void Drive::End() {
 	//empty the queue if interrupted
 	while(!m_output.empty())
 		m_output.pop();
+
+	while(!m_dist.empty())
+		m_dist.pop();
+
 }
 
 // Called when another command which requires one or more of the same
