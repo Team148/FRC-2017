@@ -60,7 +60,7 @@ void Intake::ConfigureClosedLoop() {
 	m_ArmMotor->SetAllowableClosedLoopErr(0);
 	m_ArmMotor->SelectProfileSlot(0);
 	m_ArmMotor->SetF(0.0);
-	m_ArmMotor->SetP(0.4);
+	m_ArmMotor->SetP(INTAKE_ARM_POSITION_P);
 	m_ArmMotor->SetI(0.0);
 	m_ArmMotor->SetD(0.0);
 	m_isClosedLoop = 1;

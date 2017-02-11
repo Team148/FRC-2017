@@ -27,6 +27,7 @@ constexpr float TURRET_ROTATIONS_PER_TICK = 1;
 
 //Intake
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = .0128;
+constexpr float INTAKE_ARM_POSITION_P = 0.45;
 
 
 #endif /* CONSTANTS_H */
