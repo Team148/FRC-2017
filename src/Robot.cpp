@@ -9,6 +9,7 @@
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/Autonomous.h"
+#include "Commands/Auto/CalibrateArm.h"
 
 class Robot: public frc::IterativeRobot {
 public:
@@ -97,7 +98,7 @@ public:
 		//Set Shooter for OpenLoop
 		shooter->ConfigureOpenLoop();
 		drivetrain->configOpenLoop();
-		intake->ConfigureClosedLoop();
+		intake->ConfigureOpenLoop();
 
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
@@ -141,16 +142,15 @@ public:
 
 		//armMotor = oi->drvStick->GetRawAxis(3);
 
-//		if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
-//		if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
+		if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
+		if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
+		//CLOSED LOOP CODE
+		//if(oi->drvStick->GetRawButton(5)) intake->SetArmAngle(-1.0); //up
+		//if(oi->drvStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down
 
-		if(oi->drvStick->GetRawButton(5)) intake->SetArmAngle(90.0);
-		if(oi->drvStick->GetRawButton(6)) intake->SetArmAngle(0.0);
-		intake->IsIntakeDown();
-
-		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
-		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		//intake->SetArm(armMotor);		//Intake Arm
+		if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
+		if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
+		intake->SetArm(armMotor);		//Intake Arm
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
@@ -166,8 +166,10 @@ public:
 
 		//adjust ShooterRPM up & down
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
-		frc::SmartDashboard::PutNumber("IntakeArm Angle", intake->GetArmAngle());
-
+		frc::SmartDashboard::PutNumber("IntakeArm Angle (rotations)", intake->GetArmAngle());
+		frc::SmartDashboard::PutNumber("Intake Limit Switch", intake->IsIntakeDown());
+		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
+		frc::SmartDashboard::PutNumber("Intake Closed Loop", intake->IsClosedLoop());
 	}
 
 	void TestPeriodic() override {

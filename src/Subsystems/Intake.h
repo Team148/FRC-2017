@@ -36,6 +36,7 @@ public:
 	void SetBrakeMode(bool on);
 	void ConfigureOpenLoop();
 	void ConfigureClosedLoop();
+	bool IsClosedLoop();
 	void ResetArm();
 
 	bool IsIntakeDown();

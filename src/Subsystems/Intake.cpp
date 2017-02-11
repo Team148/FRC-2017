@@ -57,12 +57,15 @@ void Intake::ConfigureClosedLoop() {
 	m_ArmMotor->SetAllowableClosedLoopErr(0);
 	m_ArmMotor->SelectProfileSlot(0);
 	m_ArmMotor->SetF(0.0);
-	m_ArmMotor->SetP(0.5);
+	m_ArmMotor->SetP(0.4);
 	m_ArmMotor->SetI(0.0);
 	m_ArmMotor->SetD(0.0);
 	m_isClosedLoop = 1;
 }
 
+bool Intake::IsClosedLoop() {
+	return m_isClosedLoop;
+}
 
 bool Intake::IsIntakeUp() {
 
@@ -74,16 +77,7 @@ bool Intake::IsIntakeUp() {
 
 
 bool Intake::IsIntakeDown() {
-	if(m_DownLimit)
-	{
-		if(m_isClosedLoop) {
-			m_ArmMotor->SetPosition(0.0);
-			m_isHomed = true;
-		}
-	return true;
-	}
-	else
-		return false;
+	return !m_DownLimit->Get();
 }
 
 
@@ -93,7 +87,7 @@ void Intake::ResetArm() {
 
 void Intake::SetArmAngle(float angle) {
 	if(m_isClosedLoop)
-		m_ArmMotor->Set(angle*INTAKE_ARM_ROTATIONS_PER_DEGREE);
+		m_ArmMotor->Set(angle);
 	std::cout << angle*INTAKE_ARM_ROTATIONS_PER_DEGREE << std::endl;
 }
 
