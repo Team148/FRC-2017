@@ -44,8 +44,15 @@ void Shooter::ConfigureClosedLoop() {
 	m_Motor1->ConfigEncoderCodesPerRev(256);
 	m_Motor1->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_1Ms);
 	m_Motor1->SetVelocityMeasurementWindow(5);
-
+	m_Motor1->SelectProfileSlot(0);
+	m_Motor1->SetAllowableClosedLoopErr(0);
+	m_Motor1->SetF(SHOOTER_F);
+	m_Motor1->SetP(SHOOTER_P);
+	m_Motor1->Set(0);
+	m_isClosedLoop = true;
 }
+
+
 void Shooter::ConfigureOpenLoop() {
 	m_Motor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 	m_Motor1->Set(0.0);
@@ -56,7 +63,11 @@ void Shooter::SetOpenLoop(float value) {
 	m_Motor1->Set(value);
 }
 
-void Shooter::SetClosedLoop(int rpm) {
+void Shooter::SetRPM(int rpm) {
 	m_rpm = rpm;
 	m_Motor1->Set(m_rpm);
+}
+
+int Shooter::GetRPM() {
+	return m_rpm;
 }

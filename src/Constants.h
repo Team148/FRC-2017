@@ -1,8 +1,7 @@
 /*
  * Constants.h
  *
- *  Created on: Jan 29, 2017
- *      Author: justingriggs
+ *
  */
 
 #ifndef CONSTANTS_H
@@ -25,9 +24,13 @@ constexpr float DRIVE_TURN_TOLERANCE = 0.05;
 //Turret
 constexpr float TURRET_ROTATIONS_PER_TICK = 1;
 
+
 //Intake
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = .0128;
 constexpr float INTAKE_ARM_POSITION_P = 0.45;
 
+//Shooter
+constexpr float SHOOTER_F = 99.99;
+constexpr float SHOOTER_P = 99.99;
 
 #endif /* CONSTANTS_H */

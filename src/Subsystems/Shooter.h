@@ -3,6 +3,7 @@
 
 #include <Commands/Subsystem.h>
 #include <iostream>
+#include "Constants.h"
 #include "CANTalon.h"
 
 class Shooter : public Subsystem {
@@ -13,7 +14,7 @@ private:
 	Shooter();
 	static Shooter* m_instance;
 	int m_rpm=0;
-
+	bool m_isClosedLoop=false;
 public:
 
 	static Shooter* GetInstance();
@@ -21,7 +22,8 @@ public:
 	void ConfigureClosedLoop();
 	void ConfigureOpenLoop();
 	void SetOpenLoop(float value);
-	void SetClosedLoop(int rpm);
+	void SetRPM(int rpm);
+	int GetRPM();
 };
 
 #endif  // Shooter_H
