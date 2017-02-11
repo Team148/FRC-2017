@@ -99,7 +99,7 @@ public:
 		shooter->ConfigureOpenLoop();
 		drivetrain->configOpenLoop();
 		intake->ConfigureOpenLoop();
-
+		frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
 		//}
@@ -140,10 +140,10 @@ public:
 		}		//GearIntake Out
 		intake->SetGear(gear);
 
-		//armMotor = oi->drvStick->GetRawAxis(3);
+		armMotor = oi->opStick->GetRawAxis(3);
 
-		if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
-		if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
+		//if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
+		//if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
 		//CLOSED LOOP CODE
 		//if(oi->drvStick->GetRawButton(5)) intake->SetArmAngle(-1.0); //up
 		//if(oi->drvStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down

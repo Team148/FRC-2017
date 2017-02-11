@@ -34,7 +34,10 @@ void Intake::InitDefaultCommand() {
 }
 
 void Intake::SetArm(float val) {
-	m_ArmMotor->Set(val);
+	if(IsIntakeDown())
+		m_ArmMotor->Set(0);
+	else
+		m_ArmMotor->Set(val);
 }
 
 void Intake::SetGear(float val) {
