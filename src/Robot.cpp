@@ -85,7 +85,6 @@ public:
 		frc::Scheduler::GetInstance()->Run();
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
 
-
 	}
 
 	void TeleopInit() override {
@@ -97,13 +96,15 @@ public:
 
 		//Set Shooter for OpenLoop
 		shooter->ConfigureOpenLoop();
+		//uncomment for ClosedLoop Shooter
+		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		intake->ConfigureOpenLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
+
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
 		//}
-
 	}
 
 	void TeleopPeriodic() override {
@@ -114,11 +115,13 @@ public:
 		static float armMotor = 0.0;
 		static int conveyorX = 0;
 		static bool shooteron = 0;
+		int shooterrpm = 0;
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
 		ballin = 0;
 		gear = 0;
 		shooteron = false;
+
 		conveyorX = 0;
 		if(oi->opStick->GetRawButton(1))
 		{
@@ -145,12 +148,12 @@ public:
 		//if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
 		//if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
 		//CLOSED LOOP CODE
-		//if(oi->drvStick->GetRawButton(5)) intake->SetArmAngle(-1.0); //up
-		//if(oi->drvStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down
+		if(oi->drvStick->GetRawButton(5)) intake->SetArmAngle(-1.0); //up
+		if(oi->drvStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down
 
-		if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
-		if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		intake->SetArm(armMotor);		//Intake Arm
+		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
+		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
+		//intake->SetArm(armMotor);		//Intake Arm
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
@@ -158,18 +161,41 @@ public:
 		conveyor->SetUpper(conveyorX);
 
 
+		//OPEN LOOP SHOOTER
 		if(oi->opStick->GetRawButton(6)){shooteron=true;}	//Run Shooter
 
-		if(shooteron) { shooter->SetOpenLoop(0.8); }  	//setShooter to ShooterSetpoint
+		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
 		else {shooter->SetOpenLoop(0); }					//SetShooter 0
 
+		//CLOSED LOOP SHOOTER
+//		if(oi->opStick->GetRawButton(6)){
+//			shooteron=true;
+//			shooterrpm = shootersetpoint1;
+//			shooter->SetRPM(shooterrpm);
+//		}
+//		if(oi->opStick->GetRawButton(9)){
+//			shooteron=false;
+//			shooterrpm = 0;
+//			shooter->SetRPM(shooterrpm);
+//		}
+//
+//		//adjust ShooterRPM up & down
+//		if(oi->opStick->GetRawButton(7)) {
+//			shooterrpm+=20;
+//			shooter->SetRPM(shooterrpm);
+//		}
+//		if(oi->opStick->GetRawButton(8)) {
+//			shooterrpm-=20;
+//			shooter->SetRPM(shooterrpm);
+//		}
+		//END CLOSEDLOOP SHOOTER
 
-		//adjust ShooterRPM up & down
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (rotations)", intake->GetArmAngle());
 		frc::SmartDashboard::PutNumber("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
 		frc::SmartDashboard::PutNumber("Intake Closed Loop", intake->IsClosedLoop());
+		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
 	}
 
 	void TestPeriodic() override {
@@ -180,7 +206,8 @@ private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
 
-	int shootersetpoint = 2800;
+	int shootersetpoint1 = 3000;
+	int shootersetpoint2 = 2500;
 };
 
 START_ROBOT_CLASS(Robot)

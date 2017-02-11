@@ -5,7 +5,7 @@
  *      Author: justingriggs
  */
 
-#include <Logger.h>
+#include <util/Logger.h>
 
 using namespace std;
 
