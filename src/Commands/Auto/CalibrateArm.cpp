@@ -9,6 +9,8 @@ CalibrateArm::CalibrateArm() {
 // Called just before this Command runs the first time
 void CalibrateArm::Initialize() {
 	m_isFinished = false;
+	if(Intake::GetInstance()->IsClosedLoop())
+		Intake::GetInstance()->ConfigureOpenLoop();
 }
 
 // Called repeatedly when this Command is scheduled to run
