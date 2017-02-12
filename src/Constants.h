@@ -27,7 +27,9 @@ constexpr float TURRET_ROTATIONS_PER_TICK = 1;
 
 //Intake
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = .0128;
-constexpr float INTAKE_ARM_POSITION_P = 0.75;
+constexpr float INTAKE_ARM_POSITION_P = 0.55;
+constexpr float INTAKE_ARM_POSITION_I = 0.0001;
+constexpr float INTAKE_ARM_DOWN_VOLTAGE = -5.75;
 
 //Shooter
 constexpr float SHOOTER_F = 99.99;
