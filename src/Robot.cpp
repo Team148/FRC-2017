@@ -5,11 +5,13 @@
 #include <IterativeRobot.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
+#include "Util/logger.h"
 
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/Autonomous.h"
 #include "Commands/Auto/CalibrateArm.h"
+
 
 class Robot: public frc::IterativeRobot {
 public:
@@ -19,6 +21,7 @@ public:
 	Conveyor* conveyor = 0;
 	Intake* intake = 0;
 	Shooter* shooter = 0;
+	Logger* log = 0;
 
 	void RobotInit() override {
 		std::cout << "starting RobotInit" << std::endl;
@@ -27,6 +30,7 @@ public:
 		conveyor = Conveyor::GetInstance();
 		intake = Intake::GetInstance();
 		shooter = Shooter::GetInstance();
+		log = new Logger();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
 		//frc::SmartDashboard::PutData("Auto Modes", &chooser);
@@ -72,7 +76,7 @@ public:
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
 		//}
-
+		log->Start();
 		//TESTING Drive command (distance in inches, and velocity in inches per second)
 		drivetrain->configClosedLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
@@ -101,7 +105,7 @@ public:
 		drivetrain->configOpenLoop();
 		intake->ConfigureOpenLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
-
+		log->Stop();
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
 		//}
@@ -196,12 +200,20 @@ public:
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
 		frc::SmartDashboard::PutNumber("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+
 	}
 
 	void TestPeriodic() override {
 
 	}
 
+	void RobotLog()
+	{
+		//Add all subsystems to log here.
+		//drivetrain->Log();
+
+		log->WriteBuffertoFile();
+	}
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;

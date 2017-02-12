@@ -53,7 +53,7 @@ public:
 	void FlushBuffer();  //empty anything in the buffer.
 
 private:
-	string m_filepathbase = "/home/lvuser/";
+	string m_filepathbase = "/home/lvuser/logs/";
 	string m_filenamebase;
 	ofstream m_filestream;
 	int m_period;
