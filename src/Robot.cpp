@@ -103,7 +103,7 @@ public:
 		//uncomment for ClosedLoop Shooter
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
-		//intake->ConfigureClosedLoop();
+		intake->ConfigureOpenLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 		log->Stop();
 		//if (autonomousCommand != nullptr) {
@@ -152,8 +152,11 @@ public:
 		//if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
 		//if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
 		//CLOSED LOOP CODE
-		if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(-1.1); //down
-		if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(0.027); //up
+		//if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(-1.1); //down
+		//if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(0.027); //up
+		if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down
+		if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(1.12); //up
+
 
 		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
 		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
