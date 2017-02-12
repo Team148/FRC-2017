@@ -18,16 +18,21 @@ private:
 
 	static Turret* m_instance;
 	Turret();
+	bool m_IsClosedLoop;
 
 public:
 	static Turret* GetInstance();
 	void InitDefaultCommand();
 	void ConfigOpenLoop();
 	void ConfigClosedLoop();
+	bool IsClosedLoop();
 
 	void SetActualPosition(double position = 0);
 	void SetOpen();
 	void SetAngle(float angle);
+	void Reset(float actual);
+	bool IsHomed();
+
 };
 
 #endif  // Turret_H

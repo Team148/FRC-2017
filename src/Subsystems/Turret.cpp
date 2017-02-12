@@ -39,9 +39,11 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetAllowableClosedLoopErr(0);
 	m_Motor->SelectProfileSlot(0);
 	m_Motor->SetF(0.0);
-	m_Motor->SetP(0.1);
+	m_Motor->SetP(TURRET_P);
 	m_Motor->SetI(0.0);
 	m_Motor->SetD(0.0);
+
+	Reset(0);
 }
 
 
@@ -58,4 +60,16 @@ void Turret::SetActualPosition(double position) {
 void Turret::SetAngle(float angle) {
 	float radians = angle*M_PI/180;
 	m_Motor->Set(radians/(2*M_PI * TURRET_ROTATIONS_PER_TICK));
+}
+
+void Turret::Reset(float actual) {
+	m_Motor->SetPosition(actual);
+}
+
+bool Turret::IsHomed() {
+	return !m_HomeSwitch->Get();
+}
+
+bool Turret::IsClosedLoop() {
+	return m_IsClosedLoop;
 }
