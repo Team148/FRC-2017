@@ -8,8 +8,6 @@ Turret::Turret() : Subsystem("Turret") {
 	m_Motor = new CANTalon(TURRET_MOTOR);
 	m_Motor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
 
-	m_MaxSwitch = new DigitalInput(TURRET_MAX_SWITCH);
-	m_MinSwitch = new DigitalInput(TURRET_MIN_SWITCH);
 	m_HomeSwitch = new DigitalInput(TURRET_HOME_SWITCH);
 }
 
