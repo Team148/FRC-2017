@@ -143,17 +143,17 @@ public:
 		}		//GearIntake Out
 		intake->SetGear(gear);
 
-		armMotor = oi->opStick->GetRawAxis(3);
+		//armMotor = oi->opStick->GetRawAxis(3);
 
 		//if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
 		//if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
 		//CLOSED LOOP CODE
-		if(oi->drvStick->GetRawButton(5)) intake->SetArmAngle(-1.0); //up
-		if(oi->drvStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down
+		if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(1.2); //up
+		if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(0.0); //down
 
 		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
 		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		//intake->SetArm(armMotor);		//Intake Arm
+		//intake->SetArm(-armMotor);		//Intake Arm
 
 
 		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)

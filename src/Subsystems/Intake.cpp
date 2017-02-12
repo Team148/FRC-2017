@@ -34,9 +34,9 @@ void Intake::InitDefaultCommand() {
 }
 
 void Intake::SetArm(float val) {
-	if(IsIntakeDown())
-		m_ArmMotor->Set(0);
-	else
+	//if(IsIntakeDown())
+	//	m_ArmMotor->Set(0);
+	//else
 		m_ArmMotor->Set(val);
 }
 
@@ -59,6 +59,7 @@ void Intake::ConfigureClosedLoop() {
 	m_ArmMotor->SetSensorDirection(false);
 	m_ArmMotor->SetAllowableClosedLoopErr(0);
 	m_ArmMotor->SelectProfileSlot(0);
+	m_ArmMotor->ConfigPeakOutputVoltage(11,-7.5);  //Forward is Up
 	m_ArmMotor->SetF(0.0);
 	m_ArmMotor->SetP(INTAKE_ARM_POSITION_P);
 	m_ArmMotor->SetI(0.0);

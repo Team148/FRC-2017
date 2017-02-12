@@ -13,7 +13,7 @@ void CalibrateArm::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void CalibrateArm::Execute() {
-	Intake::GetInstance()->SetArm(-.45);
+	Intake::GetInstance()->SetArm(-.4);
 	if(Intake::GetInstance()->IsIntakeDown()) {
 		Intake::GetInstance()->ConfigureClosedLoop();
 		m_isFinished = true;
@@ -27,7 +27,7 @@ bool CalibrateArm::IsFinished() {
 
 // Called once after isFinished returns true
 void CalibrateArm::End() {
-	Intake::GetInstance()->SetArmAngle(-.5);
+	Intake::GetInstance()->SetArmAngle(0);
 }
 
 // Called when another command which requires one or more of the same
