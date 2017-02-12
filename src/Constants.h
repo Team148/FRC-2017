@@ -14,7 +14,7 @@ constexpr float DRIVETRAIN_WHEEL_DIAMETER = 4.0;
 constexpr float DRIVETRAIN_BASE_DIAMETER = 39; 		//distance(in) from wheel to wheel
 
 //Auto/Drive
-constexpr float DRIVE_GYRO_P = 2.5;
+constexpr float DRIVE_GYRO_P = 2.55;
 
 //Auto/TurnPID
 constexpr float DRIVE_TURN_P = 0.009;
