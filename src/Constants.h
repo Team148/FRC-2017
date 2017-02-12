@@ -9,7 +9,7 @@
 
 //Drivetrain constants.
 constexpr double DRIVETRAIN_F = 0.5645;
-constexpr double DRIVETRAIN_P = 0.8;
+constexpr double DRIVETRAIN_P = 0.7;
 constexpr float DRIVETRAIN_WHEEL_DIAMETER = 4.0;
 constexpr float DRIVETRAIN_BASE_DIAMETER = 39; 		//distance(in) from wheel to wheel
 
