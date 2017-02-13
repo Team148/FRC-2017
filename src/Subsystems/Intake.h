@@ -37,7 +37,7 @@ public:
 	void ConfigureOpenLoop();
 	void ConfigureClosedLoop();
 	bool IsClosedLoop();
-	void ResetArm();
+	void ResetArm(float actual_pos);
 
 	bool IsIntakeDown();
 	bool IsIntakeUp();

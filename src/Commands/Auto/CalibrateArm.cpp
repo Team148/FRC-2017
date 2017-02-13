@@ -9,12 +9,18 @@ CalibrateArm::CalibrateArm() {
 // Called just before this Command runs the first time
 void CalibrateArm::Initialize() {
 	m_isFinished = false;
+	m_switchdelaycount=0;
+	if(Intake::GetInstance()->IsClosedLoop())
+		Intake::GetInstance()->ConfigureOpenLoop();
 }
 
 // Called repeatedly when this Command is scheduled to run
 void CalibrateArm::Execute() {
 	Intake::GetInstance()->SetArm(-.4);
 	if(Intake::GetInstance()->IsIntakeDown()) {
+		m_switchdelaycount++;
+	}
+	if(m_switchdelaycount == m_switchdelay) {
 		Intake::GetInstance()->ConfigureClosedLoop();
 		m_isFinished = true;
 	}
@@ -27,7 +33,7 @@ bool CalibrateArm::IsFinished() {
 
 // Called once after isFinished returns true
 void CalibrateArm::End() {
-	Intake::GetInstance()->SetArmAngle(0);
+	//Intake::GetInstance()->SetArmAngle(1.0);
 }
 
 // Called when another command which requires one or more of the same

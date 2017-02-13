@@ -30,12 +30,12 @@ void Turret::ConfigClosedLoop() {
 	//if(m_Motor->IsSensorPresent(CANTalon::FeedbackDevice::CtreMagEncoder_Relative) != CANTalon::FeedbackDeviceStatus::FeedbackStatusPresent)
 		//std::cout << "error:  could not detect turret sensor" << std::endl;
 
-	m_Motor->SetSensorDirection(true);
 	m_Motor->SetTalonControlMode(CANTalon::TalonControlMode::kPositionMode);
-	m_Motor->Set(0);
 
 	//SetForwardLimit
 	//SetBackwardLimit
+	m_Motor->SetSensorDirection(false);
+	m_Motor->SetClosedLoopOutputDirection(false);
 	m_Motor->SetAllowableClosedLoopErr(0);
 	m_Motor->SelectProfileSlot(0);
 	m_Motor->SetF(0.0);
@@ -44,11 +44,15 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetD(0.0);
 
 	Reset(0);
+
+	SetActualPosition(0.0);
+	//m_Motor->Set(0);
 }
 
 
 void Turret::ConfigOpenLoop() {
 	m_Motor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	m_Motor->Set(0);
 }
 
 
@@ -58,8 +62,9 @@ void Turret::SetActualPosition(double position) {
 
 
 void Turret::SetAngle(float angle) {
-	float radians = angle*M_PI/180;
-	m_Motor->Set(radians/(2*M_PI * TURRET_ROTATIONS_PER_TICK));
+	//float radians = angle*M_PI/180;
+	//m_Motor->Set(radians/(2*M_PI * TURRET_ROTATIONS_PER_TICK));
+	m_Motor->Set(angle);
 }
 
 void Turret::Reset(float actual) {

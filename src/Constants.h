@@ -9,12 +9,12 @@
 
 //Drivetrain constants.
 constexpr double DRIVETRAIN_F = 0.5645;
-constexpr double DRIVETRAIN_P = 0.8;
+constexpr double DRIVETRAIN_P = 0.7;
 constexpr float DRIVETRAIN_WHEEL_DIAMETER = 4.0;
 constexpr float DRIVETRAIN_BASE_DIAMETER = 39; 		//distance(in) from wheel to wheel
 
 //Auto/Drive
-constexpr float DRIVE_GYRO_P = 2.5;
+constexpr float DRIVE_GYRO_P = 2.55;
 
 //Auto/TurnPID
 constexpr float DRIVE_TURN_P = 0.009;
@@ -23,11 +23,14 @@ constexpr float DRIVE_TURN_TOLERANCE = 0.05;
 
 //Turret
 constexpr float TURRET_ROTATIONS_PER_TICK = 1;
+constexpr float TURRET_P = .2;
 
 
 //Intake
-constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = .0128;
-constexpr float INTAKE_ARM_POSITION_P = 0.75;
+constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = 84/18/360;
+constexpr float INTAKE_ARM_POSITION_P = 0.55;
+constexpr float INTAKE_ARM_POSITION_I = 0.0001;
+constexpr float INTAKE_ARM_DOWN_VOLTAGE = -5.75;
 
 //Shooter
 constexpr float SHOOTER_F = 99.99;

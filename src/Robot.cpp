@@ -5,11 +5,13 @@
 #include <IterativeRobot.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
+#include "Util/logger.h"
 
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/Autonomous.h"
 #include "Commands/Auto/CalibrateArm.h"
+
 
 class Robot: public frc::IterativeRobot {
 public:
@@ -19,14 +21,18 @@ public:
 	Conveyor* conveyor = 0;
 	Intake* intake = 0;
 	Shooter* shooter = 0;
+	Turret* turret = 0;
+	Logger* log = 0;
 
 	void RobotInit() override {
-		std::cout << "starting RobotInit" << std::endl;
+		std::cout << "info: starting RobotInit" << std::endl;
 		oi = OI::GetInstance();
 		drivetrain = Drivetrain::GetInstance();
 		conveyor = Conveyor::GetInstance();
 		intake = Intake::GetInstance();
 		shooter = Shooter::GetInstance();
+		turret = Turret::GetInstance();
+		log = new Logger();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
 		//frc::SmartDashboard::PutData("Auto Modes", &chooser);
@@ -72,7 +78,7 @@ public:
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
 		//}
-
+		log->Start();
 		//TESTING Drive command (distance in inches, and velocity in inches per second)
 		drivetrain->configClosedLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
@@ -100,8 +106,9 @@ public:
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		intake->ConfigureOpenLoop();
+		turret->ConfigClosedLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
-
+		log->Stop();
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
 		//}
@@ -148,8 +155,11 @@ public:
 		//if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
 		//if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
 		//CLOSED LOOP CODE
-		if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(1.2); //up
-		if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(0.0); //down
+		//if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(-1.1); //down
+		//if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(0.027); //up
+		if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down
+		if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(1.12); //up
+
 
 		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
 		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
@@ -190,18 +200,28 @@ public:
 //		}
 		//END CLOSEDLOOP SHOOTER
 
+		turret->SetAngle(oi->opStick->GetRawAxis(2)*3);
+
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (rotations)", intake->GetArmAngle());
 		frc::SmartDashboard::PutNumber("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
 		frc::SmartDashboard::PutNumber("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+
 	}
 
 	void TestPeriodic() override {
 
 	}
 
+	void RobotLog()
+	{
+		//Add all subsystems to log here.
+		//drivetrain->Log();
+
+		log->WriteBuffertoFile();
+	}
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
