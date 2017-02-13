@@ -43,10 +43,10 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetI(0.0);
 	m_Motor->SetD(0.0);
 
-	Reset(0);
+	Reset();
 
-	SetActualPosition(0.0);
 	//m_Motor->Set(0);
+	m_isClosedLoop=true;
 }
 
 
@@ -62,13 +62,12 @@ void Turret::SetActualPosition(double position) {
 
 
 void Turret::SetAngle(float angle) {
-	//float radians = angle*M_PI/180;
-	//m_Motor->Set(radians/(2*M_PI * TURRET_ROTATIONS_PER_TICK));
-	m_Motor->Set(angle);
+	m_Motor->Set(angle*INTAKE_ARM_ROTATIONS_PER_DEGREE);
+	//m_Motor->Set(angle);
 }
 
-void Turret::Reset(float actual) {
-	m_Motor->SetPosition(actual);
+void Turret::Reset() {
+	m_Motor->SetPosition(0);
 }
 
 bool Turret::IsHomed() {
@@ -76,5 +75,5 @@ bool Turret::IsHomed() {
 }
 
 bool Turret::IsClosedLoop() {
-	return m_IsClosedLoop;
+	return m_isClosedLoop;
 }

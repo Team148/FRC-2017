@@ -200,7 +200,9 @@ public:
 //		}
 		//END CLOSEDLOOP SHOOTER
 
-		turret->SetAngle(oi->opStick->GetRawAxis(2)*3);
+		//TURRET
+		turret->SetAngle(oi->opStick->GetRawAxis(2)*90);
+
 
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (rotations)", intake->GetArmAngle());

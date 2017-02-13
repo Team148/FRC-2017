@@ -18,7 +18,7 @@ private:
 
 	static Turret* m_instance;
 	Turret();
-	bool m_IsClosedLoop;
+	bool m_isClosedLoop = false;
 
 public:
 	static Turret* GetInstance();
@@ -30,7 +30,7 @@ public:
 	void SetActualPosition(double position = 0);
 	void SetOpen();
 	void SetAngle(float angle);
-	void Reset(float actual);
+	void Reset();
 	bool IsHomed();
 
 };
