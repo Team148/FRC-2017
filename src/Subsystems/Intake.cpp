@@ -51,6 +51,7 @@ void Intake::SetBall(float val) {
 void Intake::ConfigureOpenLoop() {
 	m_ArmMotor->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 	m_ArmMotor->Set(0.0);
+	m_isClosedLoop = 0;
 }
 
 void Intake::ConfigureClosedLoop() {
