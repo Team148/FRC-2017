@@ -21,6 +21,7 @@ public:
 	Conveyor* conveyor = 0;
 	Intake* intake = 0;
 	Shooter* shooter = 0;
+	Turret* turret = 0;
 	Logger* log = 0;
 
 	void RobotInit() override {
@@ -30,6 +31,7 @@ public:
 		conveyor = Conveyor::GetInstance();
 		intake = Intake::GetInstance();
 		shooter = Shooter::GetInstance();
+		turret = Turret::GetInstance();
 		log = new Logger();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
@@ -104,6 +106,7 @@ public:
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		intake->ConfigureOpenLoop();
+		turret->ConfigClosedLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 		log->Stop();
 		//if (autonomousCommand != nullptr) {
@@ -196,6 +199,8 @@ public:
 //			shooter->SetRPM(shooterrpm);
 //		}
 		//END CLOSEDLOOP SHOOTER
+
+		turret->SetAngle(oi->opStick->GetRawAxis(2)*3);
 
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (rotations)", intake->GetArmAngle());
