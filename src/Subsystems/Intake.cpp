@@ -13,8 +13,6 @@ Intake::Intake() : Subsystem("Intake") {
 	m_GearMotor->SetSafetyEnabled(false);
 	m_BallMotor_1->SetSafetyEnabled(false);
 
-	//m_ArmMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
-
 	m_UpLimit = new frc::DigitalInput(INTAKE_ARM_UP_LIMIT);
 	m_DownLimit = new frc::DigitalInput(INTAKE_ARM_DOWN_LIMIT);
 }
@@ -34,9 +32,6 @@ void Intake::InitDefaultCommand() {
 }
 
 void Intake::SetArm(float val) {
-	//if(IsIntakeDown())
-	//	m_ArmMotor->Set(0);
-	//else
 		m_ArmMotor->Set(val);
 }
 
@@ -99,7 +94,6 @@ void Intake::SetArmAngle(float angle) {
 }
 
 float Intake::GetArmAngle() {
-
 	return m_ArmMotor->GetPosition();
 }
 

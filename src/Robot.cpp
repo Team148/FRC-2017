@@ -205,7 +205,7 @@ public:
 
 
 		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
-		frc::SmartDashboard::PutNumber("IntakeArm Angle (rotations)", intake->GetArmAngle());
+		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
 		frc::SmartDashboard::PutNumber("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
 		frc::SmartDashboard::PutNumber("Intake Closed Loop", intake->IsClosedLoop());
