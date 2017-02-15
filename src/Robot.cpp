@@ -204,7 +204,7 @@ public:
 		turret->SetAngle(oi->opStick->GetRawAxis(2)*90);
 
 
-		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
+		//frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
 		frc::SmartDashboard::PutNumber("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());

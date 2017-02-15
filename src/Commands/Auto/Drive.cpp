@@ -38,14 +38,28 @@ void Drive::Initialize() {
 	double accel_cruise_time = m_travelDistance/m_cruiseVelocity;
 
 	double decel_time = -m_cruiseVelocity/m_maxDecelRate;
+	float decel_dist = -0.5*m_cruiseVelocity*m_cruiseVelocity/m_maxDecelRate;
+	int decel_segments = ceil(abs(m_cruiseVelocity/m_maxDecelRate/m_dt));
 	double end_time = accel_cruise_time + decel_time;
 
 	bool isTriangular=0;
+	float max_velocity;
 	if(accel_dist*2 > m_travelDistance) {
 		//we will never reach the requested speed, so a triangle profile is generated
 		cout << "info: generating Triangle profile" << endl;
 		isTriangular=true;
+		max_velocity = pow(2 * m_maxAccelRate * (m_travelDistance/2),0.5);
+		accel_time = max_velocity/m_maxAccelRate;
+		accel_cruise_time = accel_time;
+		decel_time = -max_velocity/m_maxDecelRate;
+		accel_segments = ceil(max_velocity/m_maxAccelRate/m_dt);
+		decel_segments = ceil(-max_velocity/m_maxDecelRate/m_dt);
+		end_time = accel_time + decel_time;
 	}
+
+	log->AddtoBuffer("accel_segments", accel_segments);
+	log->AddtoBuffer("decel_segments", decel_segments);
+
 
 	//generate acceleration curve
 	for(int i = 0;i <= accel_segments;i++) {
@@ -65,11 +79,11 @@ void Drive::Initialize() {
 	float hold_time = 0;
 	int hold_segments = 0;
 	if(!isTriangular) {
-		hold_distance = m_travelDistance - (accel_dist * 2);
+		hold_distance = m_travelDistance - (accel_dist + decel_dist);
 		hold_time = hold_distance/m_cruiseVelocity;
 		hold_segments = hold_time / m_dt;
-		cout << "Hold Distance: " << hold_distance << endl;
-		cout << "hold Time: " << hold_time << endl;
+		//cout << "Hold Distance: " << hold_distance << endl;
+		//cout << "hold Time: " << hold_time << endl;
 		//generate the hold
 		for(int y = 1;y <= hold_segments;y++) {
 			double t = m_dt*y;
@@ -85,11 +99,11 @@ void Drive::Initialize() {
 
 
 	//generate deceleration curve
-	for(int i=1 ;i < accel_segments;i++) {
+	for(int i=1 ;i < decel_segments;i++) {
 		float t = m_dt*i;
 		float curr_t = t + accel_cruise_time;
 	    // v = u + at
-	    float velocity = top_speed_reached+(-m_maxAccelRate*t);
+	    float velocity = top_speed_reached+(m_maxDecelRate*t);
 	    float dist = m_travelDistance + 0.5*m_maxDecelRate*pow(curr_t-end_time,2);								//very negative
 	    if(velocity > 0)
 	    	m_output.push(velocity);
@@ -102,10 +116,13 @@ void Drive::Initialize() {
 	 //push last point
 	 m_output.push(0);
 	 m_dist.push(m_travelDistance);
+	 log->AddtoBuffer("Vel",0);
+	 log->AddtoBuffer("Dist", m_travelDistance);
+
 	 log->WriteBuffertoFile();
 	 log->CloseFile();
 
-	cout<<"info: generated profile with"<< accel_segments*2+hold_segments << " Points. time: " << accel_segments*2*m_dt+hold_time <<"sec"<< endl;
+	cout<<"info: generated profile with"<< accel_segments+hold_segments+decel_segments << " Points. time: " << end_time <<"sec"<< endl;
 }
 
 
