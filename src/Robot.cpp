@@ -123,6 +123,7 @@ public:
 		static int conveyorX = 0;
 		static bool shooteron = 0;
 		int shooterrpm = 0;
+
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
 		ballin = 0;
@@ -150,17 +151,31 @@ public:
 		}		//GearIntake Out
 		intake->SetGear(gear);
 
-		//armMotor = oi->opStick->GetRawAxis(3);
 
-		//if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
-		//if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
-		//CLOSED LOOP CODE
-		//if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(-1.1); //down
-		//if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(0.027); //up
-		if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down
-		if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(1.12); //up
+		//CLOSED LOOP ARM CODE
+		//Shoulder Buttons
+		if(oi->drvStick->GetRawButton(6)){
+			//intake->SetArmAngle(0.0); //down
+			m_armAngle=0;
+		}
+		if(oi->drvStick->GetRawButton(5)) {
+			//intake->SetArmAngle(1.12); //up
+			m_armAngle=1.12;
+		}
 
+		//increment Arm Up/Down
+		if(oi->drvStick->GetRawButton(1)) {
+			m_armAngle-=.10;
+		}
 
+		if(oi->drvStick->GetRawButton(3)) {
+			m_armAngle+=.10;
+		}
+
+		intake->SetArmAngle(m_armAngle);
+		//END INTAKE ARM
+
+		//OOPEN LOOP ARM CODE
 		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
 		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
 		//intake->SetArm(-armMotor);		//Intake Arm
@@ -201,7 +216,7 @@ public:
 		//END CLOSEDLOOP SHOOTER
 
 		//TURRET
-		turret->SetAngle(oi->opStick->GetRawAxis(2)*90);
+
 
 
 		//frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
@@ -230,6 +245,7 @@ private:
 
 	int shootersetpoint1 = 3000;
 	int shootersetpoint2 = 2500;
+	float m_armAngle = 0.0;
 };
 
 START_ROBOT_CLASS(Robot)
