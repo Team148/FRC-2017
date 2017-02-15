@@ -38,6 +38,8 @@ public:
 	void Reenable();
 	double GetAngle();
 	int GetEncoderVelocity();
+	int GetLeftVelocity();
+	int GetRightVelocity();
 
 	void configClosedLoop();
 	bool isClosedLoop();

@@ -87,9 +87,10 @@ void Drive::Initialize() {
 	//generate deceleration curve
 	for(int i=1 ;i < accel_segments;i++) {
 		float t = m_dt*i;
+		float curr_t = t + accel_cruise_time;
 	    // v = u + at
 	    float velocity = top_speed_reached+(-m_maxAccelRate*t);
-	    float dist = initial_d + 0.5*m_maxDecelRate*(end_time - t);
+	    float dist = m_travelDistance + 0.5*m_maxDecelRate*pow(curr_t-end_time,2);								//very negative
 	    if(velocity > 0)
 	    	m_output.push(velocity);
 	    	m_dist.push(dist);
@@ -118,13 +119,24 @@ void Drive::Execute() {
 	m_output.pop();
 	m_dist.pop();
 
+
+	//find actual velocity(rpm)
+	int act_lvel = Drivetrain::GetInstance()->GetLeftVelocity();
+	int act_rvel = Drivetrain::GetInstance()->GetRightVelocity();
+
+	//convert IPS to RPM and account
+	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
+
 	//compute heading hold compensation
 	float cur_angle = Drivetrain::GetInstance()->GetAngle();
 	float cur_angle_err = cur_angle - m_initangle;
 	float gyro_comp = DRIVE_GYRO_P*cur_angle_err;
 
-	//convert IPS to RPM and account
-	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
+	//Find left and right velocity error
+	int vel_l_error = act_lvel - cur_vel;
+	int vel_2_error = act_rvel - cur_vel;
+
+
 
 	//SetLeft and SetRight to current queue with gyro compensation
 	Drivetrain::GetInstance()->SetLeft(cur_vel-gyro_comp);

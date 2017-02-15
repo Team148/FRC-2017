@@ -153,3 +153,12 @@ float Drivetrain::IPStoRPM(float val) {
 	return (val*60*DRIVETRAIN_GEAR_REDUCTION)/(M_PI*DRIVETRAIN_WHEEL_DIAMETER);
 }
 
+
+int Drivetrain::GetRightVelocity() {
+	return m_rightMotor1->GetEncVel();
+}
+
+int Drivetrain::GetLeftVelocity() {
+	return m_leftMotor1->GetEncVel();
+}
+
