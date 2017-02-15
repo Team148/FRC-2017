@@ -1,5 +1,6 @@
 #include "Drivetrain.h"
 #include "Commands/DriveWithJoystick.h"
+#include "Commands/TankDriveJoystick.h"
 #include "../RobotMap.h"
 
 Drivetrain *Drivetrain::m_instance = 0;
@@ -57,11 +58,15 @@ Drivetrain* Drivetrain::GetInstance() {
 }
 
 void Drivetrain::InitDefaultCommand() {
-	SetDefaultCommand(new DriveWithJoystick());
+	SetDefaultCommand(new TankDriveJoystick());
 }
 
 void Drivetrain::Arcade(float ystick, float xstick) {
 	m_drive->ArcadeDrive(ystick,xstick);
+}
+
+void Drivetrain::Tank(float leftstick, float rightstick) {
+	m_drive->TankDrive(leftstick,rightstick);
 }
 
 
