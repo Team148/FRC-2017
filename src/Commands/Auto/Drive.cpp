@@ -1,14 +1,18 @@
 #include "Drive.h"
 
+
 Drive::Drive(double inches, double velocity) {
 	Requires(Drivetrain::GetInstance());
 	m_travelDistance  = inches; //How far we want to go in inches
 	m_cruiseVelocity = velocity;
+
+	if(inches<0) {m_isReverse=true;}
+	log = new Logger("DriveCommandLog");
 }
 
 // Called just before this Command runs the first time
 void Drive::Initialize() {
-
+	log->Start();
 	//reset isFinished
 	m_isFinished=0;
 
@@ -29,6 +33,13 @@ void Drive::Initialize() {
 	//to begin, check if a triangle or trapezoid profile is needed.
 	float accel_dist = 0.5*m_cruiseVelocity*m_cruiseVelocity/m_maxAccelRate;
 	int accel_segments = ceil(m_cruiseVelocity/m_maxAccelRate/m_dt);
+
+	double accel_time = m_cruiseVelocity/m_maxAccelRate;
+	double accel_cruise_time = m_travelDistance/m_cruiseVelocity;
+
+	double decel_time = -m_cruiseVelocity/m_maxDecelRate;
+	double end_time = accel_cruise_time + decel_time;
+
 	bool isTriangular=0;
 	if(accel_dist*2 > m_travelDistance) {
 		//we will never reach the requested speed, so a triangle profile is generated
@@ -41,6 +52,10 @@ void Drive::Initialize() {
 		double t = m_dt*i;
 	    m_output.push(m_maxAccelRate*t);
 	    m_dist.push(0.5*m_maxAccelRate*t*t);
+
+	    //Log
+	    log->AddtoBuffer("Vel", m_maxAccelRate*t);
+	    log->AddtoBuffer("Dist", 0.5*m_maxAccelRate*t*t);
 	 }
 	float top_speed_reached = m_output.back();
 	float acc_distance = m_dist.back();
@@ -53,28 +68,41 @@ void Drive::Initialize() {
 		hold_distance = m_travelDistance - (accel_dist * 2);
 		hold_time = hold_distance/m_cruiseVelocity;
 		hold_segments = hold_time / m_dt;
+		cout << "Hold Distance: " << hold_distance << endl;
+		cout << "hold Time: " << hold_time << endl;
 		//generate the hold
 		for(int y = 1;y <= hold_segments;y++) {
 			double t = m_dt*y;
 			m_output.push(m_cruiseVelocity);
 			m_dist.push(acc_distance+m_cruiseVelocity*t);
+
+			//LOG
+			log->AddtoBuffer("Vel",m_cruiseVelocity);
+			log->AddtoBuffer("Dist", acc_distance+m_cruiseVelocity*t);
 		}
 	}
 	float initial_d = m_dist.back();
 
 
 	//generate deceleration curve
-	for(int i=0 ;i < accel_segments;i++) {
+	for(int i=1 ;i < accel_segments;i++) {
 		float t = m_dt*i;
 	    // v = u + at
 	    float velocity = top_speed_reached+(-m_maxAccelRate*t);
-	    //float dist = initial_d;   DOESN'T WORK YET.
+	    float dist = initial_d + 0.5*m_maxDecelRate*(end_time - t);
 	    if(velocity > 0)
 	    	m_output.push(velocity);
+	    	m_dist.push(dist);
+
+	    	//LOG
+	    	log->AddtoBuffer("Vel",velocity);
+	    	log->AddtoBuffer("Dist", dist);
 	 }
 	 //push last point
 	 m_output.push(0);
 	 m_dist.push(m_travelDistance);
+	 log->WriteBuffertoFile();
+	 log->CloseFile();
 
 	cout<<"info: generated profile with"<< accel_segments*2+hold_segments << " Points. time: " << accel_segments*2*m_dt+hold_time <<"sec"<< endl;
 }
@@ -84,17 +112,18 @@ void Drive::Initialize() {
 void Drive::Execute() {
 
 	float cur_vel = m_output.front();
-
+	float cur_dist = m_dist.front();
 
 	//after setting, remove from queue
 	m_output.pop();
+	m_dist.pop();
 
 	//compute heading hold compensation
 	float cur_angle = Drivetrain::GetInstance()->GetAngle();
 	float cur_angle_err = cur_angle - m_initangle;
 	float gyro_comp = DRIVE_GYRO_P*cur_angle_err;
 
-	//convert IPS to RPM
+	//convert IPS to RPM and account
 	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
 
 	//SetLeft and SetRight to current queue with gyro compensation
