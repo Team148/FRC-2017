@@ -35,7 +35,7 @@ void Turret::ConfigClosedLoop() {
 	//SetForwardLimit
 	//SetBackwardLimit
 	m_Motor->SetSensorDirection(false);
-	m_Motor->SetClosedLoopOutputDirection(false);
+	m_Motor->SetClosedLoopOutputDirection(true);
 	m_Motor->SetAllowableClosedLoopErr(0);
 	m_Motor->SelectProfileSlot(0);
 	m_Motor->SetF(0.0);
@@ -43,9 +43,8 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetI(0.0);
 	m_Motor->SetD(0.0);
 
-	Reset();
-
-	//m_Motor->Set(0);
+	Reset();			//assume starting at Home
+	m_Motor->Set(0);
 	m_isClosedLoop=true;
 }
 

@@ -41,5 +41,6 @@ constexpr int INTAKE_ARM_UP_LIMIT	= 1;
 constexpr int TURRET_MOTOR 			= 6;
 constexpr int TURRET_HOME_SWITCH	= 2;
 
+constexpr int CLIMBER_MOTOR 		= 15;
 
 #endif  // ROBOTMAP_H
