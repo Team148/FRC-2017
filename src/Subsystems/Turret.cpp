@@ -8,7 +8,7 @@ Turret::Turret() : Subsystem("Turret") {
 	m_Motor = new CANTalon(TURRET_MOTOR);
 	m_Motor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
 
-	m_HomeSwitch = new DigitalInput(TURRET_HOME_SWITCH);
+	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
 }
 
 Turret* Turret::GetInstance() {

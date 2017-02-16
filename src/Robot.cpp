@@ -123,7 +123,10 @@ public:
 		static float agitator = 0.0;
 		static float kicker = 0.0;
 		static bool shooteron = 0;
-		int shooterrpm = 0;
+		static int shooterRpm = 0;
+		constexpr int shooterSetPoint_A = 3000;
+		constexpr int shooterSetPoint_B = 2500;
+		constexpr int shooterSetPoint_Home = 2750;
 
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
@@ -207,31 +210,40 @@ public:
 //		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
 //		else {shooter->SetOpenLoop(0); }					//SetShooter 0
 
+		if(oi->opStick->GetRawAxis(1) <= -1) // Close Shot
+		{
+			shooterRpm -= 10;
+		}
+
+
+
 		//CLOSED LOOP SHOOTER
-//		if(oi->opStick->GetRawButton(6)){
-//			shooteron=true;
-//			shooterrpm = shootersetpoint1;
-//			shooter->SetRPM(shooterrpm);
-//		}
-//		if(oi->opStick->GetRawButton(9)){
-//			shooteron=false;
-//			shooterrpm = 0;
-//			shooter->SetRPM(shooterrpm);
-//		}
-//
-//		//adjust ShooterRPM up & down
-//		if(oi->opStick->GetRawButton(7)) {
-//			shooterrpm+=20;
-//			shooter->SetRPM(shooterrpm);
-//		}
-//		if(oi->opStick->GetRawButton(8)) {
-//			shooterrpm-=20;
-//			shooter->SetRPM(shooterrpm);
-//		}
+		if(oi->opStick->GetRawAxis(1) >= 1) // Far Shot
+		{
+			shooterRpm += 10;
+		}
+
+		if(oi->opStick->GetRawAxis(0) <= -1) // in-take
+		{
+			shooterRpm = shooterSetPoint_A;
+		}
+
+		if(oi->opStick->GetRawAxis(0) >= 1) // out-take
+		{
+			shooterRpm = shooterSetPoint_B;
+		}
+		if(oi->opStick->GetRawButton(9))
+		{
+			shooterRpm = shooterSetPoint_Home;
+		}
+		if(oi->opStick->GetRawButton(9))
+		{
+			shooterRpm = 0;
+		}
 		//END CLOSEDLOOP SHOOTER
-
+		shooter->SetRPM(shooterRpm);
 		//TURRET
-
+		turret->SetAngle(oi->opStick->GetRawAxis(2));
 
 
 		//frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
