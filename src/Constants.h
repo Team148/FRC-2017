@@ -16,6 +16,7 @@ constexpr float DRIVETRAIN_GEAR_REDUCTION = 66/12;
 
 //Auto/Drive
 constexpr float DRIVE_GYRO_P = 2.55;
+constexpr float DRIVE_VELOCITY_P = .5;
 
 //Auto/TurnPID
 constexpr float DRIVE_TURN_P = 0.009;

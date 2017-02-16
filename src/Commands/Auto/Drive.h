@@ -24,6 +24,7 @@ private:
 	bool m_isFinished=0;
 	float m_initangle = 0;
 	bool m_isReverse = false;
+
 	//drivetrain constraints
 	float m_maxAccelRate = 40; 		//Inches per sec^2
 	float m_maxDecelRate= -30;		//Inches per sec^2
