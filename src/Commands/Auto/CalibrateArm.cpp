@@ -34,8 +34,10 @@ bool CalibrateArm::IsFinished() {
 
 // Called once after isFinished returns true
 void CalibrateArm::End() {
-	if(!Intake::GetInstance()->IsClosedLoop())
+	if(!Intake::GetInstance()->IsClosedLoop()) {
 		std::cout << "error: could not calibrate arm" << std::endl;
+		Intake::GetInstance()->SetArm(0); //Stop Arm
+	}
 }
 
 // Called when another command which requires one or more of the same
