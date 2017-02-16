@@ -117,39 +117,57 @@ public:
 	void TeleopPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 
-		static float ballin = 0.0;
-		static float gear = 0.0;
+		static float ballIntake = 0.0;
+		static float gearIntake = 0.0;
 		static float armMotor = 0.0;
-		static int conveyorX = 0;
+		static float agitator = 0.0;
+		static float kicker = 0.0;
 		static bool shooteron = 0;
 		int shooterrpm = 0;
 
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
-		ballin = 0;
-		gear = 0;
+		ballIntake = 0.0;
+		gearIntake = 0.0;
+		agitator = 0.0;
+		kicker = 0.0;
 		shooteron = false;
 
-		conveyorX = 0;
-		if(oi->opStick->GetRawButton(1))
-		{
-			ballin = 1.0;
-		}
-		if(oi->opStick->GetRawButton(3))
-		{
-			ballin = -1.0;
-		}//Ball Intake
-		intake->SetBall(ballin);
 
 		if(oi->opStick->GetRawButton(2))
 		{
-			gear= 1.0;
+			ballIntake = 1.0;
+		}
+		if(oi->opStick->GetRawButton(3))
+		{
+			ballIntake = -1.0;
+		}//Ball Intake
+
+		intake->SetBall(ballIntake);
+
+		if(oi->opStick->GetRawButton(1))
+		{
+			gearIntake = 1.0;
 		}		//GearIntake
 		if(oi->opStick->GetRawButton(4))
 		{
-			gear= -1.0;
+			gearIntake = -1.0;
 		}		//GearIntake Out
-		intake->SetGear(gear);
+		intake->SetGear(gearIntake);
+
+		if(oi->opStick->GetRawButton(5))
+		{
+			agitator = 12.0;
+		}	//Run Agitator (Voltage control)
+		if(oi->opStick->GetRawButton(6))
+		{
+			agitator = 12.0;
+			kicker = 12.0;
+		}	//Run Agitator (Voltage control)
+
+		conveyor->SetAgitator(agitator);
+		conveyor->SetKicker(kicker);
+
 
 
 		//CLOSED LOOP ARM CODE
@@ -165,32 +183,29 @@ public:
 
 		//increment Arm Up/Down
 		if(oi->drvStick->GetRawButton(1)) {
-			m_armAngle-=.10;
+			m_armAngle -= 0.10;
 		}
 
 		if(oi->drvStick->GetRawButton(3)) {
-			m_armAngle+=.10;
+			m_armAngle += 0.10;
 		}
 
 		intake->SetArmAngle(m_armAngle);
 		//END INTAKE ARM
 
-		//OOPEN LOOP ARM CODE
+		//OPEN LOOP ARM CODE
 		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
 		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
 		//intake->SetArm(-armMotor);		//Intake Arm
 
 
-		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
-		conveyor->SetLower(conveyorX);
-		conveyor->SetUpper(conveyorX);
 
 
 		//OPEN LOOP SHOOTER
-		if(oi->opStick->GetRawButton(6)){shooteron=true;}	//Run Shooter
-
-		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
-		else {shooter->SetOpenLoop(0); }					//SetShooter 0
+//		if(oi->opStick->GetRawButton(6)){shooteron=true;}	//Run Shooter
+//
+//		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
+//		else {shooter->SetOpenLoop(0); }					//SetShooter 0
 
 		//CLOSED LOOP SHOOTER
 //		if(oi->opStick->GetRawButton(6)){
