@@ -23,6 +23,7 @@ public:
 	Intake* intake = 0;
 	Shooter* shooter = 0;
 	Turret* turret = 0;
+	Climber* climber = 0;
 	Logger* log = 0;
 
 	void RobotInit() override {
@@ -33,6 +34,7 @@ public:
 		intake = Intake::GetInstance();
 		shooter = Shooter::GetInstance();
 		turret = Turret::GetInstance();
+		climber = Climber::GetInstance();
 		log = new Logger();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
@@ -255,6 +257,14 @@ public:
 		float angle_change = m_turret_angle + oi->opStick->GetRawAxis(2)*1;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
+
+
+		//CLIMBER
+		int climberMotor=0;
+		if(oi->GetSw5())
+			climberMotor=1;
+		climber->Set(climberMotor);
+		//END CLIMBER
 
 
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
