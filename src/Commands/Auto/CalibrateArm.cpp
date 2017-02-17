@@ -8,7 +8,7 @@ CalibrateArm::CalibrateArm() {
 
 // Called just before this Command runs the first time
 void CalibrateArm::Initialize() {
-	SetTimeout(3);
+	SetTimeout(2.5);
 	m_isFinished = false;
 	m_switchdelaycount=0;
 	if(Intake::GetInstance()->IsClosedLoop())
@@ -17,7 +17,7 @@ void CalibrateArm::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void CalibrateArm::Execute() {
-	Intake::GetInstance()->SetArm(-.4);
+	Intake::GetInstance()->SetArm(-.6);
 	if(Intake::GetInstance()->IsIntakeDown()) {
 		m_switchdelaycount++;
 	}
@@ -34,8 +34,12 @@ bool CalibrateArm::IsFinished() {
 
 // Called once after isFinished returns true
 void CalibrateArm::End() {
-	if(!Intake::GetInstance()->IsClosedLoop())
+	if(!Intake::GetInstance()->IsClosedLoop()) {
 		std::cout << "error: could not calibrate arm" << std::endl;
+		Intake::GetInstance()->SetArm(0); //Stop Arm
+	}
+	else
+		Intake::GetInstance()->SetArmAngle(1.12);
 }
 
 // Called when another command which requires one or more of the same

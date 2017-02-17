@@ -4,12 +4,19 @@ TurnTMP::TurnTMP(float degrees, float velocity) {
 	Requires(Drivetrain::GetInstance());
 	m_deg_input = degrees;
 	m_cruiseVelocity = velocity;
+
+	if(degrees<0) {
+			m_isLeft=true;
+			m_deg_input = -m_deg_input;
+		}
 }
 
 // Called just before this Command runs the first time
 void TurnTMP::Initialize() {
 	//reset isFinished
 	m_isFinished=0;
+	float accel_dist,hold_time,hold_segments=0;
+	bool isTriangular=0;
 
 	//check that the Drivetrain is in closed loop
 	if(!Drivetrain::GetInstance()->isClosedLoop())
@@ -27,96 +34,119 @@ void TurnTMP::Initialize() {
 	//ensure queue is empty
 	while(!m_output.empty())
 		m_output.pop();
-
+	while(!m_dist.empty())
+		m_dist.pop();
 
 	//generate profile
 	//to begin, check if a triangle or trapezoid profile is needed.
-	float accel_dist = 0.5*m_cruiseVelocity*m_cruiseVelocity/m_maxAccelRate;
+	float accel_time = sqrt(m_rad_distance/m_maxAccelRate);
+	float max_vel = m_maxAccelRate*accel_time;
 
-	if(accel_dist*2 > m_rad_distance) {
-		//we will never reach the requested speed, so a triangle profile is generated
-		cout << "info: generating Triangle profile" << endl;
-		int accel_segments = ceil(m_cruiseVelocity/m_maxAccelRate/m_dt);
+	if(max_vel>m_cruiseVelocity) {
+	    max_vel = m_cruiseVelocity;
+	    cout <<"trapezoid" << endl;
+	    accel_time = m_cruiseVelocity/m_maxAccelRate;
+	    accel_dist = 0.5*m_maxAccelRate*pow(accel_time,2);
+
+	    hold_time = (m_rad_distance-accel_dist-accel_dist)/m_cruiseVelocity;
+	    //hold_dist = m_travelDistance - accel_dist - accel_dist;
+	    hold_segments = ceil(hold_time/m_dt);
+	   }
+	   else {
+	    cout <<"triangle" << endl;
+	    isTriangular=true;
+	    accel_dist = 0.5*m_maxAccelRate*pow(accel_time,2);
+	   }
+
+	  	  //calculate the segments needed
+		float end_time = accel_time + accel_time + hold_time;
+		int accel_segments = ceil(accel_time/m_dt);
+		int decel_segments = accel_segments;
 
 		//generate acceleration curve
-		for(int i = 0;i <= accel_segments;i++) {
+		for(int i = 0;i < accel_segments;i++) {
 			double t = m_dt*i;
-		    m_output.push(m_maxAccelRate*t);
-		 }
-		float top_speed_reached = m_output.back();
+		    float v = (m_maxAccelRate*t);
+		    float d = (0.5*m_maxAccelRate*t*t);
 
-		//generate deceleration curve
-		for(int i=0 ;i < accel_segments;i++) {
-			float t = m_dt*i;
-		    // v = u + at
-		    float velocity = top_speed_reached+(-m_maxAccelRate*t);
-		    if(velocity > 0)
-		    	m_output.push(velocity);
-		 }
-		 //push last point
-		 m_output.push(0);
+			if(m_isLeft) {
+	        v = -v;
+	        d = -d;
+	        }
+
+		    m_output.push(v);
+		    m_dist.push(d);
+
+			//if needed, generate hold
+			if(!isTriangular) {
+				for(int i = 0;i <= hold_segments;i++) {
+					double t = m_dt*i;
+					float v = (m_cruiseVelocity);
+					float d = (accel_dist+m_cruiseVelocity*t);
+
+					if(m_isLeft) {
+						v = -v;
+						d = -d;
+					}
+
+					m_output.push(v);
+					m_dist.push(d);
+					//LOG
+					//log->AddtoBuffer("Vel",v);
+					//log->AddtoBuffer("Dist", d);
+				}
+			}
+
+			//generate deceleration curve
+			for(int i=1 ;i < decel_segments;i++) {
+				float t = m_dt*i;
+				float curr_t = t + accel_time + hold_time;
+				float v = max_vel-(m_maxAccelRate*t);
+				float d = m_rad_distance - 0.5*m_maxAccelRate*pow(curr_t-end_time,2);								//very negative
+
+				if(m_isLeft) {
+					v=-v;
+					d = -d;
+				}
+
+			    m_output.push(v);
+			    m_dist.push(d);
+			}
+			//last point
+			m_output.push(0);
+
+			if(m_isLeft)
+				m_dist.push(-m_rad_distance);
+			else
+				m_dist.push(m_rad_distance);
 
 		cout << "info: generated a profile with "<< accel_segments*2 <<" Points. time: " << accel_segments*2*m_dt << "sec"<< endl;
 	}
-	else {
-		//generate a trapezoid profile
-		cout << "info: generating Trapezoid Profile" << endl;
 
-		float hold_distance = m_rad_distance - (accel_dist * 2);
-		float hold_time = hold_distance/m_cruiseVelocity;
-
-		int accel_segments = ceil(m_cruiseVelocity / m_maxAccelRate / m_dt);
-		int hold_segments = hold_time / m_dt;
-
-		//generate acceleration curve
-		for(int i = 0;i <= accel_segments;i++) {
-			float t = m_dt*i;
-			float accvelocity = m_maxAccelRate*t;
-			if(accvelocity > m_cruiseVelocity)
-				m_output.push(m_cruiseVelocity);
-			else
-				m_output.push(accvelocity);
-		}
-
-		//generate the hold
-		for(int y = 0;y < hold_segments;y++) {
-			m_output.push(m_cruiseVelocity);
-		}
-
-		//generate deceleration curve
-		for(int i=0 ;i < accel_segments;i++) {
-			float t = m_dt*i;
-			float decvelocity = m_cruiseVelocity+(-m_maxAccelRate*t);
-
-			//check for undershoot
-			if(decvelocity < 0)
-				m_output.push(0);
-			else
-				m_output.push(decvelocity);
-
-		}
-		//push last point
-		m_output.push(0);
-
-
-		cout<<"info: generated profile with"<< accel_segments*2+hold_segments << " Points. time: " << accel_segments*2*m_dt+hold_time <<"sec"<< endl;
-	}
 }
 
 // Called repeatedly when this Command is scheduled to run
 void TurnTMP::Execute() {
 
 	float cur_vel = m_output.front();
+	float cur_dist = m_dist.front();
 
 	//after setting, remove from queue
 	m_output.pop();
+	m_dist.pop();
+
+	float act_angle =  Drivetrain::GetInstance()->GetAngle() - m_initangle;
+	float act_rad_dist = ((M_PI/180) * act_angle)*(DRIVETRAIN_BASE_DIAMETER/2);
+
+	float dist_err = cur_dist - act_rad_dist;
+	float dist_comp = dist_err*TURN_DIST_P;
 
 	//convert IPS to RPM
 	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
 
 	//SetLeft and SetRight to current queue
-	Drivetrain::GetInstance()->SetLeft(cur_vel);
-	Drivetrain::GetInstance()->SetRight(-cur_vel);
+	Drivetrain::GetInstance()->SetLeft(cur_vel + dist_comp);
+	Drivetrain::GetInstance()->SetRight(-cur_vel - dist_comp);
 
 	//once the queue is empty, set isFinished
 	if(m_output.empty())
@@ -141,6 +171,8 @@ void TurnTMP::End() {
 	//empty the queue if interrupted
 	while(!m_output.empty())
 		m_output.pop();
+	while(!m_dist.empty())
+		m_dist.pop();
 }
 
 // Called when another command which requires one or more of the same

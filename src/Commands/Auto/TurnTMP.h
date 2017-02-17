@@ -24,11 +24,13 @@ private:
 
 	//drivetrain constraints
 	float m_maxAccelRate = 80; 		//Inches per sec^2
-	float m_maxdrivevelocity = 200; //Inches per sec
+	float m_maxdrivevelocity = 100; //Inches per sec
 	float m_dt = 0.02;				//time step set to 20ms(50Hz).
 
 	queue <float> m_output;
+	queue <float> m_dist;
 	bool m_isFinished=false;
+	bool m_isLeft=false;
 };
 
 #endif  // TurnTMP_H

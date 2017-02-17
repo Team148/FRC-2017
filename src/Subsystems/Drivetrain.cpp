@@ -1,5 +1,6 @@
 #include "Drivetrain.h"
 #include "Commands/DriveWithJoystick.h"
+#include "Commands/TankDriveJoystick.h"
 #include "../RobotMap.h"
 
 Drivetrain *Drivetrain::m_instance = 0;
@@ -57,11 +58,15 @@ Drivetrain* Drivetrain::GetInstance() {
 }
 
 void Drivetrain::InitDefaultCommand() {
-	SetDefaultCommand(new DriveWithJoystick());
+	SetDefaultCommand(new TankDriveJoystick());
 }
 
 void Drivetrain::Arcade(float ystick, float xstick) {
 	m_drive->ArcadeDrive(ystick,xstick);
+}
+
+void Drivetrain::Tank(float leftstick, float rightstick) {
+	m_drive->TankDrive(leftstick,rightstick);
 }
 
 
@@ -150,6 +155,20 @@ void Drivetrain::SetRight(float val) {
 
 float Drivetrain::IPStoRPM(float val) {
 	//RPM = IPS*60/(circumference of the wheel)
-	return val*60/(M_PI*DRIVETRAIN_WHEEL_DIAMETER);
+	return (val*60)/(M_PI*DRIVETRAIN_WHEEL_DIAMETER);
+}
+
+float Drivetrain::RPMtoIPS(float val) {
+	//RPM = IPS*60*Gear_reduction/(circumference of the wheel)
+	return (val*M_PI*DRIVETRAIN_WHEEL_DIAMETER)/60;
+}
+
+//Returns velocities in RPM
+int Drivetrain::GetRightVelocity() {
+	return m_rightMotor1->GetEncVel();
+}
+
+int Drivetrain::GetLeftVelocity() {
+	return m_leftMotor1->GetEncVel();
 }
 

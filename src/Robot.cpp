@@ -12,6 +12,7 @@
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/Autonomous.h"
+#include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
 #include "Vision/VisionAPI.h"
 #include <Vision/CameraServer.h>
@@ -128,6 +129,7 @@ public:
 	Intake* intake = 0;
 	Shooter* shooter = 0;
 	Turret* turret = 0;
+	Climber* climber = 0;
 	Logger* log = 0;
 
 	void RobotInit() override {
@@ -141,6 +143,7 @@ public:
 		intake = Intake::GetInstance();
 		shooter = Shooter::GetInstance();
 		turret = Turret::GetInstance();
+		climber = Climber::GetInstance();
 		log = new Logger();
 
 
@@ -162,7 +165,10 @@ public:
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+
 		result = doVisionWithProcessing();
+
+		SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 	}
 
 	/**
@@ -191,19 +197,18 @@ public:
 		//	autonomousCommand->Start();
 		//}
 		log->Start();
-		//TESTING Drive command (distance in inches, and velocity in inches per second)
 		drivetrain->configClosedLoop();
+		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
-//		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,160));
-//		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,40));
-		result = doVisionWithProcessing();
 
+		result = doVisionWithProcessing();
 	}
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
-		result = doVisionWithProcessing();
+		//frc::SmartDashboard::PutNumber("Drive Left Encoder Velocity: ", drivetrain->GetLeftVelocity());
+		//frc::SmartDashboard::PutNumber("Drive Right Encoder Velocity: ", drivetrain->GetRightVelocity());
+		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 	}
 
 	void TeleopInit() override {
@@ -219,10 +224,10 @@ public:
 		//uncomment for ClosedLoop Shooter
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
-		intake->ConfigureOpenLoop();
 		turret->ConfigClosedLoop();
-		frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
-		log->Stop();
+		if(!intake->IsClosedLoop())
+			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
+
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
 		//}
@@ -231,101 +236,161 @@ public:
 	void TeleopPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 
-		static float ballin = 0.0;
-		static float gear = 0.0;
+		static float ballIntake = 0.0;
+		static float gearIntake = 0.0;
 		static float armMotor = 0.0;
-		static int conveyorX = 0;
-		static bool shooteron = 0;
-		int shooterrpm = 0;
+		static float agitator = 0.0;
+		static float kicker = 0.0;
+		static int shooterRpm = 0;
+		constexpr int shooterSetPoint_A = 3000;
+		constexpr int shooterSetPoint_B = 2500;
+
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
-		ballin = 0;
-		gear = 0;
-		shooteron = false;
+		ballIntake = 0.0;
+		gearIntake = 0.0;
+		agitator = 0.0;
+		kicker = 0.0;
+		armMotor = 0.0;
 
-		conveyorX = 0;
+
 		result = doVisionWithProcessing();
-
-		if(oi->opStick->GetRawButton(1))
-		{
-			ballin = 1.0;
-		}
-		if(oi->opStick->GetRawButton(3))
-		{
-			ballin = -1.0;
-		}//Ball Intake
-		intake->SetBall(ballin);
 
 		if(oi->opStick->GetRawButton(2))
 		{
-			gear= 1.0;
+			ballIntake = 1.0;
+		}
+		if(oi->opStick->GetRawButton(3))
+		{
+			ballIntake = -1.0;
+		}//Ball Intake
+
+		intake->SetBall(ballIntake);
+
+		if(oi->opStick->GetRawButton(1))
+		{
+			gearIntake = 1.0;
 		}		//GearIntake
 		if(oi->opStick->GetRawButton(4))
 		{
-			gear= -1.0;
+			gearIntake = -1.0;
 		}		//GearIntake Out
-		intake->SetGear(gear);
+		intake->SetGear(gearIntake);
 
-		//armMotor = oi->opStick->GetRawAxis(3);
+		//AGITATOR AND SHOOTER FIRE
+		if(oi->opStick->GetRawButton(5))
+		{
+			agitator = 10.0;
+		}	//Run Agitator (Voltage control)
+		if(oi->opStick->GetRawButton(6))
+		{
+			agitator = 10.0;
+			kicker = 10.0;
+		}	//Run Agitator (Voltage control)
 
-		//if(oi->drvStick->GetRawButton(5)) armMotor = -1.0;
-		//if(oi->drvStick->GetRawButton(6)) armMotor = 1.0;
-		//CLOSED LOOP CODE
-		//if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(-1.1); //down
-		//if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(0.027); //up
-		if(oi->opStick->GetRawButton(6)) intake->SetArmAngle(0.0); //down
-		if(oi->opStick->GetRawButton(5)) intake->SetArmAngle(1.12); //up
+		conveyor->SetAgitator(agitator);
+		conveyor->SetKicker(kicker);
+		//END AGITATOR AND FIRE
 
 
-		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
-		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		//intake->SetArm(-armMotor);		//Intake Arm
+		//CLOSED LOOP ARM CODE
+		//Shoulder Buttons
+		if(intake->IsClosedLoop()) {
+			if(oi->drvStick->GetRawButton(6)){
+				//intake->SetArmAngle(0.0); //down
+				m_armAngle=0;
+			}
+			if(oi->drvStick->GetRawButton(5)) {
+				//intake->SetArmAngle(1.12); //up
+				m_armAngle=1.12;
+			}
 
+			//increment Arm Up/Down
+			if(oi->drvStick->GetRawButton(2)) {
+				m_armAngle -= 0.025;
+			}
 
-		if(oi->opStick->GetRawButton(4)){conveyorX = 10.0;}	//Run Lower Conveyor (Voltage control)
-		conveyor->SetLower(conveyorX);
-		conveyor->SetUpper(conveyorX);
+			if(oi->drvStick->GetRawButton(4)) {
+				m_armAngle += 0.025;
+			}
+
+		intake->SetArmAngle(m_armAngle);
+		}
+		else {  //OPEN LOOP INTAKE
+			if(oi->drvStick->GetRawButton(6)){
+				//down
+				armMotor=-.77;
+			}
+			if(oi->drvStick->GetRawButton(5)) {
+				//up
+				armMotor=.77;
+			}
+		intake->SetArm(armMotor);
+		}
+		//END INTAKE ARM
+
 
 
 		//OPEN LOOP SHOOTER
-		if(oi->opStick->GetRawButton(6)){shooteron=true;}	//Run Shooter
+//		if(oi->opStick->GetRawButton(6)){shooteron=true;}	//Run Shooter
+//
+//		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
+//		else {shooter->SetOpenLoop(0); }					//SetShooter 0
 
-		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
-		else {shooter->SetOpenLoop(0); }					//SetShooter 0
+		if(oi->opStick->GetRawAxis(1) <= -1)
+		{
+			shooterRpm -= 10;
+		}
+
+
 
 		//CLOSED LOOP SHOOTER
-//		if(oi->opStick->GetRawButton(6)){
-//			shooteron=true;
-//			shooterrpm = shootersetpoint1;
-//			shooter->SetRPM(shooterrpm);
-//		}
-//		if(oi->opStick->GetRawButton(9)){
-//			shooteron=false;
-//			shooterrpm = 0;
-//			shooter->SetRPM(shooterrpm);
-//		}
-//
-//		//adjust ShooterRPM up & down
-//		if(oi->opStick->GetRawButton(7)) {
-//			shooterrpm+=20;
-//			shooter->SetRPM(shooterrpm);
-//		}
-//		if(oi->opStick->GetRawButton(8)) {
-//			shooterrpm-=20;
-//			shooter->SetRPM(shooterrpm);
-//		}
+		if(oi->opStick->GetRawAxis(1) >= 1) //RPM adjust up
+		{
+			shooterRpm += 10;
+		}
+
+		if(oi->opStick->GetRawAxis(1) <= -1) //RPM adjust down
+		{
+			shooterRpm -= 10;
+		}
+
+		if(oi->opStick->GetRawAxis(0) >= 1)
+		{
+			shooterRpm = shooterSetPoint_A;
+		}
+		if(oi->opStick->GetRawAxis(0) <= -1)
+		{
+			shooterRpm = shooterSetPoint_B;
+		}
+		if(oi->opStick->GetRawButton(9))	//Turret off
+		{
+			shooterRpm = 0;
+		}
+		shooter->SetRPM(shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
 		//TURRET
-		turret->SetAngle(oi->opStick->GetRawAxis(2)*90);
+		float angle_change = m_turret_angle + oi->opStick->GetRawAxis(2)*1;
+		turret->SetAngle(angle_change);
+		m_turret_angle = angle_change;
 
 
-		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
+		//CLIMBER
+		int climberMotor=0;
+		if(oi->GetSw5())
+			climberMotor=1;
+		climber->Set(climberMotor);
+		//END CLIMBER
+
+
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
-		frc::SmartDashboard::PutNumber("Intake Limit Switch", intake->IsIntakeDown());
+		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
-		frc::SmartDashboard::PutNumber("Intake Closed Loop", intake->IsClosedLoop());
+		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+
 
 	}
 
@@ -340,12 +405,16 @@ public:
 
 		log->WriteBuffertoFile();
 	}
+
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
 
 	int shootersetpoint1 = 3000;
 	int shootersetpoint2 = 2500;
+	float m_armAngle = 0.0;
+	float m_turret_angle = 0;
+
 
 public:
 
@@ -520,7 +589,6 @@ public:
 #endif
 		return target;
 	}
-
 
 };
 

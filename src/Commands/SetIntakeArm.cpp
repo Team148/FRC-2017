@@ -1,4 +1,5 @@
 #include "SetIntakeArm.h"
+#include "WPILib.h"
 
 SetIntakeArm::SetIntakeArm(float angle, float time) {
 	// Use Requires() here to declare subsystem dependencies
