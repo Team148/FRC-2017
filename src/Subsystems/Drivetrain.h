@@ -46,6 +46,7 @@ public:
 	bool isClosedLoop();
 	void configOpenLoop();
 	float IPStoRPM(float val);
+	float RPMtoIPS(float val);
 };
 
 #endif  // Drivetrain_H

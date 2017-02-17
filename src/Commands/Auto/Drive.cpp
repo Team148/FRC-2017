@@ -80,8 +80,8 @@ void Drive::Initialize() {
 	    m_output.push(v);
 	    m_dist.push(d);
 	    //Log
-	    log->AddtoBuffer("Vel", m_maxAccelRate*t);
-	    log->AddtoBuffer("Dist", 0.5*m_maxAccelRate*t*t);
+	    log->AddtoBuffer("Vel", v);
+	    log->AddtoBuffer("Dist", d);
 	 }
 
 
@@ -136,7 +136,7 @@ void Drive::Initialize() {
 	 log->AddtoBuffer("Dist", m_travelDistance);
 
 	 log->WriteBuffertoFile();
-	 log->CloseFile();
+	 //log->CloseFile();
 
 	cout<<"info: generated profile with"<< accel_segments+hold_segments+decel_segments << " Points. time: " << end_time <<"sec"<< endl;
 }
@@ -180,6 +180,11 @@ void Drive::Execute() {
 	//for Testing
 	cout <<"info: set drivetrain to " << cur_vel <<" RPM" << endl;
 	cout <<"info: heading error is " << cur_angle_err << "Degrees" << endl;
+	cout <<"info: Set drivetrain V to" << Drivetrain::GetInstance()->RPMtoIPS(cur_vel) << "IPS" << endl;
+
+	log->AddtoBuffer("vel_comp", vel_comp);
+	log->AddtoBuffer("act_vel",Drivetrain::GetInstance()->RPMtoIPS(cur_vel-gyro_comp+vel_comp));
+	log->WriteBuffertoFile();
 
 	//once the queue is empty, set isFinished
 	if(m_output.empty())
@@ -203,7 +208,7 @@ void Drive::End() {
 
 	while(!m_dist.empty())
 		m_dist.pop();
-
+	log->CloseFile();
 }
 
 // Called when another command which requires one or more of the same

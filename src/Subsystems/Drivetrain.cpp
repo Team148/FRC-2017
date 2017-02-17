@@ -154,8 +154,13 @@ void Drivetrain::SetRight(float val) {
 }
 
 float Drivetrain::IPStoRPM(float val) {
-	//RPM = IPS*60*Gear_reduction/(circumference of the wheel)
+	//RPM = IPS*60/(circumference of the wheel)
 	return (val*60)/(M_PI*DRIVETRAIN_WHEEL_DIAMETER);
+}
+
+float Drivetrain::RPMtoIPS(float val) {
+	//RPM = IPS*60*Gear_reduction/(circumference of the wheel)
+	return (val*M_PI*DRIVETRAIN_WHEEL_DIAMETER)/60;
 }
 
 //Returns velocities in RPM

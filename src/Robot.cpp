@@ -10,6 +10,7 @@
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/Autonomous.h"
+#include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
 
 
@@ -81,7 +82,7 @@ public:
 		log->Start();
 		//TESTING Drive command (distance in inches, and velocity in inches per second)
 		drivetrain->configClosedLoop();
-		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
+		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 //		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,160));
 //		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,40));
 
@@ -89,8 +90,8 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
-
+		frc::SmartDashboard::PutNumber("Drive Left Encoder Velocity: ", drivetrain->GetLeftVelocity());
+		frc::SmartDashboard::PutNumber("Drive Right Encoder Velocity: ", drivetrain->GetRightVelocity());
 	}
 
 	void TeleopInit() override {
@@ -126,7 +127,6 @@ public:
 		static int shooterRpm = 0;
 		constexpr int shooterSetPoint_A = 3000;
 		constexpr int shooterSetPoint_B = 2500;
-		constexpr int shooterSetPoint_Home = 2750;
 
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
@@ -134,6 +134,7 @@ public:
 		gearIntake = 0.0;
 		agitator = 0.0;
 		kicker = 0.0;
+		armMotor = 0.0;
 		shooteron = false;
 
 
@@ -158,49 +159,57 @@ public:
 		}		//GearIntake Out
 		intake->SetGear(gearIntake);
 
+		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
 		{
-			agitator = 12.0;
+			agitator = 10.0;
 		}	//Run Agitator (Voltage control)
 		if(oi->opStick->GetRawButton(6))
 		{
-			agitator = 12.0;
-			kicker = 12.0;
+			agitator = 10.0;
+			kicker = 10.0;
 		}	//Run Agitator (Voltage control)
 
 		conveyor->SetAgitator(agitator);
 		conveyor->SetKicker(kicker);
-
+		//END AGITATOR AND FIRE
 
 
 		//CLOSED LOOP ARM CODE
 		//Shoulder Buttons
-		if(oi->drvStick->GetRawButton(6)){
-			//intake->SetArmAngle(0.0); //down
-			m_armAngle=0;
-		}
-		if(oi->drvStick->GetRawButton(5)) {
-			//intake->SetArmAngle(1.12); //up
-			m_armAngle=1.12;
-		}
+		if(intake->IsClosedLoop()) {
+			if(oi->drvStick->GetRawButton(6)){
+				//intake->SetArmAngle(0.0); //down
+				m_armAngle=0;
+			}
+			if(oi->drvStick->GetRawButton(5)) {
+				//intake->SetArmAngle(1.12); //up
+				m_armAngle=1.12;
+			}
 
-		//increment Arm Up/Down
-		if(oi->drvStick->GetRawButton(1)) {
-			m_armAngle -= 0.10;
-		}
+			//increment Arm Up/Down
+			if(oi->drvStick->GetRawButton(2)) {
+				m_armAngle -= 0.025;
+			}
 
-		if(oi->drvStick->GetRawButton(3)) {
-			m_armAngle += 0.10;
-		}
+			if(oi->drvStick->GetRawButton(4)) {
+				m_armAngle += 0.025;
+			}
 
 		intake->SetArmAngle(m_armAngle);
+		}
+		else {  //OPEN LOOP INTAKE
+			if(oi->drvStick->GetRawButton(6)){
+				//down
+				armMotor=-.77;
+			}
+			if(oi->drvStick->GetRawButton(5)) {
+				//up
+				armMotor=.77;
+			}
+		intake->SetArm(armMotor);
+		}
 		//END INTAKE ARM
-
-		//OPEN LOOP ARM CODE
-		//if(armMotor >= .75) {armMotor = .75;} //Arm Motor Limit
-		//if(armMotor <= -.75) {armMotor = -.75;} // Arm Motor Limit
-		//intake->SetArm(-armMotor);		//Intake Arm
-
 
 
 
@@ -218,23 +227,23 @@ public:
 
 
 		//CLOSED LOOP SHOOTER
-		if(oi->opStick->GetRawAxis(1) >= 1) // Far Shot
+		if(oi->opStick->GetRawAxis(1) >= 1) //RPM adjust up
 		{
 			shooterRpm += 10;
 		}
 
-		if(oi->opStick->GetRawAxis(0) <= -1) // in-take
+		if(oi->opStick->GetRawAxis(1) <= -1) //
+		{
+			shooterRpm -= 10;
+		}
+
+		if(oi->opStick->GetRawAxis(0) >= 1)
 		{
 			shooterRpm = shooterSetPoint_A;
 		}
-
-		if(oi->opStick->GetRawAxis(0) >= 1) // out-take
+		if(oi->opStick->GetRawAxis(0) <= -1)
 		{
 			shooterRpm = shooterSetPoint_B;
-		}
-		if(oi->opStick->GetRawButton(9))
-		{
-			shooterRpm = shooterSetPoint_Home;
 		}
 		if(oi->opStick->GetRawButton(9))
 		{
@@ -242,8 +251,13 @@ public:
 		}
 		//END CLOSEDLOOP SHOOTER
 		shooter->SetRPM(shooterRpm);
+
 		//TURRET
-		turret->SetAngle(oi->opStick->GetRawAxis(2));
+
+		float speed = turret_angle + oi->opStick->GetRawAxis(2)*1;
+
+		turret->SetAngle(speed);
+		turret_angle = speed;
 
 
 		//frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
@@ -266,6 +280,7 @@ public:
 
 		log->WriteBuffertoFile();
 	}
+
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
@@ -273,6 +288,7 @@ private:
 	int shootersetpoint1 = 3000;
 	int shootersetpoint2 = 2500;
 	float m_armAngle = 0.0;
+	float turret_angle = 0;
 };
 
 START_ROBOT_CLASS(Robot)
