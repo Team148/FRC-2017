@@ -51,7 +51,7 @@ public:
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-
+		SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 	}
 
 	/**
@@ -80,18 +80,18 @@ public:
 		//	autonomousCommand->Start();
 		//}
 		log->Start();
-		//TESTING Drive command (distance in inches, and velocity in inches per second)
 		drivetrain->configClosedLoop();
-		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
-//		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,160));
-//		frc::Scheduler::GetInstance()->AddCommand(new Drive(100,40));
+		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
+		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
+
 
 	}
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		frc::SmartDashboard::PutNumber("Drive Left Encoder Velocity: ", drivetrain->GetLeftVelocity());
-		frc::SmartDashboard::PutNumber("Drive Right Encoder Velocity: ", drivetrain->GetRightVelocity());
+		//frc::SmartDashboard::PutNumber("Drive Left Encoder Velocity: ", drivetrain->GetLeftVelocity());
+		//frc::SmartDashboard::PutNumber("Drive Right Encoder Velocity: ", drivetrain->GetRightVelocity());
+		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 	}
 
 	void TeleopInit() override {
@@ -106,10 +106,10 @@ public:
 		//uncomment for ClosedLoop Shooter
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
-		intake->ConfigureOpenLoop();
 		turret->ConfigClosedLoop();
-		frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
-		log->Stop();
+		if(!intake->IsClosedLoop())
+			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
+
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
 		//}
@@ -123,7 +123,6 @@ public:
 		static float armMotor = 0.0;
 		static float agitator = 0.0;
 		static float kicker = 0.0;
-		static bool shooteron = 0;
 		static int shooterRpm = 0;
 		constexpr int shooterSetPoint_A = 3000;
 		constexpr int shooterSetPoint_B = 2500;
@@ -135,7 +134,7 @@ public:
 		agitator = 0.0;
 		kicker = 0.0;
 		armMotor = 0.0;
-		shooteron = false;
+
 
 
 		if(oi->opStick->GetRawButton(2))
@@ -219,7 +218,7 @@ public:
 //		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
 //		else {shooter->SetOpenLoop(0); }					//SetShooter 0
 
-		if(oi->opStick->GetRawAxis(1) <= -1) // Close Shot
+		if(oi->opStick->GetRawAxis(1) <= -1)
 		{
 			shooterRpm -= 10;
 		}
@@ -232,7 +231,7 @@ public:
 			shooterRpm += 10;
 		}
 
-		if(oi->opStick->GetRawAxis(1) <= -1) //
+		if(oi->opStick->GetRawAxis(1) <= -1) //RPM adjust down
 		{
 			shooterRpm -= 10;
 		}
@@ -245,27 +244,26 @@ public:
 		{
 			shooterRpm = shooterSetPoint_B;
 		}
-		if(oi->opStick->GetRawButton(9))
+		if(oi->opStick->GetRawButton(9))	//Turret off
 		{
 			shooterRpm = 0;
 		}
-		//END CLOSEDLOOP SHOOTER
 		shooter->SetRPM(shooterRpm);
+		//END CLOSEDLOOP SHOOTER
 
 		//TURRET
-
-		float speed = turret_angle + oi->opStick->GetRawAxis(2)*1;
-
-		turret->SetAngle(speed);
-		turret_angle = speed;
+		float angle_change = m_turret_angle + oi->opStick->GetRawAxis(2)*1;
+		turret->SetAngle(angle_change);
+		m_turret_angle = angle_change;
 
 
-		//frc::SmartDashboard::PutNumber("Drive Encoder Velocity: ", drivetrain->GetEncoderVelocity());
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
-		frc::SmartDashboard::PutNumber("Intake Limit Switch", intake->IsIntakeDown());
+		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
-		frc::SmartDashboard::PutNumber("Intake Closed Loop", intake->IsClosedLoop());
+		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+
 
 	}
 
@@ -288,7 +286,7 @@ private:
 	int shootersetpoint1 = 3000;
 	int shootersetpoint2 = 2500;
 	float m_armAngle = 0.0;
-	float turret_angle = 0;
+	float m_turret_angle = 0;
 };
 
 START_ROBOT_CLASS(Robot)
