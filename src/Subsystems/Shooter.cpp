@@ -56,6 +56,7 @@ void Shooter::ConfigureClosedLoop() {
 	m_Motor1->SetAllowableClosedLoopErr(0);
 	m_Motor1->SetF(SHOOTER_F);
 	m_Motor1->SetP(SHOOTER_P);
+	m_Motor1->SetD(SHOOTER_D);
 	m_Motor1->Set(0);
 	m_isClosedLoop = true;
 }

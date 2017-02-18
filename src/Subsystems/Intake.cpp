@@ -101,8 +101,9 @@ float Intake::GetArmAngle() {
 
 
 bool Intake::IsBeamBroke() {
+	frc::SmartDashboard::PutNumber("BeamVoltage",m_beam->GetVoltage());
 	if(m_beam->GetVoltage() > 3.0)
-		return true;
-	else
-		return false;
+		return 1;
+	if(m_beam->GetVoltage() < 3.0)
+		return 0;
 }

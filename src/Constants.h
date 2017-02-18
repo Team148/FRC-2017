@@ -40,5 +40,6 @@ constexpr float INTAKE_ARM_DOWN_VOLTAGE = -5.75;
 //Shooter
 constexpr float SHOOTER_F = .18;
 constexpr float SHOOTER_P = .5;
+constexpr float SHOOTER_D = 0;
 
 #endif /* CONSTANTS_H */

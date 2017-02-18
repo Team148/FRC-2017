@@ -169,6 +169,7 @@ public:
 		{
 			agitator = 10.0;
 			kicker = 10.0;
+			climberMotor = -10;
 			ballIntake = 1;
 		}	//Run Agitator and fire (Voltage control)
 
@@ -198,8 +199,10 @@ public:
 			if(oi->drvStick->GetRawButton(4)) {
 				m_armAngle += 0.025;
 			}
+			if(m_armAngle <= 0.0) m_armAngle = 0.0;
+			if(m_armAngle >= 1.14) m_armAngle = 1.13;
 
-		intake->SetArmAngle(m_armAngle);
+			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
 			if(oi->drvStick->GetRawButton(6)){
@@ -221,12 +224,6 @@ public:
 //
 //		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
 //		else {shooter->SetOpenLoop(0); }					//SetShooter 0
-
-		if(oi->opStick->GetRawAxis(1) <= -1)
-		{
-			shooterRpm -= 10;
-		}
-
 
 
 		//CLOSED LOOP SHOOTER
@@ -258,6 +255,8 @@ public:
 		}
 		else shooter->SetFlashlightOn(true);
 
+		if(shooterRpm <0)
+			shooterRpm = 0;
 		shooter->SetRPM(shooterRpm);
 		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
 		//END CLOSEDLOOP SHOOTER
