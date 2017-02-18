@@ -35,7 +35,7 @@ void Turret::ConfigClosedLoop() {
 	//SetForwardLimit
 	//SetBackwardLimit
 	m_Motor->SetSensorDirection(false);
-	m_Motor->SetClosedLoopOutputDirection(true);
+	m_Motor->SetClosedLoopOutputDirection(false);
 	m_Motor->SetAllowableClosedLoopErr(0);
 	m_Motor->SelectProfileSlot(0);
 	m_Motor->SetF(0.0);
@@ -61,12 +61,13 @@ void Turret::SetActualPosition(double position) {
 
 
 void Turret::SetAngle(float angle) {
-	m_Motor->Set(angle*INTAKE_ARM_ROTATIONS_PER_DEGREE);
-	//m_Motor->Set(angle);
+	//m_Motor->Set(angle*TURRET_ROTATIONS_PER_TICK);
+	m_Motor->Set(angle);
 }
 
 void Turret::Reset() {
 	m_Motor->SetPosition(0);
+	m_Motor->SetEncPosition(0);
 }
 
 bool Turret::IsHomed() {

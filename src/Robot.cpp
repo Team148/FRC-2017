@@ -102,7 +102,7 @@ public:
 		std::cout << "starting TeleopInit" << std::endl;
 
 		//Set Shooter for OpenLoop
-		shooter->ConfigureOpenLoop();
+		shooter->ConfigureClosedLoop();
 		//uncomment for ClosedLoop Shooter
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
@@ -264,9 +264,15 @@ public:
 		//END CLOSEDLOOP SHOOTER
 
 		//TURRET
-		float angle_change = m_turret_angle + oi->opStick->GetRawAxis(2)*1;
+		float angle_change = m_turret_angle - oi->opStick->GetRawAxis(2)*.1;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
+
+		if(oi->opStick->GetRawButton(10))
+		{
+			m_turret_angle = 0.0;
+			turret->SetAngle(0.0);
+		}
 
 
 		//CLIMBER
