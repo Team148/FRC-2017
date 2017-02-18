@@ -81,8 +81,8 @@ public:
 		//}
 		log->Start();
 		drivetrain->configClosedLoop();
-		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
-		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
+		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
+		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 
 
 	}
@@ -163,7 +163,7 @@ public:
 		if(oi->opStick->GetRawButton(5))
 		{
 			agitator = 10.0;
-			climberMotor = 10;
+			climberMotor = -10;
 			ballIntake = 1;
 
 		}	//Run Agitator (Voltage control)
@@ -171,8 +171,8 @@ public:
 		{
 			agitator = 10.0;
 			kicker = 10.0;
-
-		}	//Run Agitator (Voltage control)
+			ballIntake = 1;
+		}	//Run Agitator and fire (Voltage control)
 
 		conveyor->SetAgitator(agitator);
 		conveyor->SetKicker(kicker);
@@ -272,7 +272,7 @@ public:
 		//CLIMBER
 
 		if(oi->GetSw5())
-			climberMotor=12;
+			climberMotor=-12;
 		conveyor->SetClimber(climberMotor);
 		//END CLIMBER
 
@@ -283,6 +283,7 @@ public:
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 
 
 	}
