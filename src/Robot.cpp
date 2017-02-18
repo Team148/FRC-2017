@@ -46,8 +46,8 @@ public:
 	 * the robot is disabled.
 	 */
 	void DisabledInit() override {
-
 	}
+
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
@@ -89,7 +89,6 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-
 		SmartDashUpdate();
 	}
 
@@ -233,12 +232,12 @@ public:
 		//CLOSED LOOP SHOOTER
 		if(oi->opStick->GetRawAxis(1) >= 1) //RPM adjust up
 		{
-			shooterRpm += 10;
+			shooterRpm -= 10;
 		}
 
 		if(oi->opStick->GetRawAxis(1) <= -1) //RPM adjust down
 		{
-			shooterRpm -= 10;
+			shooterRpm += 10;
 		}
 
 		if(oi->opStick->GetRawAxis(0) >= 1)
@@ -260,6 +259,7 @@ public:
 		else shooter->SetFlashlightOn(true);
 
 		shooter->SetRPM(shooterRpm);
+		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
 		//TURRET
@@ -291,13 +291,13 @@ public:
 
 	}
 
-	void RobotLog()
-	{
+	void RobotLog() {
 		//Add all subsystems to log here.
 		//drivetrain->Log();
 
 		log->WriteBuffertoFile();
 	}
+
 
 
 	void SmartDashUpdate() {
@@ -310,6 +310,7 @@ public:
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 	}
+
 
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
