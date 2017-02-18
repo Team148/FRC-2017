@@ -10,6 +10,7 @@ class Conveyor : public Subsystem {
 private:
 	CANTalon* m_lowerMotor;
 	CANTalon* m_upperMotor;
+	CANTalon* m_climberMotor;
 
 	Conveyor();
 	static Conveyor *m_instance;

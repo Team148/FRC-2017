@@ -1,7 +1,5 @@
 #include <memory>
 #include <iostream>
-#include <algorithm>
-#include <vector>
 #include <Commands/Command.h>
 #include <Commands/Scheduler.h>
 #include <IterativeRobot.h>

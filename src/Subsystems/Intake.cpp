@@ -15,6 +15,8 @@ Intake::Intake() : Subsystem("Intake") {
 
 	m_UpLimit = new frc::DigitalInput(INTAKE_ARM_UP_LIMIT);
 	m_DownLimit = new frc::DigitalInput(INTAKE_ARM_DOWN_LIMIT);
+
+	m_beam = new frc::AnalogInput(INTAKE_BEAM_BREAK_AN_IN);
 }
 
 
@@ -97,3 +99,10 @@ float Intake::GetArmAngle() {
 	return m_ArmMotor->GetPosition();
 }
 
+
+bool Intake::IsBeamBroke() {
+	if(m_beam->GetVoltage() > 3.0)
+		return true;
+	else
+		return false;
+}
