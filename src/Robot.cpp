@@ -468,7 +468,7 @@ public:
 		std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
 #endif
 		target = 0;
-		if(RcRs[0].Area > 64) target = 1;
+		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 5) ) target = 1;
 
 			//Publish the sorted 1st two results
 			frc::SmartDashboard::PutNumber("angleOff", angleOff);
