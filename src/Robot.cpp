@@ -23,7 +23,6 @@ public:
 	Intake* intake = 0;
 	Shooter* shooter = 0;
 	Turret* turret = 0;
-	Climber* climber = 0;
 	Logger* log = 0;
 
 	void RobotInit() override {
@@ -34,7 +33,6 @@ public:
 		intake = Intake::GetInstance();
 		shooter = Shooter::GetInstance();
 		turret = Turret::GetInstance();
-		climber = Climber::GetInstance();
 		log = new Logger();
 		//chooser.AddDefault("Default Auto", new ExampleCommand());
 		// chooser.AddObject("My Auto", new MyAutoCommand());
@@ -128,6 +126,7 @@ public:
 		static int shooterRpm = 0;
 		constexpr int shooterSetPoint_A = 3000;
 		constexpr int shooterSetPoint_B = 2500;
+		float climberMotor=0;
 
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
@@ -148,7 +147,7 @@ public:
 			ballIntake = -1.0;
 		}//Ball Intake
 
-		intake->SetBall(ballIntake);
+
 
 		if(oi->opStick->GetRawButton(1))
 		{
@@ -164,16 +163,21 @@ public:
 		if(oi->opStick->GetRawButton(5))
 		{
 			agitator = 10.0;
+			climberMotor = 10;
+			ballIntake = 1;
+
 		}	//Run Agitator (Voltage control)
 		if(oi->opStick->GetRawButton(6))
 		{
 			agitator = 10.0;
 			kicker = 10.0;
+
 		}	//Run Agitator (Voltage control)
 
 		conveyor->SetAgitator(agitator);
 		conveyor->SetKicker(kicker);
 		//END AGITATOR AND FIRE
+		intake->SetBall(ballIntake);
 
 
 		//CLOSED LOOP ARM CODE
@@ -250,6 +254,12 @@ public:
 		{
 			shooterRpm = 0;
 		}
+		if(shooterRpm == 0)
+		{
+			shooter->SetFlashlightOn(false);
+		}
+		else shooter->SetFlashlightOn(true);
+
 		shooter->SetRPM(shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
@@ -260,10 +270,10 @@ public:
 
 
 		//CLIMBER
-		int climberMotor=0;
+
 		if(oi->GetSw5())
-			climberMotor=1;
-		climber->Set(climberMotor);
+			climberMotor=12;
+		conveyor->SetClimber(climberMotor);
 		//END CLIMBER
 
 
