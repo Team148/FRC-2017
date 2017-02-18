@@ -19,6 +19,9 @@ Shooter::Shooter() : Subsystem("Shooter") {
 
 	m_Motor1->SetSafetyEnabled(false);
 	m_Motor2->SetSafetyEnabled(false);
+
+	m_pcm = new PCM(0);
+	m_c = new Compressor(0);
 }
 
 Shooter* Shooter::GetInstance() {
@@ -70,4 +73,9 @@ void Shooter::SetRPM(int rpm) {
 
 int Shooter::GetRPM() {
 	return m_rpm;
+}
+
+void Shooter::SetFlashlightOn(bool mode)
+{
+	m_c->SetClosedLoopControl(mode);
 }

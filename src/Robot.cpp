@@ -250,6 +250,12 @@ public:
 		{
 			shooterRpm = 0;
 		}
+		if(shooterRpm == 0)
+		{
+			shooter->SetFlashlightOn(false);
+		}
+		else shooter->SetFlashlightOn(true);
+
 		shooter->SetRPM(shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
