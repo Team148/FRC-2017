@@ -21,6 +21,7 @@ Shooter::Shooter() : Subsystem("Shooter") {
 	m_Motor2->SetSafetyEnabled(false);
 
 
+
 	m_c = new Compressor(0);
 }
 

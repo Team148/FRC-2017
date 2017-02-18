@@ -12,8 +12,9 @@ class Shooter : public Subsystem {
 private:
 	CANTalon* m_Motor1;
 	CANTalon* m_Motor2;
-
 	Compressor *m_c;
+
+
 	Shooter();
 	static Shooter* m_instance;
 	int m_rpm = 0;
