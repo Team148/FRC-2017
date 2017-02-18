@@ -51,7 +51,7 @@ public:
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+		SmartDashUpdate();
 	}
 
 	/**
@@ -89,9 +89,8 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		//frc::SmartDashboard::PutNumber("Drive Left Encoder Velocity: ", drivetrain->GetLeftVelocity());
-		//frc::SmartDashboard::PutNumber("Drive Right Encoder Velocity: ", drivetrain->GetRightVelocity());
-		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+
+		SmartDashUpdate();
 	}
 
 	void TeleopInit() override {
@@ -283,15 +282,9 @@ public:
 		//END CLIMBER
 
 
-		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
-		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
-		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
-		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
-		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
-		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
-		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 
 
+		SmartDashUpdate();
 	}
 
 	void TestPeriodic() override {
@@ -304,6 +297,18 @@ public:
 		//drivetrain->Log();
 
 		log->WriteBuffertoFile();
+	}
+
+
+	void SmartDashUpdate() {
+		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
+		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
+		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
+		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
+		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
+		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 	}
 
 private:
