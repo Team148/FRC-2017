@@ -28,7 +28,7 @@ constexpr float TURN_DIST_P = 0.05;
 
 //Turret
 constexpr float TURRET_ROTATIONS_PER_TICK = 100/18/360;
-constexpr float TURRET_P = .18;
+constexpr float TURRET_P = .5;
 
 
 //Intake

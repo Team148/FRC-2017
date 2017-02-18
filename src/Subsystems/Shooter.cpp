@@ -9,12 +9,15 @@ Shooter::Shooter() : Subsystem("Shooter") {
 	m_Motor1 = new CANTalon(SHOOTER_MOTOR_1,1);
 	m_Motor2 = new CANTalon(SHOOTER_MOTOR_2,1);
 
+	m_Motor1->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
+	m_Motor2->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 
-	m_Motor1->ConfigPeakOutputVoltage(12.0,0);  	//configure motor to not drive backwards
+	m_Motor1->ConfigPeakOutputVoltage(12.0,-12);  	//configure motor to not drive backwards
 	m_Motor2->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
-	m_Motor2->ConfigPeakOutputVoltage(12.0,0);  	//configure motor to not drive backwards
+	m_Motor2->ConfigPeakOutputVoltage(12.0,-12);  	//configure motor to not drive backwards
 	//m_Motor2->SetClosedLoopOutputDirection(true);	//for reversing follower direction
 	m_Motor2->Set(SHOOTER_MOTOR_1);
+
 
 
 	m_Motor1->SetSafetyEnabled(false);
@@ -22,7 +25,7 @@ Shooter::Shooter() : Subsystem("Shooter") {
 
 
 
-	m_c = new Compressor(0);
+	m_c = new frc::Compressor(0);
 }
 
 Shooter* Shooter::GetInstance() {
@@ -44,7 +47,8 @@ void Shooter::InitDefaultCommand() {
 void Shooter::ConfigureClosedLoop() {
 	m_Motor1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
 	m_Motor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-	m_Motor1->SetSensorDirection(true);
+	m_Motor1->SetSensorDirection(false);
+	m_Motor1->SetClosedLoopOutputDirection(true);
 	m_Motor1->ConfigEncoderCodesPerRev(256);
 	m_Motor1->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_1Ms);
 	m_Motor1->SetVelocityMeasurementWindow(5);

@@ -20,6 +20,7 @@ public:
 	void InitDefaultCommand();
 	void SetAgitator(float voltage);
 	void SetKicker(float voltage);
+	void SetClimber(float voltage);
 };
 
 #endif  // Conveyor_H

@@ -61,12 +61,13 @@ void Turret::SetActualPosition(double position) {
 
 
 void Turret::SetAngle(float angle) {
-	m_Motor->Set(angle*INTAKE_ARM_ROTATIONS_PER_DEGREE);
-	//m_Motor->Set(angle);
+	//m_Motor->Set(angle*TURRET_ROTATIONS_PER_TICK);
+	m_Motor->Set(angle);
 }
 
 void Turret::Reset() {
 	m_Motor->SetPosition(0);
+	m_Motor->SetEncPosition(0);
 }
 
 bool Turret::IsHomed() {

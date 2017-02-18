@@ -196,8 +196,8 @@ public:
 		//}
 		log->Start();
 		drivetrain->configClosedLoop();
-		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
-		frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
+		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
+		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 
 		result = doVisionWithProcessing();
 	}
@@ -218,7 +218,7 @@ public:
 		result = doVisionWithProcessing();
 
 		//Set Shooter for OpenLoop
-		shooter->ConfigureOpenLoop();
+		shooter->ConfigureClosedLoop();
 		//uncomment for ClosedLoop Shooter
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
@@ -242,6 +242,8 @@ public:
 		static int shooterRpm = 0;
 		constexpr int shooterSetPoint_A = 3000;
 		constexpr int shooterSetPoint_B = 2500;
+		float climberMotor=0;
+
 
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
@@ -250,6 +252,7 @@ public:
 		agitator = 0.0;
 		kicker = 0.0;
 		armMotor = 0.0;
+
 
 
 		result = doVisionWithProcessing();
@@ -263,7 +266,6 @@ public:
 			ballIntake = -1.0;
 		}//Ball Intake
 
-		intake->SetBall(ballIntake);
 
 		if(oi->opStick->GetRawButton(1))
 		{
@@ -279,16 +281,21 @@ public:
 		if(oi->opStick->GetRawButton(5))
 		{
 			agitator = 10.0;
+			climberMotor = -10;
+			ballIntake = 1;
+
 		}	//Run Agitator (Voltage control)
 		if(oi->opStick->GetRawButton(6))
 		{
 			agitator = 10.0;
 			kicker = 10.0;
-		}	//Run Agitator (Voltage control)
+			ballIntake = 1;
+		}	//Run Agitator and fire (Voltage control)
 
 		conveyor->SetAgitator(agitator);
 		conveyor->SetKicker(kicker);
 		//END AGITATOR AND FIRE
+		intake->SetBall(ballIntake);
 
 
 		//CLOSED LOOP ARM CODE
@@ -365,20 +372,33 @@ public:
 		{
 			shooterRpm = 0;
 		}
+		if(shooterRpm == 0)
+		{
+			shooter->SetFlashlightOn(false);
+		}
+		else shooter->SetFlashlightOn(true);
+
 		shooter->SetRPM(shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
 		//TURRET
-		float angle_change = m_turret_angle + oi->opStick->GetRawAxis(2)*1;
+
+		float angle_change = m_turret_angle - oi->opStick->GetRawAxis(2)*.1;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
 
+		if(oi->opStick->GetRawButton(10))
+		{
+			m_turret_angle = 0.0;
+			turret->SetAngle(0.0);
+		}
+
 
 		//CLIMBER
-		int climberMotor=0;
+
 		if(oi->GetSw5())
-			climberMotor=1;
-		climber->Set(climberMotor);
+			climberMotor=-12;
+		conveyor->SetClimber(climberMotor);
 		//END CLIMBER
 
 
@@ -388,7 +408,6 @@ public:
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
-
 
 	}
 
@@ -412,7 +431,6 @@ private:
 	int shootersetpoint2 = 2500;
 	float m_armAngle = 0.0;
 	float m_turret_angle = 0;
-
 
 public:
 
