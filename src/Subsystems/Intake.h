@@ -21,6 +21,9 @@ private:
 	DigitalInput* m_DownLimit;
 	DigitalInput* m_UpLimit;
 
+	//BeamBreak
+	AnalogInput* m_beam;
+
 	Intake();
 	static Intake *m_instance;
 	bool m_isHomed = 0;
@@ -43,6 +46,7 @@ public:
 	bool IsIntakeUp();
 	void SetArmAngle(float angle);
 	float GetArmAngle();
+	bool IsBeamBroke();
 
 };
 
