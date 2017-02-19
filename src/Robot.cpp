@@ -107,12 +107,12 @@ public:
 		turret->ConfigClosedLoop();
 
 		intake->ConfigureOpenLoop();
-//		if(!intake->IsClosedLoop())
-//			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
+		if(!intake->IsClosedLoop())
+			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 
-		//if (autonomousCommand != nullptr) {
-		//	autonomousCommand->Cancel();
-		//}
+//		if (autonomousCommand != nullptr) {
+//			autonomousCommand->Cancel();
+//		}
 	}
 
 	void TeleopPeriodic() override {
@@ -182,12 +182,15 @@ public:
 
 		//CLOSED LOOP ARM CODE
 		//Shoulder Buttons
+		static bool armIncPressed = false;
+		static bool armBtnSafe = false;
+
 		if(intake->IsClosedLoop()) {
-			if(oi->drvStick->GetRawButton(6)){
+			if(oi->drvStick->GetRawButton(5)){
 				//intake->SetArmAngle(0.0); //down
-				m_armAngle=0;
+				m_armAngle = 0.0;
 			}
-			if(oi->drvStick->GetRawButton(5)) {
+			if(oi->drvStick->GetRawButton(6)) {
 				//intake->SetArmAngle(1.12); //up
 				m_armAngle=1.12;
 			}
@@ -195,10 +198,22 @@ public:
 			//increment Arm Up/Down
 			if(oi->drvStick->GetRawButton(2)) {
 				m_armAngle -= 0.025;
+
 			}
 
-			if(oi->drvStick->GetRawButton(4)) {
+			if(oi->drvStick->GetRawButton(3)) {
 				m_armAngle += 0.025;
+				armIncPressed = true;
+				armBtnSafe = false;
+			}
+			else
+			{
+				armBtnSafe = true;
+			}
+			if(armIncPressed && armBtnSafe)
+			{
+				m_armAngle = 0.0;
+				armIncPressed = false;
 			}
 			if(m_armAngle <= 0.0) m_armAngle = 0.0;
 			if(m_armAngle >= 1.14) m_armAngle = 1.13;
@@ -206,11 +221,11 @@ public:
 			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
-			if(oi->drvStick->GetRawButton(6)){
+			if(oi->drvStick->GetRawButton(5)){
 				//down
 				armMotor=-.77;
 			}
-			if(oi->drvStick->GetRawButton(5)) {
+			if(oi->drvStick->GetRawButton(6)) {
 				//up
 				armMotor=.77;
 			}
