@@ -325,6 +325,8 @@ public:
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", -shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());
+		frc::SmartDashboard::PutNumber("Shooter Voltage", -shooter->GetVoltage());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());

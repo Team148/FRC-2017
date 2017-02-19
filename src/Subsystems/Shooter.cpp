@@ -12,9 +12,9 @@ Shooter::Shooter() : Subsystem("Shooter") {
 	m_Motor1->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	m_Motor2->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 
-	m_Motor1->ConfigPeakOutputVoltage(2.0,-12);  	//configure motor to not drive backwards
+	m_Motor1->ConfigPeakOutputVoltage(0.0,-12);  	//configure motor to not drive backwards
 	m_Motor2->SetTalonControlMode(CANTalon::TalonControlMode::kFollowerMode);
-	m_Motor2->ConfigPeakOutputVoltage(2.0,-12);  	//configure motor to not drive backwards
+	m_Motor2->ConfigPeakOutputVoltage(0.0,-12);  	//configure motor to not drive backwards
 	//m_Motor2->SetClosedLoopOutputDirection(true);	//for reversing follower direction
 	m_Motor2->Set(SHOOTER_MOTOR_1);
 
@@ -50,8 +50,8 @@ void Shooter::ConfigureClosedLoop() {
 	m_Motor1->SetSensorDirection(false);
 	m_Motor1->SetClosedLoopOutputDirection(false);
 	m_Motor1->ConfigEncoderCodesPerRev(256);
-	m_Motor1->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_1Ms);
-	m_Motor1->SetVelocityMeasurementWindow(10);
+	m_Motor1->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_50Ms);
+	m_Motor1->SetVelocityMeasurementWindow(32);
 	m_Motor1->SelectProfileSlot(0);
 	m_Motor1->SetAllowableClosedLoopErr(0);
 //	m_Motor1->SetF(SHOOTER_F);
@@ -79,6 +79,12 @@ void Shooter::SetRPM(int rpm) {
 
 int Shooter::GetRPM() {
 	return m_Motor1->GetSpeed();
+}
+float Shooter::GetCurrent() {
+	return m_Motor1->GetOutputCurrent();
+}
+float Shooter::GetVoltage() {
+	return m_Motor1->GetOutputVoltage();
 }
 
 void Shooter::SetFlashlightOn(bool mode)
