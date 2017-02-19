@@ -200,6 +200,7 @@ public:
 		//}
 		log->Start();
 		drivetrain->configClosedLoop();
+		turret->ConfigClosedLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 
@@ -209,6 +210,7 @@ public:
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 		SmartDashUpdate();
+		result = doVisionWithProcessing();
 	}
 
 	void TeleopInit() override {
@@ -217,7 +219,7 @@ public:
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		std::cout << "starting TeleopInit" << std::endl;
-		result = doVisionWithProcessing();
+//		result = doVisionWithProcessing();
 
 		//Set Shooter for OpenLoop
 		shooter->ConfigureClosedLoop();
@@ -257,7 +259,7 @@ public:
 
 
 
-		result = doVisionWithProcessing();
+//		result = doVisionWithProcessing();
 
 		if(oi->opStick->GetRawButton(2))
 		{
@@ -395,7 +397,7 @@ public:
 			turret->SetAngle(0.0);
 		}
 
-
+		frc::SmartDashboard::PutNumber("angleOff", angle_change);
 		//CLIMBER
 
 		if(oi->GetSw5())
@@ -440,6 +442,7 @@ private:
 	int shootersetpoint2 = 2500;
 	float m_armAngle = 0.0;
 	float m_turret_angle = 0;
+	float angle_change;
 
 public:
 
@@ -486,7 +489,7 @@ public:
 		//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 		//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
 		target = 1;
-		float angle_change = (160.0 - RcRs[0].Width) * 0.00625;  //may need to invert this range -0.1 to 0.1
+		angle_change = m_turret_angle - (160.0 - RcRs[0].CenterX) * -0.000625;  //.00625 may need to invert this range -0.1 to 0.1
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
 		}
@@ -494,7 +497,7 @@ public:
 
 
 			//Publish the sorted 1st two results
-			frc::SmartDashboard::PutNumber("angleOff", angleOff);
+			frc::SmartDashboard::PutNumber("angleOff", angle_change);
 			frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
 			frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
 			frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
