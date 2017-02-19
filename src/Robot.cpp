@@ -227,12 +227,14 @@ public:
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		turret->ConfigClosedLoop();
+
+		intake->ConfigureOpenLoop();
 		if(!intake->IsClosedLoop())
 			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 
-		//if (autonomousCommand != nullptr) {
-		//	autonomousCommand->Cancel();
-		//}
+//		if (autonomousCommand != nullptr) {
+//			autonomousCommand->Cancel();
+//		}
 	}
 
 	void TeleopPeriodic() override {
@@ -244,8 +246,7 @@ public:
 		static float agitator = 0.0;
 		static float kicker = 0.0;
 		static int shooterRpm = 0;
-		constexpr int shooterSetPoint_A = 3000;
-		constexpr int shooterSetPoint_B = 2500;
+
 		float climberMotor=0;
 
 
@@ -284,17 +285,17 @@ public:
 		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
 		{
-			agitator = 10.0;
-			climberMotor = -10;
-			ballIntake = 1;
+			agitator = 5.0;
+			climberMotor = -3.0;
+			ballIntake = 0.25;
 
 		}	//Run Agitator (Voltage control)
 		if(oi->opStick->GetRawButton(6))
 		{
-			agitator = 10.0;
+			agitator = 5.0;
 			kicker = 10.0;
-			climberMotor = -10;
-			ballIntake = 1;
+			climberMotor = -3.0;
+			ballIntake = 0.25;
 		}	//Run Agitator and fire (Voltage control)
 
 		conveyor->SetAgitator(agitator);
@@ -305,12 +306,15 @@ public:
 
 		//CLOSED LOOP ARM CODE
 		//Shoulder Buttons
+		static bool armIncPressed = false;
+		static bool armBtnSafe = false;
+
 		if(intake->IsClosedLoop()) {
-			if(oi->drvStick->GetRawButton(6)){
+			if(oi->drvStick->GetRawButton(5)){
 				//intake->SetArmAngle(0.0); //down
-				m_armAngle=0;
+				m_armAngle = 0.0;
 			}
-			if(oi->drvStick->GetRawButton(5)) {
+			if(oi->drvStick->GetRawButton(6)) {
 				//intake->SetArmAngle(1.12); //up
 				m_armAngle=1.12;
 			}
@@ -318,10 +322,22 @@ public:
 			//increment Arm Up/Down
 			if(oi->drvStick->GetRawButton(2)) {
 				m_armAngle -= 0.025;
+
 			}
 
-			if(oi->drvStick->GetRawButton(4)) {
+			if(oi->drvStick->GetRawButton(3)) {
 				m_armAngle += 0.025;
+				armIncPressed = true;
+				armBtnSafe = false;
+			}
+			else
+			{
+				armBtnSafe = true;
+			}
+			if(armIncPressed && armBtnSafe)
+			{
+				m_armAngle = 0.0;
+				armIncPressed = false;
 			}
 			if(m_armAngle <= 0.0) m_armAngle = 0.0;
 			if(m_armAngle >= 1.14) m_armAngle = 1.13;
@@ -329,11 +345,11 @@ public:
 			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
-			if(oi->drvStick->GetRawButton(6)){
+			if(oi->drvStick->GetRawButton(5)){
 				//down
 				armMotor=-.77;
 			}
-			if(oi->drvStick->GetRawButton(5)) {
+			if(oi->drvStick->GetRawButton(6)) {
 				//up
 				armMotor=.77;
 			}
@@ -363,11 +379,11 @@ public:
 
 		if(oi->opStick->GetRawAxis(0) >= 1)
 		{
-			shooterRpm = shooterSetPoint_A;
+			shooterRpm = SHOOTER_SET_POINT_A;
 		}
 		if(oi->opStick->GetRawAxis(0) <= -1)
 		{
-			shooterRpm = shooterSetPoint_B;
+			shooterRpm = SHOOTER_SET_POINT_B;
 		}
 		if(oi->opStick->GetRawButton(9))	//Turret off
 		{
@@ -429,7 +445,7 @@ public:
 		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
-		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("ShooterRPM", -shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 	}
 

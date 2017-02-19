@@ -58,7 +58,7 @@ Drivetrain* Drivetrain::GetInstance() {
 }
 
 void Drivetrain::InitDefaultCommand() {
-	SetDefaultCommand(new TankDriveJoystick());
+	SetDefaultCommand(new DriveWithJoystick());
 }
 
 void Drivetrain::Arcade(float ystick, float xstick) {
