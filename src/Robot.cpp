@@ -105,8 +105,10 @@ public:
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		turret->ConfigClosedLoop();
-		if(!intake->IsClosedLoop())
-			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
+
+		intake->ConfigureOpenLoop();
+//		if(!intake->IsClosedLoop())
+//			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 
 		//if (autonomousCommand != nullptr) {
 		//	autonomousCommand->Cancel();
@@ -122,8 +124,7 @@ public:
 		static float agitator = 0.0;
 		static float kicker = 0.0;
 		static int shooterRpm = 0;
-		constexpr int shooterSetPoint_A = 3000;
-		constexpr int shooterSetPoint_B = 2500;
+
 		float climberMotor=0;
 
 		//Manual Open Loop Controls
@@ -160,17 +161,17 @@ public:
 		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
 		{
-			agitator = 10.0;
-			climberMotor = -10;
-			ballIntake = 1;
+			agitator = 5.0;
+			climberMotor = -3.0;
+			ballIntake = 0.25;
 
 		}	//Run Agitator (Voltage control)
 		if(oi->opStick->GetRawButton(6))
 		{
-			agitator = 10.0;
+			agitator = 5.0;
 			kicker = 10.0;
-			climberMotor = -10;
-			ballIntake = 1;
+			climberMotor = -3.0;
+			ballIntake = 0.25;
 		}	//Run Agitator and fire (Voltage control)
 
 		conveyor->SetAgitator(agitator);
@@ -239,11 +240,11 @@ public:
 
 		if(oi->opStick->GetRawAxis(0) >= 1)
 		{
-			shooterRpm = shooterSetPoint_A;
+			shooterRpm = SHOOTER_SET_POINT_A;
 		}
 		if(oi->opStick->GetRawAxis(0) <= -1)
 		{
-			shooterRpm = shooterSetPoint_B;
+			shooterRpm = SHOOTER_SET_POINT_B;
 		}
 		if(oi->opStick->GetRawButton(9))	//Turret off
 		{
@@ -304,10 +305,11 @@ public:
 		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
-		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("ShooterRPM", -shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+
 	}
 
 

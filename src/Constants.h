@@ -38,8 +38,11 @@ constexpr float INTAKE_ARM_POSITION_I = 0.0001;
 constexpr float INTAKE_ARM_DOWN_VOLTAGE = -5.75;
 
 //Shooter
-constexpr float SHOOTER_F = .18;
-constexpr float SHOOTER_P = .5;
-constexpr float SHOOTER_D = 0;
+constexpr float SHOOTER_F = 0.1;
+constexpr float SHOOTER_P = 0.5;
+constexpr float SHOOTER_D = 0.0;
+
+constexpr int SHOOTER_SET_POINT_A = 3260;
+constexpr int SHOOTER_SET_POINT_B = 3580;
 
 #endif /* CONSTANTS_H */
