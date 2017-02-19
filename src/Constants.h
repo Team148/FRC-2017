@@ -27,8 +27,10 @@ constexpr float DRIVE_TURN_TOLERANCE = 0.05;
 constexpr float TURN_DIST_P = 0.05;
 
 //Turret
-constexpr float TURRET_ROTATIONS_PER_TICK = 100/18/360;
+constexpr float TURRET_DEG_PER_ROTATION = 190/11;
 constexpr float TURRET_P = .5;
+constexpr float TURRET_FORWARD_TRAVEL_LIMIT = 100;		//forward limit of travel in Degrees
+constexpr float TURRET_REVERSE_TRAVEL_LIMIT = -100;		//reverse limit of travel in Degrees
 
 
 //Intake
