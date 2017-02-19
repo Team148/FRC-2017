@@ -158,15 +158,19 @@ public:
 	 * the robot is disabled.
 	 */
 	void DisabledInit() override {
+
 		result = doVisionWithProcessing();
+
 	}
+
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 
+
 		result = doVisionWithProcessing();
 
-		SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+		SmartDashUpdate();
 	}
 
 	/**
@@ -204,9 +208,7 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		//frc::SmartDashboard::PutNumber("Drive Left Encoder Velocity: ", drivetrain->GetLeftVelocity());
-		//frc::SmartDashboard::PutNumber("Drive Right Encoder Velocity: ", drivetrain->GetRightVelocity());
-		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+		SmartDashUpdate();
 	}
 
 	void TeleopInit() override {
@@ -289,6 +291,7 @@ public:
 		{
 			agitator = 10.0;
 			kicker = 10.0;
+			climberMotor = -10;
 			ballIntake = 1;
 		}	//Run Agitator and fire (Voltage control)
 
@@ -318,8 +321,10 @@ public:
 			if(oi->drvStick->GetRawButton(4)) {
 				m_armAngle += 0.025;
 			}
+			if(m_armAngle <= 0.0) m_armAngle = 0.0;
+			if(m_armAngle >= 1.14) m_armAngle = 1.13;
 
-		intake->SetArmAngle(m_armAngle);
+			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
 			if(oi->drvStick->GetRawButton(6)){
@@ -342,22 +347,16 @@ public:
 //		if(shooteron) { shooter->SetOpenLoop(0.8); }  		//setShooter to ShooterSetpoint
 //		else {shooter->SetOpenLoop(0); }					//SetShooter 0
 
-		if(oi->opStick->GetRawAxis(1) <= -1)
-		{
-			shooterRpm -= 10;
-		}
-
-
 
 		//CLOSED LOOP SHOOTER
 		if(oi->opStick->GetRawAxis(1) >= 1) //RPM adjust up
 		{
-			shooterRpm += 10;
+			shooterRpm -= 10;
 		}
 
 		if(oi->opStick->GetRawAxis(1) <= -1) //RPM adjust down
 		{
-			shooterRpm -= 10;
+			shooterRpm += 10;
 		}
 
 		if(oi->opStick->GetRawAxis(0) >= 1)
@@ -378,7 +377,10 @@ public:
 		}
 		else shooter->SetFlashlightOn(true);
 
+		if(shooterRpm <0)
+			shooterRpm = 0;
 		shooter->SetRPM(shooterRpm);
+		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
 		//TURRET
@@ -402,26 +404,33 @@ public:
 		//END CLIMBER
 
 
-		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
-		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
-		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
-		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
-		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
-		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 
+
+		SmartDashUpdate();
 	}
 
 	void TestPeriodic() override {
 
 	}
 
-	void RobotLog()
-	{
+	void RobotLog() {
 		//Add all subsystems to log here.
 		//drivetrain->Log();
 
 		log->WriteBuffertoFile();
 	}
+
+
+
+	void SmartDashUpdate() {
+		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
+		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
+		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
+		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
+		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+	}
+
 
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
