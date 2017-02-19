@@ -478,17 +478,18 @@ public:
 #endif
 		//only looking at top two biggest areas.  May need to sort deeper if false targets
 		target = 0;
-		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 5) ) target = 1;
-
+		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 5) ){
+		//Here if we have a valid target
 		//Our GRIP processing resizes the Image to 320W(x) x 240H(y).  So center of FOV is (x,y) = (160,120).
 		//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
 		//CenterX-Width/2, CenterX+Width/2) where these are target cooridinates.
 		//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 		//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
-
+		target = 1;
 		float angle_change = (160.0 - RcRs[0].Width) * 0.00625;  //may need to invert this range -0.1 to 0.1
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
+		}
 
 
 
