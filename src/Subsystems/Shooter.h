@@ -5,14 +5,13 @@
 #include <iostream>
 #include "Constants.h"
 #include "CANTalon.h"
-#include "ctre/PCM.h"
 #include "WPILib.h"
 
 class Shooter : public Subsystem {
 private:
 	CANTalon* m_Motor1;
 	CANTalon* m_Motor2;
-	Compressor *m_c;
+	Solenoid* m_flashlight;
 
 
 	Shooter();
