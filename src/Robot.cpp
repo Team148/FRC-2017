@@ -158,7 +158,7 @@ public:
 	 * the robot is disabled.
 	 */
 	void DisabledInit() override {
-
+		m_turret_angle=0;
 		result = doVisionWithProcessing();
 
 	}
@@ -166,6 +166,7 @@ public:
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+		m_turret_angle=0;
 
 
 		result = doVisionWithProcessing();
@@ -201,6 +202,7 @@ public:
 		log->Start();
 		drivetrain->configClosedLoop();
 		turret->ConfigClosedLoop();
+		m_turret_angle=0;
 		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 
