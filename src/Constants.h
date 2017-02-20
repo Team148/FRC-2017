@@ -27,8 +27,10 @@ constexpr float DRIVE_TURN_TOLERANCE = 0.05;
 constexpr float TURN_DIST_P = 0.05;
 
 //Turret
-constexpr float TURRET_ROTATIONS_PER_TICK = 100/18/360;
+constexpr float TURRET_DEG_PER_ROTATION = 190/11;
 constexpr float TURRET_P = .5;
+constexpr float TURRET_FORWARD_TRAVEL_LIMIT = 100;		//forward limit of travel in Degrees
+constexpr float TURRET_REVERSE_TRAVEL_LIMIT = -100;		//reverse limit of travel in Degrees
 
 
 //Intake
@@ -38,9 +40,9 @@ constexpr float INTAKE_ARM_POSITION_I = 0.0001;
 constexpr float INTAKE_ARM_DOWN_VOLTAGE = -5.75;
 
 //Shooter
-constexpr float SHOOTER_F = 0.1;
+constexpr float SHOOTER_F = 0.12;
 constexpr float SHOOTER_P = 0.5;
-constexpr float SHOOTER_D = 0.0;
+constexpr float SHOOTER_D = 2.5;
 
 constexpr int SHOOTER_SET_POINT_A = 3280;
 constexpr int SHOOTER_SET_POINT_B = 3580;

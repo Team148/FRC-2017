@@ -7,6 +7,7 @@ Turret::Turret() : Subsystem("Turret") {
 
 	m_Motor = new CANTalon(TURRET_MOTOR);
 	m_Motor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
+	m_Motor->ConfigPeakOutputVoltage(9,-9);
 
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
 }
@@ -32,8 +33,7 @@ void Turret::ConfigClosedLoop() {
 
 	m_Motor->SetTalonControlMode(CANTalon::TalonControlMode::kPositionMode);
 
-	//SetForwardLimit
-	//SetBackwardLimit
+
 	m_Motor->SetSensorDirection(false);
 	m_Motor->SetClosedLoopOutputDirection(false);
 	m_Motor->SetAllowableClosedLoopErr(0);
@@ -43,8 +43,17 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetI(0.0);
 	m_Motor->SetD(0.0);
 
+
 	Reset();			//assume starting at Home
+
+	m_Motor->ConfigLimitMode(frc::CANSpeedController::kLimitMode_SrxDisableSwitchInputs);
+	m_Motor->ConfigForwardSoftLimitEnable(true);
+	m_Motor->ConfigReverseSoftLimitEnable(true);
+
+	m_Motor->ConfigForwardLimit(TURRET_FORWARD_TRAVEL_LIMIT*TURRET_DEG_PER_ROTATION/360);
+	m_Motor->ConfigReverseLimit(TURRET_REVERSE_TRAVEL_LIMIT*TURRET_DEG_PER_ROTATION/360);
 	m_Motor->Set(0);
+
 	m_isClosedLoop=true;
 }
 
@@ -61,7 +70,7 @@ void Turret::SetActualPosition(double position) {
 
 
 void Turret::SetAngle(float angle) {
-	//m_Motor->Set(angle*TURRET_ROTATIONS_PER_TICK);
+	//m_Motor->Set(angle*TURRET_ROTATIONS_PER_DEGREE);
 	m_Motor->Set(angle);
 }
 

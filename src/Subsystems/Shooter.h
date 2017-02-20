@@ -28,6 +28,8 @@ public:
 	void SetOpenLoop(float value);
 	void SetRPM(int rpm);
 	int GetRPM();
+	float GetCurrent();
+	float GetVoltage();
 
 	void SetFlashlightOn(bool mode);
 

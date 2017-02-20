@@ -227,6 +227,7 @@ public:
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		turret->ConfigClosedLoop();
+		m_turret_angle=0;
 
 		intake->ConfigureOpenLoop();
 		if(!intake->IsClosedLoop())
@@ -403,7 +404,10 @@ public:
 
 		//TURRET
 
-		float angle_change = m_turret_angle - oi->opStick->GetRawAxis(2)*.1;
+		float turret_joy_in = oi->opStick->GetRawAxis(2);
+		if(abs(turret_joy_in) < .1)
+			turret_joy_in = 0;
+		float angle_change = m_turret_angle - turret_joy_in*.1;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
 
@@ -446,6 +450,8 @@ public:
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", -shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());
+		frc::SmartDashboard::PutNumber("Shooter Voltage", -shooter->GetVoltage());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 	}
 
