@@ -410,7 +410,7 @@ public:
 		float turret_joy_in = oi->opStick->GetRawAxis(2);
 		if(abs(turret_joy_in) < .1)
 			turret_joy_in = 0;
-		float angle_change = m_turret_angle - turret_joy_in*.1;
+		float angle_change = m_turret_angle - turret_joy_in*.095;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
 
