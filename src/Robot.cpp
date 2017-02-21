@@ -163,7 +163,6 @@ public:
 		if(oi->opStick->GetRawButton(5))
 		{
 			agitator = 5.0;
-			climberMotor = -3.0;
 			ballIntake = 0.25;
 
 		}	//Run Agitator (Voltage control)
@@ -171,7 +170,6 @@ public:
 		{
 			agitator = 5.0;
 			kicker = 10.0;
-			climberMotor = -3.0;
 			ballIntake = 0.25;
 		}	//Run Agitator and fire (Voltage control)
 
