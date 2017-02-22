@@ -506,7 +506,7 @@ public:
 #endif
 		//only looking at top two biggest areas.  May need to sort deeper if false targets
 		if (target == 4) target = 0;
-		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 7) && (target == 0) ){
+		if((RcRs[0].Area > 48) && (abs(RcRs[0].Width - RcRs[1].Width) < 7) && (target == 0) ){
 		//Here if we have a valid target
 		//Our GRIP processing resizes the Image to 320W(x) x 240H(y).  So center of FOV is (x,y) = (160,120).
 		//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
