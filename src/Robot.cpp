@@ -162,13 +162,13 @@ public:
 		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
 		{
-			agitator = 5.0;
+			agitator = -8.75;
 			ballIntake = 0.25;
 
 		}	//Run Agitator (Voltage control)
 		if(oi->opStick->GetRawButton(6))
 		{
-			agitator = 5.0;
+			agitator = -8.75;
 			kicker = 10.0;
 			ballIntake = 0.25;
 		}	//Run Agitator and fire (Voltage control)
@@ -280,7 +280,7 @@ public:
 		float turret_joy_in = oi->opStick->GetRawAxis(2);
 		if(abs(turret_joy_in) < .1)
 			turret_joy_in = 0;
-		float angle_change = m_turret_angle - turret_joy_in*.095;
+		float angle_change = m_turret_angle - turret_joy_in*.045;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
 
