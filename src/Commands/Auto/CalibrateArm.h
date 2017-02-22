@@ -15,7 +15,7 @@ public:
 private:
 	bool m_isFinished = false;
 	int m_switchdelay = 3;
-	int m_switchdelaycount=0;
+	int m_switchdelaycount = 0;
 };
 
 #endif  // CalibrateArm_H
