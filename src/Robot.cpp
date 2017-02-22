@@ -124,9 +124,12 @@ public:
 		static float armMotor = 0.0;
 		static float agitator = 0.0;
 		static float kicker = 0.0;
+		static float climberMotor = 0.0;
 		static int shooterRpm = 0;
+		static bool armIncPressed = false;
+		static bool armBtnSafe = false;
 
-		float climberMotor=0;
+
 
 		//Manual Open Loop Controls
 		//Drive control is in Commands/DriveWithJoystick
@@ -135,6 +138,7 @@ public:
 		agitator = 0.0;
 		kicker = 0.0;
 		armMotor = 0.0;
+		climberMotor = 0.0;
 
 
 
@@ -162,14 +166,14 @@ public:
 		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
 		{
-			agitator = -8.75;
+			agitator = -CONVEYER_AGITATOR_VOLTAGE;
 			ballIntake = 0.25;
 
 		}	//Run Agitator (Voltage control)
 		if(oi->opStick->GetRawButton(6))
 		{
-			agitator = -8.75;
-			kicker = 10.0;
+			agitator = -CONVEYER_AGITATOR_VOLTAGE;
+			kicker = CONVEYER_KICKER_VOLTAGE;
 			ballIntake = 0.25;
 		}	//Run Agitator and fire (Voltage control)
 
@@ -181,8 +185,7 @@ public:
 
 		//CLOSED LOOP ARM CODE
 		//Shoulder Buttons
-		static bool armIncPressed = false;
-		static bool armBtnSafe = false;
+
 
 		if(intake->IsClosedLoop()) {
 			if(oi->drvStick->GetRawButton(5)){
@@ -191,7 +194,7 @@ public:
 			}
 			if(oi->drvStick->GetRawButton(6)) {
 				//intake->SetArmAngle(1.12); //up
-				m_armAngle=1.12;
+				m_armAngle = INTAKE_ARM_POSITION_UP;
 			}
 
 			//increment Arm Up/Down
@@ -200,33 +203,32 @@ public:
 
 			}
 
-			if(oi->drvStick->GetRawButton(3)) {
+			if(oi->drvStick->GetRawButton(3)) { // Increment Arm position up, when btn released set to zero
 				m_armAngle += 0.025;
 				armIncPressed = true;
 				armBtnSafe = false;
 			}
-			else
-			{
-				armBtnSafe = true;
-			}
+			else armBtnSafe = true;
+
 			if(armIncPressed && armBtnSafe)
 			{
 				m_armAngle = 0.0;
 				armIncPressed = false;
-			}
-			if(m_armAngle <= 0.0) m_armAngle = 0.0;
-			if(m_armAngle >= 1.14) m_armAngle = 1.13;
+			} // ---
+
+			if(m_armAngle <= 0.0) m_armAngle = 0.0; // Hard Stop stall Safety (down)
+			if(m_armAngle >= 1.14) m_armAngle = 1.13; // Hard Stop stall Safety (up)
 
 			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
 			if(oi->drvStick->GetRawButton(5)){
 				//down
-				armMotor=-.77;
+				armMotor = -INTAKE_ARM_OPEN_LOOP_SPEED;
 			}
 			if(oi->drvStick->GetRawButton(6)) {
 				//up
-				armMotor=.77;
+				armMotor = INTAKE_ARM_OPEN_LOOP_SPEED;
 			}
 		intake->SetArm(armMotor);
 		}
@@ -270,7 +272,7 @@ public:
 		}
 		else shooter->SetFlashlightOn(true);
 
-		if(shooterRpm <0)
+		if(shooterRpm < 0)
 			shooterRpm = 0;
 		shooter->SetRPM(shooterRpm);
 		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
@@ -280,7 +282,7 @@ public:
 		float turret_joy_in = oi->opStick->GetRawAxis(2);
 		if(abs(turret_joy_in) < .1)
 			turret_joy_in = 0;
-		float angle_change = m_turret_angle - turret_joy_in*.045;
+		float angle_change = m_turret_angle - turret_joy_in* TURRET_SPEED;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
 
@@ -294,7 +296,7 @@ public:
 		//CLIMBER
 
 		if(oi->GetSw5())
-			climberMotor=-12;
+			climberMotor =- 12.0;
 		conveyor->SetClimber(climberMotor);
 		//END CLIMBER
 
@@ -336,10 +338,8 @@ private:
 	std::unique_ptr<frc::Command> autonomousCommand;
 	frc::SendableChooser<frc::Command*> chooser;
 
-	int shootersetpoint1 = 3000;
-	int shootersetpoint2 = 2500;
 	float m_armAngle = 0.0;
-	float m_turret_angle = 0;
+	float m_turret_angle = 0.0;
 };
 
 START_ROBOT_CLASS(Robot)

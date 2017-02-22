@@ -28,7 +28,8 @@ constexpr float TURN_DIST_P = 0.05;
 
 //Turret
 constexpr float TURRET_DEG_PER_ROTATION = 190/11;
-constexpr float TURRET_P = .5;
+constexpr float TURRET_P = 0.5;
+constexpr float TURRET_SPEED = 0.045;
 constexpr float TURRET_FORWARD_TRAVEL_LIMIT = 100;		//forward limit of travel in Degrees
 constexpr float TURRET_REVERSE_TRAVEL_LIMIT = -90;		//reverse limit of travel in Degrees
 
@@ -37,7 +38,13 @@ constexpr float TURRET_REVERSE_TRAVEL_LIMIT = -90;		//reverse limit of travel in
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = 84/18/360;
 constexpr float INTAKE_ARM_POSITION_P = 0.55;
 constexpr float INTAKE_ARM_POSITION_I = 0.0001;
+constexpr float INTAKE_ARM_POSITION_UP = 1.12;
 constexpr float INTAKE_ARM_DOWN_VOLTAGE = -5.75;
+constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.77;
+
+//Conveyer
+constexpr float CONVEYER_AGITATOR_VOLTAGE = 8.75;
+constexpr float CONVEYER_KICKER_VOLTAGE = 10.0;
 
 //Shooter
 constexpr float SHOOTER_F = 0.12;
