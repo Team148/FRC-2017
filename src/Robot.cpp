@@ -12,11 +12,46 @@
 #include "Commands/Auto/Autonomous.h"
 #include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
+#include "Vision/VisionAPI.h"
+#include <Vision/CameraServer.h>
+#include <Vision/USBCamera.h>
+
+#define USBCAMERA
+//#define LOCALCAMERA
+	//A structure to hold contour measurements a paricle
+	struct RemoteContourReport {
+		double Area;
+		double CenterX;
+		double CenterY;
+		double Height;
+		double Width;
+	};
+
+	//Structure to represent the scores for the various tests used for target identification
+	struct RemoteScores {
+		double Area;
+		double Aspect;
+	};
+
+	bool result;
+
+
+	// Sort Container by Area function
+	bool sortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs) { return lhs.Area > rhs.Area; }
 
 
 class Robot: public frc::IterativeRobot {
-public:
+private:
+	std::unique_ptr<frc::Command> autonomousCommand;
+	frc::SendableChooser<frc::Command*> chooser;
 
+	float m_armAngle = 0.0;
+	float m_turret_angle = 0.0;
+	float angle_change = 0.0;
+
+
+public:
+	std::shared_ptr<NetworkTable> table;
 	Drivetrain *drivetrain = 0;
 	OI* oi = 0;
 	Conveyor* conveyor = 0;
@@ -27,6 +62,7 @@ public:
 
 	void RobotInit() override {
 		std::cout << "info: starting RobotInit" << std::endl;
+		table = NetworkTable::GetTable("GRIP/myContoursReport");
 		oi = OI::GetInstance();
 		drivetrain = Drivetrain::GetInstance();
 		conveyor = Conveyor::GetInstance();
@@ -46,11 +82,15 @@ public:
 	 * the robot is disabled.
 	 */
 	void DisabledInit() override {
+		m_turret_angle=0;
+		result = doVisionWithProcessing();
 	}
 
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+		m_turret_angle=0;
+		result = doVisionWithProcessing();
 		SmartDashUpdate();
 	}
 
@@ -83,12 +123,14 @@ public:
 		drivetrain->configClosedLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
-
+		m_turret_angle=0;
+		result = doVisionWithProcessing();
 
 	}
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+		result = doVisionWithProcessing();
 		SmartDashUpdate();
 	}
 
@@ -333,13 +375,77 @@ public:
 
 	}
 
+	bool doVisionWithProcessing()
+	{
+	//this is from remote Camera via networktables
+		static int target = 0;
+		static double angleOff = 0;
+		static double pixPDegree = 0;
+		static double pixFCenter = 0;
+		const unsigned numberOfParticles = 1000;
+		double VIEW_ANGLE = 52;
 
-private:
-	std::unique_ptr<frc::Command> autonomousCommand;
-	frc::SendableChooser<frc::Command*> chooser;
+		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
+		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
+		std::vector<double> arr3 = table->GetNumberArray("centerY", llvm::ArrayRef<double>());
+		std::vector<double> arr4 = table->GetNumberArray("height", llvm::ArrayRef<double>());
+		std::vector<double> arr5 = table->GetNumberArray("width", llvm::ArrayRef<double>());
 
-	float m_armAngle = 0.0;
-	float m_turret_angle = 0.0;
+		std::vector<RemoteContourReport> RcRs(numberOfParticles);
+
+
+		if (arr1.size() > 0){
+	#define SORT
+	#ifdef SORT
+			for(unsigned int i = 0; i < arr1.size(); i++)
+			{
+				RcRs[i].Area = arr1[i];
+				RcRs[i].CenterX = arr2[i];
+				RcRs[i].CenterY = arr3[i];
+				RcRs[i].Height = arr4[i];
+				RcRs[i].Width = arr5[i];
+			}
+
+		std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
+	#endif
+		//only looking at top two biggest areas.  May need to sort deeper if false targets
+		if (target == 4) target = 0;
+		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 7) && (target == 0) ){
+		//Here if we have a valid target
+		//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
+		//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
+		//CenterX-Width/2, CenterX+Width/2) where these are target cooridinates.
+		//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
+		//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
+
+		angle_change = m_turret_angle - (320.0 - RcRs[0].CenterX) * -0.0003;  //.000625 may need to invert this range -0.1 to 0.1
+		turret->SetAngle(angle_change);
+		m_turret_angle = angle_change;
+		}
+
+		target = target + 1;
+
+
+
+			//Publish the sorted 1st two results
+			frc::SmartDashboard::PutNumber("angleOff", angle_change);
+			frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
+			frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
+			frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
+			frc::SmartDashboard::PutNumber("ArrayX2: ", RcRs[1].CenterX);
+			frc::SmartDashboard::PutNumber("ArrayY1: ", RcRs[0].CenterY);
+			frc::SmartDashboard::PutNumber("ArrayY2: ", RcRs[1].CenterY);
+			frc::SmartDashboard::PutNumber("ArrayHeight1: ", RcRs[0].Height);
+			frc::SmartDashboard::PutNumber("ArrayHeight2: ", RcRs[1].Height);
+			frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
+			frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
+
+		frc::SmartDashboard::PutNumber("Target detected", target);
+
+	}
+		return target;
+	}
+
 };
 
 START_ROBOT_CLASS(Robot)
