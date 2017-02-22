@@ -478,7 +478,7 @@ public:
 		static double angleOff = 0;
 		static double pixPDegree = 0;
 		static double pixFCenter = 0;
-		const unsigned numberOfParticles = 100;
+		const unsigned numberOfParticles = 1000;
 		double VIEW_ANGLE = 52;
 
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
