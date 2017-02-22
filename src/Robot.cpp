@@ -217,14 +217,14 @@ public:
 			} // ---
 
 			if(m_armAngle <= 0.0) m_armAngle = 0.0; // Hard Stop stall Safety (down)
-			if(m_armAngle >= 1.14) m_armAngle = 1.13; // Hard Stop stall Safety (up)
+			if(m_armAngle >= 1.14) m_armAngle = 1.14; // Hard Stop stall Safety (up)
 
 			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
 			if(oi->drvStick->GetRawButton(5)){
 				//down
-				armMotor = -INTAKE_ARM_OPEN_LOOP_SPEED;
+				armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
 			}
 			if(oi->drvStick->GetRawButton(6)) {
 				//up
@@ -280,7 +280,7 @@ public:
 
 		//TURRET
 		float turret_joy_in = oi->opStick->GetRawAxis(2);
-		if(abs(turret_joy_in) < .1)
+		if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 			turret_joy_in = 0;
 		float angle_change = m_turret_angle - turret_joy_in* TURRET_SPEED;
 		turret->SetAngle(angle_change);
