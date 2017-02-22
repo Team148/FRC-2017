@@ -10,7 +10,7 @@ CalibrateArm::CalibrateArm() {
 void CalibrateArm::Initialize() {
 	SetTimeout(2.5);
 	m_isFinished = false;
-	m_switchdelaycount=0;
+	m_switchdelaycount = 0;
 	if(Intake::GetInstance()->IsClosedLoop())
 		Intake::GetInstance()->ConfigureOpenLoop();
 }
@@ -39,7 +39,7 @@ void CalibrateArm::End() {
 		Intake::GetInstance()->SetArm(0); //Stop Arm
 	}
 	else
-		Intake::GetInstance()->SetArmAngle(1.12);
+		Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_UP);
 }
 
 // Called when another command which requires one or more of the same

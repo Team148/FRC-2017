@@ -144,11 +144,11 @@ public:
 
 		if(oi->opStick->GetRawButton(2))
 		{
-			ballIntake = 1.0;
+			ballIntake = 1.0; // intake
 		}
 		if(oi->opStick->GetRawButton(3))
 		{
-			ballIntake = -1.0;
+			ballIntake = -1.0; // outake
 		}//Ball Intake
 
 
@@ -272,7 +272,7 @@ public:
 		}
 		else shooter->SetFlashlightOn(true);
 
-		if(shooterRpm < 0)
+		if(shooterRpm < 0) // prevents shooter from being set to a negative rpm
 			shooterRpm = 0;
 		shooter->SetRPM(shooterRpm);
 		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
