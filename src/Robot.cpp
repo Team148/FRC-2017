@@ -12,9 +12,9 @@
 #include "Commands/Auto/Autonomous.h"
 #include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
-#include "Vision/VisionAPI.h"
-#include <Vision/CameraServer.h>
-#include <Vision/USBCamera.h>
+//#include "Vision/VisionAPI.h"
+#include <CameraServer.h>
+//#include <Vision/USBCamera.h>
 
 #define USBCAMERA
 //#define LOCALCAMERA
