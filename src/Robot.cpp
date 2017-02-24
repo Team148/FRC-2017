@@ -82,14 +82,14 @@ public:
 	 * the robot is disabled.
 	 */
 	void DisabledInit() override {
-		m_turret_angle=0;
+		m_turret_angle = 0.0;
 		result = doVisionWithProcessing();
 	}
 
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		m_turret_angle=0;
+		m_turret_angle = 0.0;
 		result = doVisionWithProcessing();
 		SmartDashUpdate();
 	}
@@ -123,14 +123,14 @@ public:
 		drivetrain->configClosedLoop();
 		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
-		m_turret_angle=0;
+		m_turret_angle = 0.0;
 		result = doVisionWithProcessing();
 
 	}
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		result = doVisionWithProcessing();
+//		result = doVisionWithProcessing();
 		SmartDashUpdate();
 	}
 
@@ -140,14 +140,14 @@ public:
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		std::cout << "starting TeleopInit" << std::endl;
-
+		result = doVisionWithProcessing();
 		//Set Shooter for OpenLoop
 		shooter->ConfigureClosedLoop();
 		//uncomment for ClosedLoop Shooter
 		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		turret->ConfigClosedLoop();
-		m_turret_angle=0;
+		m_turret_angle = 0.0;
 
 		intake->ConfigureOpenLoop();
 		if(!intake->IsClosedLoop())
@@ -327,6 +327,8 @@ public:
 		float angle_change = m_turret_angle - turret_joy_in* TURRET_SPEED;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
+
+		if(oi->opStick->GetRawButton(12)) result = doVisionWithProcessing();
 
 		if(oi->opStick->GetRawButton(10))
 		{
