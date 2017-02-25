@@ -12,32 +12,31 @@
 #include "Commands/Auto/Autonomous.h"
 #include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
-#include "Vision/VisionAPI.h"
-#include <Vision/CameraServer.h>
-#include <Vision/USBCamera.h>
-
-#define USBCAMERA
-//#define LOCALCAMERA
-	//A structure to hold contour measurements a paricle
-	struct RemoteContourReport {
-		double Area;
-		double CenterX;
-		double CenterY;
-		double Height;
-		double Width;
-	};
-
-	//Structure to represent the scores for the various tests used for target identification
-	struct RemoteScores {
-		double Area;
-		double Aspect;
-	};
-
-	bool result;
+//#include "Vision/VisionAPI.h"
+//#include <Vision/CameraServer.h>
+//#include <Vision/USBCamera.h>
 
 
-	// Sort Container by Area function
-	bool sortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs) { return lhs.Area > rhs.Area; }
+//A structure to hold contour measurements a paricle
+struct RemoteContourReport {
+	double Area;
+	double CenterX;
+	double CenterY;
+	double Height;
+	double Width;
+};
+
+//Structure to represent the scores for the various tests used for target identification
+struct RemoteScores {
+	double Area;
+	double Aspect;
+};
+
+bool result;
+
+
+// Sort Container by Area function
+bool sortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs) { return lhs.Area > rhs.Area; }
 
 
 class Robot: public frc::IterativeRobot {
