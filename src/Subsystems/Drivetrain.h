@@ -41,12 +41,17 @@ public:
 	int GetEncoderVelocity();
 	int GetLeftVelocity();
 	int GetRightVelocity();
+	int GetLeftDistance();
+	int GetRightDistance();
 
 	void configClosedLoop();
 	bool isClosedLoop();
 	void configOpenLoop();
 	float IPStoRPM(float val);
 	float RPMtoIPS(float val);
+	float RotationtoInch(float val);
+	float InchtoRotation(float val);
+	void ZeroSensors();
 };
 
 #endif  // Drivetrain_H
