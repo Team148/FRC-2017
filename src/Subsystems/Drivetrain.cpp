@@ -138,6 +138,10 @@ void Drivetrain::ZeroSensors() {
 	m_rightMotor1->SetEncPosition(0);
 }
 
+void Drivetrain::ResetGyro() {
+	m_gyro->Reset();
+}
+
 bool Drivetrain::isClosedLoop() {
 	return m_closedLoop;
 }

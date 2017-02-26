@@ -2,6 +2,7 @@
 #define ArcadeDriveTurn_H
 
 #include "../../CommandBase.h"
+#include "math.h"
 
 class ArcadeDriveTurn : public CommandBase {
 public:
@@ -18,6 +19,7 @@ private:
 	float m_final_angle;
 	bool m_left_turn = 0;
 	float m_integral_err=0;
+	int tolerance_delay=0;
 };
 
 #endif  // ArcadeDriveTurn_H

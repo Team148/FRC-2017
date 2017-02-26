@@ -33,6 +33,7 @@ public:
 	void Arcade(float ystick, float xstick);
 	void Tank(float leftstick, float rightstick);
 	void SetBrakeMode(bool on);
+	void ResetGyro();
 	void SetLeft(float val);
 	void SetRight(float val);
 

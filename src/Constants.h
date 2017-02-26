@@ -21,14 +21,15 @@ constexpr float DRIVE_VELOCITY_P = .0;
 //Auto/TurnPID
 constexpr float DRIVE_TURN_P = 0.009;
 constexpr float DRIVE_TURN_I = 0.0;
-constexpr float DRIVE_TURN_TOLERANCE = 0.05;
+constexpr float DRIVE_TURN_TOLERANCE = 0.02;
 
 //Auto/TurnTMP
 constexpr float TURN_DIST_P = 0.05;
 
 //Auto/ArcadeDriveTurn
-constexpr float ARCADE_TURN_P = 1;
-constexpr float ARCADE_TURN_I = 0.001;
+constexpr float ARCADE_TURN_P = 0.17;
+constexpr float ARCADE_TURN_I = 0.006;
+constexpr float ARCADE_TURN_TOLERANCE = 0.015;
 
 //Turret
 constexpr float TURRET_DEG_PER_ROTATION = 190/11;
