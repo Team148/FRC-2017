@@ -42,7 +42,7 @@ bool sortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs) 
 class Robot: public frc::IterativeRobot {
 private:
 	std::unique_ptr<frc::Command> autonomousCommand;
-	frc::SendableChooser<frc::Command*> chooser;
+	frc::SendableChooser<frc::Command*> auton_chooser;
 
 	float m_armAngle = 0.0;
 	float m_turret_angle = 0.0;
@@ -69,9 +69,11 @@ public:
 		shooter = Shooter::GetInstance();
 		turret = Turret::GetInstance();
 		log = new Logger();
-		//chooser.AddDefault("Default Auto", new ExampleCommand());
-		// chooser.AddObject("My Auto", new MyAutoCommand());
-		//frc::SmartDashboard::PutData("Auto Modes", &chooser);
+
+		//AUTON Modes
+		auton_chooser.AddDefault("Testing Auton", new Autonomous());
+		auton_chooser.AddObject("Center 1 Gear", new Center1Gear());
+		frc::SmartDashboard::PutData("Auto Modes", &auton_chooser);
 
 	}
 
@@ -113,14 +115,15 @@ public:
 			autonomousCommand.reset(new ExampleCommand());
 		} */
 
-		//autonomousCommand.reset(chooser.GetSelected());
+		//autonomousCommand.reset(auton_chooser.GetSelected());
 
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
 		//}
+
 		log->Start();
 		drivetrain->configClosedLoop();
-		frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
+		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 		result = doVisionWithProcessing();
@@ -183,25 +186,25 @@ public:
 
 
 
-		if(oi->opStick->GetRawButton(2))
+		if(oi->opStick->GetRawButton(2)) //Ball Intake
 		{
 			ballIntake = 1.0; // intake
 		}
 		if(oi->opStick->GetRawButton(3))
 		{
 			ballIntake = -1.0; // outake
-		}//Ball Intake
+		}
 
 
 
-		if(oi->opStick->GetRawButton(1))
+		if(oi->opStick->GetRawButton(1)) //GearIntake In
 		{
 			gearIntake = 1.0;
-		}		//GearIntake
-		if(oi->opStick->GetRawButton(4))
+		}
+		if(oi->opStick->GetRawButton(4)) //GearIntake Out
 		{
 			gearIntake = -1.0;
-		}		//GearIntake Out
+		}
 		intake->SetGear(gearIntake);
 
 		//AGITATOR AND SHOOTER FIRE
@@ -327,9 +330,11 @@ public:
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
 
-		if(oi->opStick->GetRawButton(12)) result = doVisionWithProcessing();
+		if(oi->opStick->GetRawButton(12)) {	//USE VISION to steer turret
+			result = doVisionWithProcessing();
+		}
 
-		if(oi->opStick->GetRawButton(10))
+		if(oi->opStick->GetRawButton(10)) //Home Turret
 		{
 			m_turret_angle = 0.0;
 			turret->SetAngle(0.0);
@@ -337,7 +342,6 @@ public:
 
 
 		//CLIMBER
-
 		if(oi->GetSw5())
 			climberMotor =- 12.0;
 		conveyor->SetClimber(climberMotor);
@@ -376,8 +380,7 @@ public:
 
 	}
 
-	bool doVisionWithProcessing()
-	{
+	bool doVisionWithProcessing() {
 	//this is from remote Camera via networktables
 		static int target = 0;
 		static double angleOff = 0;
@@ -395,9 +398,7 @@ public:
 		std::vector<RemoteContourReport> RcRs(numberOfParticles);
 
 
-		if (arr1.size() > 0){
-	#define SORT
-	#ifdef SORT
+		if (arr1.size() > 0) {
 			for(unsigned int i = 0; i < arr1.size(); i++)
 			{
 				RcRs[i].Area = arr1[i];
@@ -407,43 +408,41 @@ public:
 				RcRs[i].Width = arr5[i];
 			}
 
-		std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
-	#endif
-		//only looking at top two biggest areas.  May need to sort deeper if false targets
-		if (target == 4) target = 0;
-		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 7) && (target == 0) ){
-		//Here if we have a valid target
-		//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
-		//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
-		//CenterX-Width/2, CenterX+Width/2) where these are target cooridinates.
-		//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
-		//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
+			std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
 
-		angle_change = m_turret_angle - (320.0 - RcRs[0].CenterX) * -0.0003;  //.000625 may need to invert this range -0.1 to 0.1
-		turret->SetAngle(angle_change);
-		m_turret_angle = angle_change;
+			//only looking at top two biggest areas.  May need to sort deeper if false targets
+			if (target == 4) target = 0;
+			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 7) && (target == 0) ) {
+			//Here if we have a valid target
+			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
+			//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
+			//CenterX-Width/2, CenterX+Width/2) where these are target cooridinates.
+			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
+			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
+
+			angle_change = m_turret_angle - (320.0 - RcRs[0].CenterX) * -0.0003;  //.000625 may need to invert this range -0.1 to 0.1
+			turret->SetAngle(angle_change);
+			m_turret_angle = angle_change;
 		}
 
 		target = target + 1;
 
 
-
-			//Publish the sorted 1st two results
-			frc::SmartDashboard::PutNumber("angleOff", angle_change);
-			frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
-			frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
-			frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
-			frc::SmartDashboard::PutNumber("ArrayX2: ", RcRs[1].CenterX);
-			frc::SmartDashboard::PutNumber("ArrayY1: ", RcRs[0].CenterY);
-			frc::SmartDashboard::PutNumber("ArrayY2: ", RcRs[1].CenterY);
-			frc::SmartDashboard::PutNumber("ArrayHeight1: ", RcRs[0].Height);
-			frc::SmartDashboard::PutNumber("ArrayHeight2: ", RcRs[1].Height);
-			frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
-			frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
-
+		//Publish the sorted 1st two results
+		frc::SmartDashboard::PutNumber("angleOff", angle_change);
+		frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
+		frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
+		frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
+		frc::SmartDashboard::PutNumber("ArrayX2: ", RcRs[1].CenterX);
+		frc::SmartDashboard::PutNumber("ArrayY1: ", RcRs[0].CenterY);
+		frc::SmartDashboard::PutNumber("ArrayY2: ", RcRs[1].CenterY);
+		frc::SmartDashboard::PutNumber("ArrayHeight1: ", RcRs[0].Height);
+		frc::SmartDashboard::PutNumber("ArrayHeight2: ", RcRs[1].Height);
+		frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
+		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
 		frc::SmartDashboard::PutNumber("Target detected", target);
 
-	}
+		}
 		return target;
 	}
 
