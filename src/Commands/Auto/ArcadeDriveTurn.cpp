@@ -13,6 +13,7 @@ ArcadeDriveTurn::ArcadeDriveTurn(float angle) {
 // Called just before this Command runs the first time
 void ArcadeDriveTurn::Initialize() {
 	m_isFinished=0;
+	m_integral_err=0;
 	m_init_angle = Drivetrain::GetInstance()->GetAngle();
 	Drivetrain::GetInstance()->configOpenLoop();
 }
@@ -22,8 +23,9 @@ void ArcadeDriveTurn::Execute() {
 	float cur_angle = Drivetrain::GetInstance()->GetAngle();
 
 	float cur_err = m_final_angle - cur_angle;
+	m_integral_err += cur_err*.02;
 
-	float stick_input = cur_err*ARCADE_TURN_P;
+	float stick_input = cur_err*ARCADE_TURN_P + ARCADE_TURN_I*m_integral_err;
 
 	//bound input
 	if(stick_input > .5)

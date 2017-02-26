@@ -17,6 +17,7 @@ private:
 	float m_input_angle;
 	float m_final_angle;
 	bool m_left_turn = 0;
+	float m_integral_err=0;
 };
 
 #endif  // ArcadeDriveTurn_H
