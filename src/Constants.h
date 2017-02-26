@@ -29,7 +29,7 @@ constexpr float TURN_DIST_P = 0.05;
 //Turret
 constexpr float TURRET_DEG_PER_ROTATION = 190/11;
 constexpr float TURRET_P = 0.5;
-constexpr float TURRET_SPEED = 0.045;
+constexpr float TURRET_SPEED = 0.025;
 constexpr float TURRET_FORWARD_TRAVEL_LIMIT = 100;		//forward limit of travel in Degrees
 constexpr float TURRET_REVERSE_TRAVEL_LIMIT = -90;		//reverse limit of travel in Degrees
 constexpr float TURRET_JOYSTICK_DEADBAND = 0.1;
