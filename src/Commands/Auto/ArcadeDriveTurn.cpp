@@ -23,7 +23,7 @@ void ArcadeDriveTurn::Execute() {
 
 	float cur_err = m_final_angle - cur_angle;
 
-	float stick_input = cur_err*1.5;
+	float stick_input = cur_err*ARCADE_TURN_P;
 
 	//bound input
 	if(stick_input > .5)

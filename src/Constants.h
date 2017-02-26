@@ -26,6 +26,9 @@ constexpr float DRIVE_TURN_TOLERANCE = 0.05;
 //Auto/TurnTMP
 constexpr float TURN_DIST_P = 0.05;
 
+//Auto/ArcadeDriveTurn
+constexpr float ARCADE_TURN_P = 1;
+
 //Turret
 constexpr float TURRET_DEG_PER_ROTATION = 190/11;
 constexpr float TURRET_P = 0.5;
