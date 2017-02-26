@@ -5,7 +5,7 @@
 
 class Center1Gear : public CommandGroup {
 public:
-	Center1Gear();
+	Center1Gear(int var);
 };
 
 #endif  // Center1Gear_H

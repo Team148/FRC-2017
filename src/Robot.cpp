@@ -9,9 +9,10 @@
 
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
-#include "Commands/Auto/Autonomous.h"
+#include "Commands/Auto/AutonRoutines/Autonomous.h"
 #include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
+#include "Commands/Auto/AutonRoutines/Blue.h"
 //#include "Vision/VisionAPI.h"
 //#include <CameraServer.h>
 //#include <Vision/USBCamera.h>
@@ -71,8 +72,8 @@ public:
 		log = new Logger();
 		
 		//AUTON Modes
-		auton_chooser.AddDefault("Testing Auton", new Autonomous());
-		auton_chooser.AddObject("Center 1 Gear", new Center1Gear());
+//		auton_chooser.AddDefault("Testing Auton", new Autonomous());
+//		auton_chooser.AddObject("Center 1 Gear", new Center1Gear());
 		frc::SmartDashboard::PutData("Auto Modes", &auton_chooser);
 
 	}
@@ -126,6 +127,7 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 		result = doVisionWithProcessing();
+		frc::Scheduler::GetInstance()->AddCommand(new Blue(2));
 
 	}
 

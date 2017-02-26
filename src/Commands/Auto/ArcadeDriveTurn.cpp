@@ -40,7 +40,7 @@ void ArcadeDriveTurn::Execute() {
 
 
 	Drivetrain::GetInstance()->Arcade(0,stick_input);
-	std::cout <<"info: cur_err " << cur_err << std::endl;
+	//std::cout <<"info: cur_err " << cur_err << std::endl;
 
 	if(abs(cur_err)<=ARCADE_TURN_TOLERANCE) {
 		tolerance_delay++;

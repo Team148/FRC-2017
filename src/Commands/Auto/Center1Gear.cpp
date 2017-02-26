@@ -4,7 +4,7 @@
 #include "Commands/SetIntakeArm.h"
 #include "Commands/Auto/SetIntake.h"
 
-Center1Gear::Center1Gear() {
+Center1Gear::Center1Gear(int val) {
 	// Add Commands here:
 	// e.g. AddSequential(new Command1());
 	//      AddSequential(new Command2());

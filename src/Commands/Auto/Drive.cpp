@@ -185,8 +185,10 @@ void Drive::Execute() {
 	Drivetrain::GetInstance()->SetRight(cur_vel+gyro_comp+vel_rcomp);
 
 	//for Testing
-	cout <<"info: set drivetrain to " << cur_vel <<" RPM" << endl;
-	cout <<"info: heading error is " << cur_angle_err << "Degrees" << endl;
+	//cout <<"info: set drivetrain to " << cur_vel <<" RPM" << endl;
+	//cout <<"info: heading error is " << cur_angle_err << "Degrees" << endl;
+	//cout <<"info: gyro_comp " << gyro_comp << "" << endl;
+	cout << "info: Left Distance " << act_ldist << endl;
 	cout <<"info: Set drivetrain V to" << Drivetrain::GetInstance()->RPMtoIPS(cur_vel) << "IPS" << endl;
 
 	log->AddtoBuffer("vel_lcomp", vel_lcomp);
