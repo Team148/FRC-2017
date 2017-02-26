@@ -13,7 +13,7 @@
 #include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
 //#include "Vision/VisionAPI.h"
-//#include <Vision/CameraServer.h>
+//#include <CameraServer.h>
 //#include <Vision/USBCamera.h>
 
 
@@ -69,7 +69,7 @@ public:
 		shooter = Shooter::GetInstance();
 		turret = Turret::GetInstance();
 		log = new Logger();
-
+		
 		//AUTON Modes
 		auton_chooser.AddDefault("Testing Auton", new Autonomous());
 		auton_chooser.AddObject("Center 1 Gear", new Center1Gear());
@@ -120,7 +120,6 @@ public:
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
 		//}
-
 		log->Start();
 		drivetrain->configClosedLoop();
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
@@ -132,7 +131,7 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-//		result = doVisionWithProcessing();
+		//result = doVisionWithProcessing();
 		SmartDashUpdate();
 	}
 
@@ -142,7 +141,7 @@ public:
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		std::cout << "starting TeleopInit" << std::endl;
-		result = doVisionWithProcessing();
+
 		//Set Shooter for OpenLoop
 		shooter->ConfigureClosedLoop();
 		//uncomment for ClosedLoop Shooter

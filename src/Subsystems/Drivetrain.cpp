@@ -133,6 +133,15 @@ void Drivetrain::configClosedLoop() {
 	m_closedLoop = true;
 }
 
+void Drivetrain::ZeroSensors() {
+	m_leftMotor1->SetEncPosition(0);
+	m_rightMotor1->SetEncPosition(0);
+}
+
+void Drivetrain::ResetGyro() {
+	m_gyro->Reset();
+}
+
 bool Drivetrain::isClosedLoop() {
 	return m_closedLoop;
 }
@@ -173,3 +182,20 @@ int Drivetrain::GetLeftVelocity() {
 	return m_leftMotor1->GetEncVel();
 }
 
+int Drivetrain::GetLeftDistance() {
+	return m_leftMotor1->GetEncPosition();
+}
+
+
+int Drivetrain::GetRightDistance() {
+	return m_rightMotor1->GetEncPosition();
+}
+
+
+float Drivetrain::RotationtoInch(float val) {
+	return val*M_PI*DRIVETRAIN_WHEEL_DIAMETER;
+}
+
+float Drivetrain::InchtoRotation(float val) {
+	return val/(M_PI*DRIVETRAIN_WHEEL_DIAMETER);
+}

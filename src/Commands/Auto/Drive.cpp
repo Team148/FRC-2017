@@ -25,6 +25,9 @@ void Drive::Initialize() {
 	//check where we pointing
 	m_initangle = Drivetrain::GetInstance()->GetAngle();
 
+	//reset encoder distance
+	Drivetrain::GetInstance()->ZeroSensors();
+
 	//check that the Drivetrain is in closed loop
 	if(!Drivetrain::GetInstance()->isClosedLoop())
 		Drivetrain::GetInstance()->configClosedLoop();
@@ -157,14 +160,18 @@ void Drive::Execute() {
 	int act_lvel = Drivetrain::GetInstance()->GetLeftVelocity();
 	int act_rvel = Drivetrain::GetInstance()->GetRightVelocity();
 
+	//find actual distance and convert to inches
+	int act_ldist = Drivetrain::GetInstance()->RotationtoInch(Drivetrain::GetInstance()->GetLeftDistance());
+	int act_rdist = Drivetrain::GetInstance()->RotationtoInch(Drivetrain::GetInstance()->GetRightDistance());
+
 	//convert IPS to RPM and account
 	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
 
 	//Find left and right velocity error
 	float vel_lerr = cur_vel-act_lvel;
 	float vel_rerr = cur_vel-act_rvel;
-	float vel_avg_error = (vel_lerr + vel_rerr)/2;
-	float vel_comp = DRIVE_VELOCITY_P*vel_avg_error;
+	float vel_lcomp = DRIVE_VELOCITY_P*vel_lerr;
+	float vel_rcomp = DRIVE_VELOCITY_P*vel_rerr;
 
 	//compute heading hold compensation
 	float cur_angle = Drivetrain::GetInstance()->GetAngle();
@@ -174,16 +181,19 @@ void Drive::Execute() {
 
 
 	//SetLeft and SetRight to current queue with gyro compensation
-	Drivetrain::GetInstance()->SetLeft(cur_vel-gyro_comp+vel_comp);
-	Drivetrain::GetInstance()->SetRight(cur_vel+gyro_comp+vel_comp);
+	Drivetrain::GetInstance()->SetLeft(cur_vel-gyro_comp+vel_lcomp);
+	Drivetrain::GetInstance()->SetRight(cur_vel+gyro_comp+vel_rcomp);
 
 	//for Testing
 	cout <<"info: set drivetrain to " << cur_vel <<" RPM" << endl;
 	cout <<"info: heading error is " << cur_angle_err << "Degrees" << endl;
 	cout <<"info: Set drivetrain V to" << Drivetrain::GetInstance()->RPMtoIPS(cur_vel) << "IPS" << endl;
 
-	log->AddtoBuffer("vel_comp", vel_comp);
-	log->AddtoBuffer("act_vel",Drivetrain::GetInstance()->RPMtoIPS(cur_vel-gyro_comp+vel_comp));
+	log->AddtoBuffer("vel_lcomp", vel_lcomp);
+	log->AddtoBuffer("act_lvel",Drivetrain::GetInstance()->RPMtoIPS(cur_vel-gyro_comp+vel_lcomp));
+	log->AddtoBuffer("act_rvel",Drivetrain::GetInstance()->RPMtoIPS(cur_vel+gyro_comp+vel_rcomp));
+	log->AddtoBuffer("act_ldist", act_ldist);
+	log->AddtoBuffer("act_rdist", act_rdist);
 	log->WriteBuffertoFile();
 
 	//once the queue is empty, set isFinished
