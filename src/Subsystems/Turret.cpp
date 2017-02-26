@@ -6,6 +6,7 @@ Turret::Turret() : Subsystem("Turret") {
 	std::cout << "info: creating Turret" << std::endl;
 
 	m_Motor = new CANTalon(TURRET_MOTOR);
+	m_Motor->SetSafetyEnabled(false);
 	m_Motor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
 	m_Motor->ConfigPeakOutputVoltage(9,-9);
 
