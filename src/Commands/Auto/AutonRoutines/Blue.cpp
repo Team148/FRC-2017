@@ -26,10 +26,10 @@ Blue::Blue(int autonSelection) : frc::CommandGroup("Blue")
 //BOILER SIDE AUTONS
 void Blue::Boiler_GetGear()
 {
-	AddSequential(new Drive(-69,25));
-	AddSequential(new ArcadeDriveTurn(45));
-	AddSequential(new Drive(-36,25));
-	AddSequential(new Drive(36,25));
+	AddSequential(new Drive(-42,25));
+	AddSequential(new ArcadeDriveTurn(53));
+	AddSequential(new Drive(-25,15));
+	AddSequential(new Drive(36,15));
 
 }
 void Blue::Boiler_GetGear_ShootHopper()
@@ -63,7 +63,7 @@ void Blue::Center_GetGear()
 void Blue::Retrieval_GetGear()
 {
 	AddSequential(new Drive(-42,25));
-	AddSequential(new ArcadeDriveTurn(-52));
+	AddSequential(new ArcadeDriveTurn(-53));
 	AddSequential(new Drive(-25,15));
 	AddSequential(new Drive(36,15));
 }
