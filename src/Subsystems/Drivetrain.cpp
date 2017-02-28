@@ -105,18 +105,16 @@ int Drivetrain::GetEncoderVelocity() {
 
 void Drivetrain::configClosedLoop() {
 	m_leftMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
-	//m_leftMotor1->Set(0.0);
 	m_leftMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 	m_leftMotor1->ConfigEncoderCodesPerRev(256);
-	m_leftMotor1->SetSensorDirection(true);
+	m_leftMotor1->SetSensorDirection(false);
 	m_leftMotor1->SetAllowableClosedLoopErr(0);
 	m_leftMotor1->SetClosedLoopOutputDirection(true);
 	m_leftMotor1->Set(0.0);
 	m_rightMotor1->SetControlMode(CANTalon::ControlMode::kSpeed);
-	//m_rightMotor1->Set(0.0);
 	m_rightMotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 	m_rightMotor1->ConfigEncoderCodesPerRev(256);
-	//m_rightMotor1->SetSensorDirection(true);
+	m_rightMotor1->SetSensorDirection(true);
 	m_rightMotor1->SetAllowableClosedLoopErr(0);
 	m_rightMotor1->Set(0.0);
 
@@ -130,6 +128,9 @@ void Drivetrain::configClosedLoop() {
 	m_rightMotor1->SetF(DRIVETRAIN_F);
 	m_leftMotor1->SetP(DRIVETRAIN_P);
 	m_rightMotor1->SetP(DRIVETRAIN_P);
+	m_leftMotor1->SetD(DRIVETRAIN_D);
+	m_rightMotor1->SetD(DRIVETRAIN_D);
+
 	m_closedLoop = true;
 }
 
@@ -156,11 +157,13 @@ void Drivetrain::configOpenLoop() {
 
 void Drivetrain::SetLeft(float val) {
 	m_leftMotor1->Set(val);
+	frc::SmartDashboard::PutNumber("SetLeft",val);
 }
 
 
 void Drivetrain::SetRight(float val) {
 	m_rightMotor1->Set(val);
+	frc::SmartDashboard::PutNumber("SetRight",val);
 }
 
 float Drivetrain::IPStoRPM(float val) {
@@ -169,17 +172,17 @@ float Drivetrain::IPStoRPM(float val) {
 }
 
 float Drivetrain::RPMtoIPS(float val) {
-	//RPM = IPS*60*Gear_reduction/(circumference of the wheel)
+	//RPM = IPS*60/(circumference of the wheel)
 	return (val*M_PI*DRIVETRAIN_WHEEL_DIAMETER)/60;
 }
 
 //Returns velocities in RPM
-int Drivetrain::GetRightVelocity() {
-	return m_rightMotor1->GetEncVel();
+double Drivetrain::GetRightVelocity() {
+	return m_rightMotor1->GetSpeed();
 }
 
-int Drivetrain::GetLeftVelocity() {
-	return m_leftMotor1->GetEncVel();
+double Drivetrain::GetLeftVelocity() {
+	return m_leftMotor1->GetSpeed();
 }
 
 int Drivetrain::GetLeftDistance() {
@@ -191,6 +194,13 @@ int Drivetrain::GetRightDistance() {
 	return m_rightMotor1->GetEncPosition();
 }
 
+double Drivetrain::GetLeftThrottle() {
+	return m_leftMotor1->GetOutputVoltage();
+}
+
+double Drivetrain::GetRightThrottle() {
+	return m_rightMotor1->GetOutputVoltage();
+}
 
 float Drivetrain::RotationtoInch(float val) {
 	return val*M_PI*DRIVETRAIN_WHEEL_DIAMETER;

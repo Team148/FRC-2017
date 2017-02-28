@@ -167,6 +167,8 @@ void Drive::Execute() {
 	//convert IPS to RPM and account
 	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
 
+
+
 	//Find left and right velocity error
 	float vel_lerr = cur_vel-act_lvel;
 	float vel_rerr = cur_vel-act_rvel;
@@ -181,8 +183,8 @@ void Drive::Execute() {
 
 
 	//SetLeft and SetRight to current queue with gyro compensation
-	Drivetrain::GetInstance()->SetLeft(cur_vel-gyro_comp+vel_lcomp);
-	Drivetrain::GetInstance()->SetRight(cur_vel+gyro_comp+vel_rcomp);
+	Drivetrain::GetInstance()->SetLeft((cur_vel-gyro_comp));
+	Drivetrain::GetInstance()->SetRight((cur_vel+gyro_comp));
 
 	//for Testing
 	//cout <<"info: set drivetrain to " << cur_vel <<" RPM" << endl;
@@ -191,12 +193,19 @@ void Drive::Execute() {
 	cout << "info: Left Distance " << act_ldist << endl;
 	cout <<"info: Set drivetrain V to" << Drivetrain::GetInstance()->RPMtoIPS(cur_vel) << "IPS" << endl;
 
-	log->AddtoBuffer("vel_lcomp", vel_lcomp);
-	log->AddtoBuffer("act_lvel",Drivetrain::GetInstance()->RPMtoIPS(cur_vel-gyro_comp+vel_lcomp));
-	log->AddtoBuffer("act_rvel",Drivetrain::GetInstance()->RPMtoIPS(cur_vel+gyro_comp+vel_rcomp));
+	log->AddtoBuffer("act_lvel",Drivetrain::GetInstance()->RPMtoIPS(cur_vel-gyro_comp));
+	log->AddtoBuffer("act_rvel",Drivetrain::GetInstance()->RPMtoIPS(cur_vel+gyro_comp));
 	log->AddtoBuffer("act_ldist", act_ldist);
 	log->AddtoBuffer("act_rdist", act_rdist);
 	log->WriteBuffertoFile();
+
+	frc::SmartDashboard::PutNumber("profileV", Drivetrain::GetInstance()->RPMtoIPS(cur_vel));
+	frc::SmartDashboard::PutNumber("profileD", cur_dist);
+	frc::SmartDashboard::PutNumber("ActualLV", Drivetrain::GetInstance()->RPMtoIPS(Drivetrain::GetInstance()->GetLeftVelocity()));
+	frc::SmartDashboard::PutNumber("ActualRV", Drivetrain::GetInstance()->RPMtoIPS(Drivetrain::GetInstance()->GetRightVelocity()));
+	frc::SmartDashboard::PutNumber("ActualD", Drivetrain::GetInstance()->GetLeftDistance());
+	frc::SmartDashboard::PutNumber("outputLeftV", Drivetrain::GetInstance()->GetLeftThrottle());
+	frc::SmartDashboard::PutNumber("outputRightV", Drivetrain::GetInstance()->GetRightThrottle());
 
 	//once the queue is empty, set isFinished
 	if(m_output.empty())

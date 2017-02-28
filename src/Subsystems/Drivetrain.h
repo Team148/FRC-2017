@@ -40,10 +40,12 @@ public:
 	void Reenable();
 	double GetAngle();
 	int GetEncoderVelocity();
-	int GetLeftVelocity();
-	int GetRightVelocity();
+	double GetLeftVelocity();
+	double GetRightVelocity();
 	int GetLeftDistance();
 	int GetRightDistance();
+	double GetLeftThrottle();
+	double GetRightThrottle();
 
 	void configClosedLoop();
 	bool isClosedLoop();
