@@ -15,7 +15,8 @@ ArcadeDriveTurn::ArcadeDriveTurn(float angle) {
 void ArcadeDriveTurn::Initialize() {
 	m_isFinished=0;
 	tolerance_delay=0;
-	//Drivetrain::GetInstance()->ResetGyro();
+	SetTimeout(5);
+
 	m_integral_err=0;
 	m_init_angle = Drivetrain::GetInstance()->GetAngle();
 	m_final_angle = m_init_angle + m_input_angle;
@@ -53,7 +54,7 @@ void ArcadeDriveTurn::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool ArcadeDriveTurn::IsFinished() {
-	return m_isFinished;
+	return m_isFinished || IsTimedOut();
 }
 
 // Called once after isFinished returns true

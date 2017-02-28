@@ -32,6 +32,11 @@ constexpr float ARCADE_TURN_P = 0.18;
 constexpr float ARCADE_TURN_I = 0.04;
 constexpr float ARCADE_TURN_TOLERANCE = 0.015;
 
+//Auto/ArcadeDriving
+constexpr float ARCADE_DRIVE_P = 0.1;
+constexpr float ARCADE_DRIVE_I = 0.02;
+constexpr float ARCADE_DRIVE_GYRO_P = 0.02;
+
 //Turret
 constexpr float TURRET_DEG_PER_ROTATION = 190/11;
 constexpr float TURRET_P = 0.5;
