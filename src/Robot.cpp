@@ -127,8 +127,9 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 		result = doVisionWithProcessing();
-		//frc::Scheduler::GetInstance()->AddCommand(new Blue(0));
-		frc::Scheduler::GetInstance()->AddCommand(new Drive(-70,30));
+		frc::Scheduler::GetInstance()->AddCommand(new Blue(1));
+		//frc::Scheduler::GetInstance()->AddCommand(new Drive(-70, 50));
+
 
 	}
 

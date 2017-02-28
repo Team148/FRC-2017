@@ -31,6 +31,8 @@ void Blue::Boiler_GetGear()
 	AddSequential(new Drive(-25,15));
 	AddSequential(new Drive(36,15));
 
+
+
 }
 void Blue::Boiler_GetGear_ShootHopper()
 {
@@ -48,10 +50,10 @@ void Blue::Boiler_GetGear_ShootHopper()
 void Blue::Center_GetGear()
 {
 	AddParallel(new CalibrateArm());
-	AddSequential(new Drive(45, 20));
+	AddSequential(new Drive(80, 20));
 	//AddSequential(new SetIntakeArm(0,2));
 	AddSequential(new SetIntake(0.05));
-	AddParallel(new Drive(-25, 30));
+	AddParallel(new Drive(45, 30));
 //	AddSequential(new Drive(-69,25));
 //	AddSequential(new Drive(36,25));
 
