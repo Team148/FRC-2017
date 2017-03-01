@@ -9,6 +9,7 @@
 #include "Commands/Auto/SetIntake.h"
 #include "Commands/SetIntakeBall.h"
 #include "Commands/SetIntakeGear.h"
+#include "Commands/Auto/SetBallGearUntilBeam.h"
 #include "Subsystems/Intake.h"
 
 #include "WPILib.h"
@@ -90,17 +91,14 @@ void Blue::Retrieval_GetTwoGear()
 	AddSequential(new Drive(60,25));
 	AddSequential(new SetIntake(0.0));
 	AddSequential(new ArcadeDriveTurn(40));
-	AddSequential(new Drive(42,20));
-	if(Intake::GetInstance()->IsBeamBroke())
-	{
-		AddParallel(new SetIntakeBall(0.0));
-		AddParallel(new SetIntakeGear(0.0));
-	}
-	else
-	{
-		AddParallel(new SetIntakeBall(1.0));
-		AddParallel(new SetIntakeGear(1.0));
-	}
+	AddParallel(new SetBallGearUntilBeam());
+	AddSequential(new Drive(26,22));
+	AddSequential(new Drive(-28,18));
+	AddParallel(new SetIntake(INTAKE_ARM_POSITION_UP));
+
+
+
+
 
 
 

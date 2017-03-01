@@ -13,6 +13,7 @@
 #include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
 #include "Commands/Auto/AutonRoutines/Blue.h"
+#include "Commands/Auto/SetBallGearUntilBeam.h"
 //#include "Vision/VisionAPI.h"
 //#include <CameraServer.h>
 //#include <Vision/USBCamera.h>
@@ -128,7 +129,7 @@ public:
 		m_turret_angle = 0.0;
 		result = doVisionWithProcessing();
 		frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
-		//frc::Scheduler::GetInstance()->AddCommand(new Drive(-70, 50));
+		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
 
 	}
