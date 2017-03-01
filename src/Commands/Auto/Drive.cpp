@@ -32,6 +32,8 @@ void Drive::Initialize() {
 	if(!Drivetrain::GetInstance()->isClosedLoop())
 		Drivetrain::GetInstance()->configClosedLoop();
 
+	Drivetrain::GetInstance()->SetBrakeMode(true);
+
 	//ensure queue is empty
 	while(!m_output.empty())
 		m_output.pop();
@@ -178,7 +180,7 @@ void Drive::Execute() {
 	//compute heading hold compensation
 	float cur_angle = Drivetrain::GetInstance()->GetAngle();
 	float cur_angle_err = cur_angle - m_initangle;
-	float gyro_comp = DRIVE_GYRO_P*cur_angle_err;
+	float gyro_comp = (DRIVE_GYRO_P*cur_angle_err);
 
 
 
