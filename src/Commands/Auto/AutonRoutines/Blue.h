@@ -12,6 +12,7 @@ public:
 	void Boiler_GetGear();
 	void Center_GetGear();
 	void Retrieval_GetGear();
+	void Retrieval_GetTwoGear();
 	void Boiler_GetGear_ShootHopper();
 
 private:
@@ -23,6 +24,7 @@ private:
 			BOILER_GEAR_ = 0,
 			CENTER_GEAR,
 			RETRIEVAL_GEAR,
+			RETRIEVAL_TWOGEAR,
 			BOILER_GEAR_HOPPER_SHOOT
 		};
 };
