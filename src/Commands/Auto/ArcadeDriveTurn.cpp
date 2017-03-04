@@ -15,7 +15,7 @@ ArcadeDriveTurn::ArcadeDriveTurn(float angle) {
 void ArcadeDriveTurn::Initialize() {
 	m_isFinished=0;
 	tolerance_delay=0;
-	SetTimeout(5.0);
+	SetTimeout(3.0);
 	//Drivetrain::GetInstance()->ResetGyro();
 	m_integral_err=0;
 	m_init_angle = Drivetrain::GetInstance()->GetAngle();
@@ -34,10 +34,10 @@ void ArcadeDriveTurn::Execute() {
 	float stick_input = cur_err*ARCADE_TURN_P + ARCADE_TURN_I*m_integral_err;
 
 	//bound input
-	if(stick_input > .57)
-		stick_input = .57;
-	if(stick_input < -.57)
-		stick_input = -.57;
+	if(stick_input > .6)
+		stick_input = .6;
+	if(stick_input < -.6)
+		stick_input = -.6;
 
 
 	Drivetrain::GetInstance()->Arcade(0,stick_input);

@@ -129,7 +129,7 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 		result = doVisionWithProcessing();
-		frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
+		frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
 
@@ -147,7 +147,6 @@ public:
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		std::cout << "starting TeleopInit" << std::endl;
-
 		//Set Shooter for OpenLoop
 		shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();

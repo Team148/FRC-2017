@@ -10,23 +10,19 @@ class Blue: public frc::CommandGroup {
 public:
 	Blue(int autonSelection);
 	void Boiler_GetGear();
-	void Center_GetGear();
-	void Retrieval_GetGear();
-	void Retrieval_GetTwoGear();
+	void Boiler_GetTwoGear();
+	void Boiler_ShootHopper();
 	void Boiler_GetGear_ShootHopper();
 
+	void Center_GetGear();
+
+
+	void Retrieval_GetGear();
+	void Retrieval_GetTwoGear();
+
+
 private:
-	enum auton
-		{
-		//	auto naming standards
-		//  POSITION_ACTION_ACTION_ACTION...
-		//	POSITION_POSITION_ACTION_ACTION...
-			BOILER_GEAR_ = 0,
-			CENTER_GEAR,
-			RETRIEVAL_GEAR,
-			RETRIEVAL_TWOGEAR,
-			BOILER_GEAR_HOPPER_SHOOT
-		};
+
 };
 
 #endif  // Blue_H
