@@ -176,6 +176,8 @@ public:
 		static int shooterRpm = 0;
 		static bool armIncPressed = false;
 		static bool armBtnSafe = false;
+		static float temp_angle = 0.0;
+		float current_angle = 0.0;
 
 
 
@@ -331,17 +333,18 @@ public:
 		if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 			turret_joy_in = 0;
 		float angle_change = m_turret_angle - turret_joy_in* TURRET_SPEED;
-		turret->SetAngle(angle_change);
+		if(oi->opStick->GetRawButton(10)) //Home Turret
+		{
+			//m_turret_angle = 0.0;
+			//turret->SetAngle(0.0);
+			//read current angle
+			current_angle = Drivetrain::GetInstance()->GetAngle();
+			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
+		}else turret->SetAngle(angle_change);  //this call set motor small gear angle on turret
 		m_turret_angle = angle_change;
 
 		if(oi->opStick->GetRawButton(12)) {	//USE VISION to steer turret
 			result = doVisionWithProcessing();
-		}
-
-		if(oi->opStick->GetRawButton(10)) //Home Turret
-		{
-			m_turret_angle = 0.0;
-			turret->SetAngle(0.0);
 		}
 
 

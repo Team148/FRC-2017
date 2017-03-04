@@ -23,9 +23,11 @@ Shooter::Shooter() : Subsystem("Shooter") {
 	m_Motor2->SetSafetyEnabled(false);
 
 
-	m_flashlight = new frc::Solenoid(0);
-	m_ringlight = new frc::Solenoid(1);
 
+	m_ringlight = new frc::Solenoid(VISION_LIGHT_SOLENOID);
+
+
+	m_flashlight = new frc::Solenoid(FLASHLIGHT_SOLENOID);
 }
 
 Shooter* Shooter::GetInstance() {
