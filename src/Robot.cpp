@@ -14,6 +14,7 @@
 #include "Commands/Auto/CalibrateArm.h"
 #include "Commands/Auto/AutonRoutines/Blue.h"
 #include "Commands/Auto/SetBallGearUntilBeam.h"
+#include "Commands/AutoGearScore.h"
 //#include "Vision/VisionAPI.h"
 //#include <CameraServer.h>
 //#include <Vision/USBCamera.h>
@@ -173,14 +174,11 @@ public:
 		static int shooterRpm = 0;
 		static bool armIncPressed = false;
 		static bool armBtnSafe = false;
-<<<<<<< HEAD
 		bool flashlightOn = false;
 		bool ringlightOn = false;
-=======
 		static float temp_angle = 0.0;
 		float current_angle = 0.0;
 
->>>>>>> origin/master
 
 
 		//Manual Open Loop Controls
@@ -250,22 +248,22 @@ public:
 			}
 
 			//increment Arm Up/Down
-			if(oi->drvStick->GetRawButton(1)) {
-				m_armAngle -= 0.025;
-			}
+			//if(oi->drvStick->GetRawButton(1)) {
+			//	m_armAngle -= 0.025;
+			//}
 
-			if(oi->drvStick->GetRawButton(4)) { // Increment Arm position up, when btn released set to zero
-				m_armAngle += 0.025;
-				armIncPressed = true;
-				armBtnSafe = false;
-			}
-			else armBtnSafe = true;
-
-			if(armIncPressed && armBtnSafe)
-			{
-				m_armAngle = 0.0;
-				armIncPressed = false;
-			} // ---
+//			if(oi->drvStick->GetRawButton(4)) { // Increment Arm position up, when btn released set to zero
+//				m_armAngle += 0.025;
+//				armIncPressed = true;
+//				armBtnSafe = false;
+//			}
+//			else armBtnSafe = true;
+//
+//			if(armIncPressed && armBtnSafe)
+//			{
+//				m_armAngle = 0.0;
+//				armIncPressed = false;
+//			} // ---
 
 			//right trigger arm control (absolute position
 			if(oi->drvStick->GetRawAxis(3) > 0.2)
@@ -326,6 +324,10 @@ public:
 			flashlightOn = true;
 		}
 
+		//AUTO SCORE
+		if(oi->drvStick->GetRawButton(3)) {
+			frc::Scheduler::GetInstance()->AddCommand(new AutoGearScore());
+		}
 
 
 		if(shooterRpm < 0) // prevents shooter from being set to a negative rpm
@@ -335,7 +337,7 @@ public:
 		//END CLOSEDLOOP SHOOTER
 
 		//Manual Flashlight control
-		if(oi->drvStick->GetRawButton(2)) {
+		if(oi->drvStick->GetRawButton(1)) {
 			flashlightOn = true;
 		}
 
@@ -365,7 +367,7 @@ public:
 			ringlightOn = true;
 		}
 
-<<<<<<< HEAD
+
 		if(oi->opStick->GetRawButton(8)) //Home Turret
 		{
 			m_turret_angle = 0.0;
@@ -373,20 +375,18 @@ public:
 		}
 
 		//manual ringlight control
-		if(oi->drvStick->GetRawButton(3)) {
+		if(oi->drvStick->GetRawButton(2)) {
 				ringlightOn = true;
 		}
-		shooter->SetRinglightOn(ringlightOn);
-=======
->>>>>>> origin/master
+		shooter->SetRingLightOn(ringlightOn);
+
+
 
 		//CLIMBER
 		if(oi->GetSw5())
 			climberMotor =- 12.0;
 		conveyor->SetClimber(climberMotor);
 		//END CLIMBER
-
-
 
 
 		SmartDashUpdate();

@@ -12,9 +12,9 @@ AutoGearScore::AutoGearScore() {
 	//      AddSequential(new Command2());
 	// these will run in order.
 	AddParallel(new SetDrivetrainClosedLoop(true));
-	AddParallel(new SetIntakeBall(0.1));
+	AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(45));
-	AddSequential(new Drive(15, 20));
+	AddSequential(new Drive(-15, 20));
 	AddParallel(new SetDrivetrainClosedLoop(false));
 
 	// To run multiple commands at the same time,
