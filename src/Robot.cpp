@@ -173,7 +173,8 @@ public:
 		static int shooterRpm = 0;
 		static bool armIncPressed = false;
 		static bool armBtnSafe = false;
-
+		bool flashlightOn = false;
+		bool ringlightOn = false;
 
 
 		//Manual Open Loop Controls
@@ -245,7 +246,6 @@ public:
 			//increment Arm Up/Down
 			if(oi->drvStick->GetRawButton(1)) {
 				m_armAngle -= 0.025;
-
 			}
 
 			if(oi->drvStick->GetRawButton(4)) { // Increment Arm position up, when btn released set to zero
@@ -260,6 +260,10 @@ public:
 				m_armAngle = 0.0;
 				armIncPressed = false;
 			} // ---
+
+			//right trigger arm control (absolute position
+			if(oi->drvStick->GetRawAxis(3) > 0.2)
+				m_armAngle = (INTAKE_ARM_POSITION_UP/2) + oi->drvStick->GetRawAxis(3)*(INTAKE_ARM_POSITION_UP/2);
 
 			if(m_armAngle <= 0.0) m_armAngle = 0.0; // Hard Stop stall Safety (down)
 			if(m_armAngle >= 1.14) m_armAngle = 1.14; // Hard Stop stall Safety (up)
@@ -289,12 +293,12 @@ public:
 
 
 		//CLOSED LOOP SHOOTER
-		if(oi->opStick->GetPOV() == 0) //RPM adjust up
+		if(oi->opStick->GetPOV() == 180) //RPM adjust up
 		{
 			shooterRpm -= 10;
 		}
 
-		if(oi->opStick->GetPOV() == 180) //RPM adjust down
+		if(oi->opStick->GetPOV() == 0) //RPM adjust down
 		{
 			shooterRpm += 10;
 		}
@@ -311,17 +315,29 @@ public:
 		{
 			shooterRpm = 0;
 		}
-		if(shooterRpm == 0)
+		if(shooterRpm != 0)	//If shooter is on, turn the flashlight ON
 		{
-			shooter->SetFlashlightOn(false);
+			flashlightOn = true;
 		}
-		else shooter->SetFlashlightOn(true);
+
+
 
 		if(shooterRpm < 0) // prevents shooter from being set to a negative rpm
 			shooterRpm = 0;
 		shooter->SetRPM(shooterRpm);
 		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
 		//END CLOSEDLOOP SHOOTER
+
+		//Manual Flashlight control
+		if(oi->drvStick->GetRawButton(2)) {
+			flashlightOn = true;
+		}
+
+
+		shooter->SetFlashlightOn(flashlightOn);
+
+		//END MANUAL FLASHLIGHT CONTROL
+
 
 		//TURRET
 		float turret_joy_in = oi->opStick->GetRawAxis(4);
@@ -333,6 +349,7 @@ public:
 
 		if(oi->opStick->GetRawButton(10)) {	//USE VISION to steer turret
 			result = doVisionWithProcessing();
+			ringlightOn = true;
 		}
 
 		if(oi->opStick->GetRawButton(8)) //Home Turret
@@ -341,6 +358,11 @@ public:
 			turret->SetAngle(0.0);
 		}
 
+		//manual ringlight control
+		if(oi->drvStick->GetRawButton(3)) {
+				ringlightOn = true;
+		}
+		shooter->SetRinglightOn(ringlightOn);
 
 		//CLIMBER
 		if(oi->GetSw5())
