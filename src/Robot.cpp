@@ -174,8 +174,8 @@ public:
 		static int shooterRpm = 0;
 		static bool armIncPressed = false;
 		static bool armBtnSafe = false;
-		bool flashlightOn = false;
-		bool ringlightOn = false;
+		static bool flashlightOn = false;
+		static bool ringlightOn = false;
 		static float temp_angle = 0.0;
 		float current_angle = 0.0;
 
@@ -189,6 +189,8 @@ public:
 		kicker = 0.0;
 		armMotor = 0.0;
 		climberMotor = 0.0;
+		flashlightOn = false;
+		ringlightOn = false;
 
 
 
@@ -326,7 +328,9 @@ public:
 
 		//AUTO SCORE
 		if(oi->drvStick->GetRawButton(3)) {
+			m_armAngle = INTAKE_ARM_POSITION_UP*0.55;
 			frc::Scheduler::GetInstance()->AddCommand(new AutoGearScore());
+
 		}
 
 

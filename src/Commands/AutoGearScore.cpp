@@ -6,16 +6,17 @@
 #include "SetDrivetrainClosedLoop.h"
 
 
+
 AutoGearScore::AutoGearScore() {
 	// Add Commands here:
 	// e.g. AddSequential(new Command1());
 	//      AddSequential(new Command2());
 	// these will run in order.
-	AddParallel(new SetDrivetrainClosedLoop(true));
+	AddSequential(new SetDrivetrainClosedLoop(true));
 	AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(45));
-	AddSequential(new Drive(-15, 20));
-	AddParallel(new SetDrivetrainClosedLoop(false));
+	//AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP/2));
+	AddSequential(new Drive(-20, 25));
+	AddSequential(new SetDrivetrainClosedLoop(false));
 
 	// To run multiple commands at the same time,
 	// use AddParallel()
