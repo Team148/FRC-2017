@@ -354,28 +354,25 @@ public:
 		float turret_joy_in = oi->opStick->GetRawAxis(4);
 		if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 			turret_joy_in = 0;
-		float angle_change = m_turret_angle - turret_joy_in* TURRET_SPEED;
-		if(oi->opStick->GetRawButton(10)) //Home Turret
-		{
-			//m_turret_angle = 0.0;
-			//turret->SetAngle(0.0);
-			//read current angle
-			current_angle = Drivetrain::GetInstance()->GetAngle();
-			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
-		}else turret->SetAngle(angle_change);  //this call set motor small gear angle on turret
+		float angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
 		m_turret_angle = angle_change;
-
-		if(oi->opStick->GetRawButton(10)) {	//USE VISION to steer turret
-			result = doVisionWithProcessing();
-			ringlightOn = true;
-		}
-
 
 		if(oi->opStick->GetRawButton(8)) //Home Turret
 		{
 			m_turret_angle = 0.0;
-			turret->SetAngle(0.0);
+			angle_change = 0.0;
 		}
+
+
+		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
+			current_angle = Drivetrain::GetInstance()->GetAngle();
+			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
+			//wait here to get to angle
+			//result = doVisionWithProcessing();
+			ringlightOn = true;
+		} else turret->SetAngle(angle_change);  //this call set motor small gear angle on turret
+
+
 
 		//manual ringlight control
 		if(oi->drvStick->GetRawButton(2)) {
