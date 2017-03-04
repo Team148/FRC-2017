@@ -19,6 +19,7 @@
 //#include <CameraServer.h>
 //#include <Vision/USBCamera.h>
 
+	unsigned int doVisionWithProcessing(float &angle);
 
 //A structure to hold contour measurements a paricle
 struct RemoteContourReport {
@@ -35,7 +36,8 @@ struct RemoteScores {
 	double Aspect;
 };
 
-bool result;
+unsigned int result;
+float _angle;
 
 
 // Sort Container by Area function
@@ -87,14 +89,14 @@ public:
 	 */
 	void DisabledInit() override {
 		m_turret_angle = 0.0;
-		result = doVisionWithProcessing();
+		result = doVisionWithProcessing(_angle);
 	}
 
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 		m_turret_angle = 0.0;
-		result = doVisionWithProcessing();
+		result = doVisionWithProcessing(_angle);
 		SmartDashUpdate();
 	}
 
@@ -128,7 +130,7 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
-		result = doVisionWithProcessing();
+		result = doVisionWithProcessing(_angle);
 		frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
@@ -137,7 +139,7 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		//result = doVisionWithProcessing();
+		//result = doVisionWithProcessing(_angle);
 		SmartDashUpdate();
 	}
 
@@ -368,8 +370,11 @@ public:
 		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
 			current_angle = Drivetrain::GetInstance()->GetAngle();
 			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
+			_angle = turret->GetBigAngle();
+			frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 			//wait here to get to angle
-			//result = doVisionWithProcessing();
+//			result = doVisionWithProcessing(_angle);
+//			turret->SetAngle(_angle);
 			ringlightOn = true;
 		} else turret->SetAngle(angle_change);  //this call set motor small gear angle on turret
 
@@ -420,14 +425,14 @@ public:
 
 	}
 
-	bool doVisionWithProcessing() {
+	unsigned int doVisionWithProcessing(float &angle_change) {
 	//this is from remote Camera via networktables
 		static int target = 0;
-		static double angleOff = 0;
-		static double pixPDegree = 0;
-		static double pixFCenter = 0;
+//		static double angleOff = 0;
+//		static double pixPDegree = 0;
+//		static double pixFCenter = 0;
 		const unsigned numberOfParticles = 1000;
-		double VIEW_ANGLE = 52;
+//		double VIEW_ANGLE = 60;  //HD3000 640x480
 
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
 		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -461,8 +466,13 @@ public:
 			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
 
 			angle_change = m_turret_angle - (320.0 - RcRs[0].CenterX) * -0.0003;  //.000625 may need to invert this range -0.1 to 0.1
-			turret->SetAngle(angle_change);
+//			turret->SetAngle(angle_change);  //moved outside of routine
 			m_turret_angle = angle_change;
+
+//below not working probably have to slow snapshot more
+//			angle_change = ((320.0 - RcRs[0].CenterX) * 0.075);  // +/-30deg
+//			turret->SetBigAngle(angle_change);
+
 		}
 
 		target = target + 1;

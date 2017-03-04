@@ -31,6 +31,7 @@ public:
 	void SetOpen();
 	void SetAngle(float angle);
 	void SetBigAngle(float angle);
+	float GetBigAngle();
 	void Reset();
 	bool IsHomed();
 

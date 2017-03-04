@@ -75,7 +75,17 @@ void Turret::SetAngle(float angle) {   //sets angle of the motor gear
 }
 
 void Turret::SetBigAngle(float angle) {  //sets angle of the turret aka big gear
+    angle = fmod(angle,360);  //get into 0-360 range
+    if (angle < 0) angle += 360;
+    angle = fabs(angle);
+	// now put into -180 < angle <= 180
+	if (angle > 180.0) angle -= 360.0;
 	m_Motor->Set(angle * TURRET_DEG_IN_BIG_GEAR);
+}
+
+float Turret::GetBigAngle() {
+	float angle = m_Motor->Get() * TURRET_INV_DEG_BIG_GEAR;
+	return angle;
 }
 
 void Turret::Reset() {
