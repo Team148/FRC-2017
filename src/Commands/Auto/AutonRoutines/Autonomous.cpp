@@ -6,6 +6,7 @@
 #include "Commands/Auto/TurnPID.h"
 #include "Commands/Auto/TurnTMP.h"
 #include "Commands/Auto/ArcadeDriveTurn.h"
+#include "Constants.h"
 
 
 Autonomous::Autonomous(bool red, int getGears, bool isShooting, bool getHopper)

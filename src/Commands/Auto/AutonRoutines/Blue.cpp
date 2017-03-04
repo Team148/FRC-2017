@@ -11,6 +11,7 @@
 #include "Commands/SetIntakeGear.h"
 #include "Commands/Auto/SetBallGearUntilBeam.h"
 #include "Subsystems/Intake.h"
+#include "Constants.h"
 
 #include "WPILib.h"
 
@@ -20,9 +21,13 @@ Blue::Blue(int autonSelection) : frc::CommandGroup("Blue")
 {
 	switch(autonSelection)
 	{
-	case BOILER_GEAR_: Boiler_GetGear(); break;
+	case BOILER_GEAR: Boiler_GetGear(); break;
 	case BOILER_GEAR_HOPPER_SHOOT: Boiler_GetGear_ShootHopper(); break;
+	case BOILER_HOPPER_SHOOT: Boiler_ShootHopper(); break;
+	case BOILER_TWO_GEAR: Boiler_GetTwoGear(); break;
+
 	case CENTER_GEAR: Center_GetGear(); break;
+
 	case RETRIEVAL_GEAR: Retrieval_GetGear(); break;
 	case RETRIEVAL_TWOGEAR: Retrieval_GetTwoGear(); break;
 	}
@@ -44,14 +49,28 @@ void Blue::Boiler_GetGear()
 
 
 }
+void Blue::Boiler_GetTwoGear()
+{
+
+
+}
 void Blue::Boiler_GetGear_ShootHopper()
 {
-	AddSequential(new Drive(69,-25));
+	AddSequential(new Drive(-85,30));
 	AddSequential(new ArcadeDriveTurn(45));
-	AddSequential(new Drive(36,-25));
-	AddSequential(new Drive(36,25));
-	AddSequential(new ArcadeDriveTurn(45));
-	AddSequential(new Drive(69,25));
+	AddSequential(new Drive(-34,20));
+	AddParallel(new CalibrateArm());
+	AddSequential(new Drive(43,20));
+
+	AddParallel(new SetIntake(0.0));
+	AddSequential(new ArcadeDriveTurn(75));
+	AddSequential(new Drive(60,30));
+	AddSequential(new ArcadeDriveTurn(-35));
+	AddSequential(new Drive(32,30));
+
+}
+void Blue::Boiler_ShootHopper()
+{
 
 }
 //-------------------------------------

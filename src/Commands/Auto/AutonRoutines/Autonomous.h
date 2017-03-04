@@ -11,21 +11,7 @@ public:
 	Autonomous(bool red, int getGears, bool isShooting, bool getHopper);
 
 private:
-	enum auton
-		{
-		//	auto naming standards
-		//  POSITION_ACTION_ACTION_ACTION...
-		//	POSITION_POSITION_ACTION_ACTION...
-			BOILER_GEAR_ = 0,
-			CENTER_GEAR,
-			RETRIEVAL_GEAR,
-			BOILER_GEAR_HOPPER_SHOOT
-		};
-	enum startingSide
-	{
-		RED = -1,
-		BLUE = 1
-	};
+
 	int autonSelection = 0;
 };
 

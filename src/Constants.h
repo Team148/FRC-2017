@@ -64,4 +64,24 @@ constexpr float SHOOTER_D = 2.0;
 constexpr int SHOOTER_SET_POINT_A = 3260;
 constexpr int SHOOTER_SET_POINT_B = 3580;
 
+//AUTON
+
+	//	auto naming standards
+	//  POSITION_ACTION_ACTION_ACTION...
+	//	POSITION_POSITION_ACTION_ACTION...
+constexpr int	BOILER_GEAR = 0;
+constexpr int	BOILER_GEAR_HOPPER_SHOOT = 1;
+constexpr int	BOILER_HOPPER_SHOOT = 2;
+constexpr int	BOILER_TWO_GEAR = 3;
+
+constexpr int	CENTER_GEAR = 10;
+
+constexpr int	RETRIEVAL_GEAR = 20;
+constexpr int	RETRIEVAL_TWOGEAR = 21;
+
+constexpr int	RED = -1;
+constexpr int	BLUE = 1;
+
+
+
 #endif /* CONSTANTS_H */

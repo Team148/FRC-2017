@@ -149,7 +149,6 @@ public:
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		std::cout << "starting TeleopInit" << std::endl;
-
 		//Set Shooter for OpenLoop
 		shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
