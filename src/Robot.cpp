@@ -149,13 +149,10 @@ public:
 
 		//Set Shooter for OpenLoop
 		shooter->ConfigureClosedLoop();
-		//uncomment for ClosedLoop Shooter
-		//shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		turret->ConfigClosedLoop();
 		m_turret_angle = 0.0;
 
-		intake->ConfigureOpenLoop();
 		if(!intake->IsClosedLoop())
 			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 
@@ -190,18 +187,18 @@ public:
 
 
 
-		if(oi->opStick->GetRawButton(2)) //Ball Intake
+		if(oi->opStick->GetRawButton(1)) //Ball Intake
 		{
 			ballIntake = 1.0; // intake
 		}
-		if(oi->opStick->GetRawButton(3))
+		if(oi->opStick->GetRawButton(2))
 		{
 			ballIntake = -1.0; // outake
 		}
 
 
 
-		if(oi->opStick->GetRawButton(1)) //GearIntake In
+		if(oi->opStick->GetRawButton(3)) //GearIntake In
 		{
 			gearIntake = 1.0;
 		}
@@ -246,12 +243,12 @@ public:
 			}
 
 			//increment Arm Up/Down
-			if(oi->drvStick->GetRawButton(2)) {
+			if(oi->drvStick->GetRawButton(1)) {
 				m_armAngle -= 0.025;
 
 			}
 
-			if(oi->drvStick->GetRawButton(3)) { // Increment Arm position up, when btn released set to zero
+			if(oi->drvStick->GetRawButton(4)) { // Increment Arm position up, when btn released set to zero
 				m_armAngle += 0.025;
 				armIncPressed = true;
 				armBtnSafe = false;
@@ -270,11 +267,11 @@ public:
 			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
-			if(oi->drvStick->GetRawButton(5)){
+			if(oi->drvStick->GetRawButton(6)){
 				//down
 				armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
 			}
-			if(oi->drvStick->GetRawButton(6)) {
+			if(oi->drvStick->GetRawButton(5)) {
 				//up
 				armMotor = INTAKE_ARM_OPEN_LOOP_SPEED;
 			}
@@ -292,25 +289,25 @@ public:
 
 
 		//CLOSED LOOP SHOOTER
-		if(oi->opStick->GetRawAxis(1) >= 1) //RPM adjust up
+		if(oi->opStick->GetPOV() == 0) //RPM adjust up
 		{
 			shooterRpm -= 10;
 		}
 
-		if(oi->opStick->GetRawAxis(1) <= -1) //RPM adjust down
+		if(oi->opStick->GetPOV() == 180) //RPM adjust down
 		{
 			shooterRpm += 10;
 		}
 
-		if(oi->opStick->GetRawAxis(0) >= 1)
+		if(oi->opStick->GetPOV() == 270)
 		{
 			shooterRpm = SHOOTER_SET_POINT_A;
 		}
-		if(oi->opStick->GetRawAxis(0) <= -1)
+		if(oi->opStick->GetPOV() == 90)
 		{
 			shooterRpm = SHOOTER_SET_POINT_B;
 		}
-		if(oi->opStick->GetRawButton(9))	//Turret off
+		if(oi->opStick->GetRawButton(7))	//Turret off
 		{
 			shooterRpm = 0;
 		}
@@ -327,18 +324,18 @@ public:
 		//END CLOSEDLOOP SHOOTER
 
 		//TURRET
-		float turret_joy_in = oi->opStick->GetRawAxis(2);
+		float turret_joy_in = oi->opStick->GetRawAxis(4);
 		if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 			turret_joy_in = 0;
 		float angle_change = m_turret_angle - turret_joy_in* TURRET_SPEED;
 		turret->SetAngle(angle_change);
 		m_turret_angle = angle_change;
 
-		if(oi->opStick->GetRawButton(12)) {	//USE VISION to steer turret
+		if(oi->opStick->GetRawButton(10)) {	//USE VISION to steer turret
 			result = doVisionWithProcessing();
 		}
 
-		if(oi->opStick->GetRawButton(10)) //Home Turret
+		if(oi->opStick->GetRawButton(8)) //Home Turret
 		{
 			m_turret_angle = 0.0;
 			turret->SetAngle(0.0);
