@@ -348,10 +348,6 @@ public:
 		}
 
 
-
-
-
-
 		//CLIMBER
 		if(oi->GetSw5())
 			climberMotor =- 12.0;
