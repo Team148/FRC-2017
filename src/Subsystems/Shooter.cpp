@@ -24,6 +24,8 @@ Shooter::Shooter() : Subsystem("Shooter") {
 
 
 	m_flashlight = new frc::Solenoid(0);
+	m_ringlight = new frc::Solenoid(1);
+
 }
 
 Shooter* Shooter::GetInstance() {
@@ -84,7 +86,11 @@ float Shooter::GetVoltage() {
 	return m_Motor1->GetOutputVoltage();
 }
 
-void Shooter::SetFlashlightOn(bool mode)
+void Shooter::SetFlashlightOn(bool on)
 {
-	m_flashlight->Set(mode);
+	m_flashlight->Set(on);
+}
+void Shooter::SetRingLightOn(bool on)
+{
+	m_ringlight->Set(on);
 }
