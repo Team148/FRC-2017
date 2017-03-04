@@ -173,8 +173,14 @@ public:
 		static int shooterRpm = 0;
 		static bool armIncPressed = false;
 		static bool armBtnSafe = false;
+<<<<<<< HEAD
 		bool flashlightOn = false;
 		bool ringlightOn = false;
+=======
+		static float temp_angle = 0.0;
+		float current_angle = 0.0;
+
+>>>>>>> origin/master
 
 
 		//Manual Open Loop Controls
@@ -344,7 +350,14 @@ public:
 		if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 			turret_joy_in = 0;
 		float angle_change = m_turret_angle - turret_joy_in* TURRET_SPEED;
-		turret->SetAngle(angle_change);
+		if(oi->opStick->GetRawButton(10)) //Home Turret
+		{
+			//m_turret_angle = 0.0;
+			//turret->SetAngle(0.0);
+			//read current angle
+			current_angle = Drivetrain::GetInstance()->GetAngle();
+			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
+		}else turret->SetAngle(angle_change);  //this call set motor small gear angle on turret
 		m_turret_angle = angle_change;
 
 		if(oi->opStick->GetRawButton(10)) {	//USE VISION to steer turret
@@ -352,6 +365,7 @@ public:
 			ringlightOn = true;
 		}
 
+<<<<<<< HEAD
 		if(oi->opStick->GetRawButton(8)) //Home Turret
 		{
 			m_turret_angle = 0.0;
@@ -363,6 +377,8 @@ public:
 				ringlightOn = true;
 		}
 		shooter->SetRinglightOn(ringlightOn);
+=======
+>>>>>>> origin/master
 
 		//CLIMBER
 		if(oi->GetSw5())

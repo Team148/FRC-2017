@@ -70,9 +70,12 @@ void Turret::SetActualPosition(double position) {
 }
 
 
-void Turret::SetAngle(float angle) {
-	//m_Motor->Set(angle*TURRET_ROTATIONS_PER_DEGREE);
+void Turret::SetAngle(float angle) {   //sets angle of the motor gear
 	m_Motor->Set(angle);
+}
+
+void Turret::SetBigAngle(float angle) {  //sets angle of the turret aka big gear
+	m_Motor->Set(angle * TURRET_DEG_IN_BIG_GEAR);
 }
 
 void Turret::Reset() {

@@ -30,6 +30,7 @@ public:
 	void SetActualPosition(double position = 0);
 	void SetOpen();
 	void SetAngle(float angle);
+	void SetBigAngle(float angle);
 	void Reset();
 	bool IsHomed();
 

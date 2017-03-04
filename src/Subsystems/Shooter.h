@@ -31,8 +31,14 @@ public:
 	float GetCurrent();
 	float GetVoltage();
 
+<<<<<<< HEAD
 	void SetFlashlightOn(bool mode);
 	void SetRinglightOn(bool mode);
+=======
+	void SetFlashlightOn(bool on);
+	void SetRingLightOn(bool on);
+
+>>>>>>> origin/master
 
 };
 
