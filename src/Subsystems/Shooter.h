@@ -12,6 +12,7 @@ private:
 	CANTalon* m_Motor1;
 	CANTalon* m_Motor2;
 	Solenoid* m_flashlight;
+	Solenoid* m_ringlight;
 
 
 	Shooter();
@@ -31,6 +32,7 @@ public:
 	float GetVoltage();
 
 	void SetFlashlightOn(bool mode);
+	void SetRinglightOn(bool mode);
 
 };
 
