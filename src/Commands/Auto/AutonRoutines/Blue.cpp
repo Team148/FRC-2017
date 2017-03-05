@@ -61,20 +61,26 @@ void Blue::Boiler_GetTwoGear()
 void Blue::Boiler_GetGear_ShootHopper()
 {
 	AddSequential(new Drive(-85,30));
-	AddSequential(new ArcadeDriveTurn(45));
+	AddSequential(new ArcadeDriveTurn(48));
 	AddSequential(new Drive(-34,20));
 	AddParallel(new CalibrateArm());
 	AddSequential(new Drive(43,20));
 
 	AddParallel(new SetIntake(0.0));
-	AddSequential(new ArcadeDriveTurn(75));
+	AddSequential(new ArcadeDriveTurn(72));
 	AddSequential(new Drive(60,30));
 	AddSequential(new ArcadeDriveTurn(-35));
 	AddParallel(new SetTurretAngle(90.0));
-	AddSequential(new Drive(32,30));
-	AddSequential(new SetShooterSpeed(SHOOTER_SET_POINT_A));
-	AddSequential(new SetAgitator(true));
-	AddSequential(new SetKicker(true));
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+	AddParallel(new SetAgitator(true, 10.0));
+	AddParallel(new SetKicker(true, 10.0));
+	AddSequential(new Drive(15,30));
+
+
+//	AddSequential(new ArcadeDriveTurn(90));
+//	AddSequential(new ArcadeDriveTurn(-90));
+//	AddSequential(new ArcadeDriveTurn(45));
+//	AddSequential(new ArcadeDriveTurn(-45));
 
 }
 void Blue::Boiler_ShootHopper()

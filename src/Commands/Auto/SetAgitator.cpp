@@ -1,15 +1,26 @@
 #include "SetAgitator.h"
 #include "Subsystems/Conveyor.h"
 
-SetAgitator::SetAgitator(bool on) {
+SetAgitator::SetAgitator(bool on, double timeout) {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 	Requires(Conveyor::GetInstance());
 	m_on = on;
+	m_timeout = timeout;
 }
 
 // Called just before this Command runs the first time
 void SetAgitator::Initialize() {
+	if(!m_timeout == 0.0)
+	{
+		SetTimeout(m_timeout);
+	}
+	m_IsFinished = false;
+
+}
+
+// Called repeatedly when this Command is scheduled to run
+void SetAgitator::Execute() {
 	if(m_on)
 	{
 		Conveyor::GetInstance()->SetAgitator(-CONVEYER_AGITATOR_VOLTAGE);
@@ -19,17 +30,11 @@ void SetAgitator::Initialize() {
 		Conveyor::GetInstance()->SetAgitator(0.0);
 	}
 
-
-}
-
-// Called repeatedly when this Command is scheduled to run
-void SetAgitator::Execute() {
-	m_IsFinished = true;
 }
 
 // Make this return true when this Command no longer needs to run execute()
 bool SetAgitator::IsFinished() {
-	return false;
+	return m_IsFinished || IsTimedOut();
 }
 
 // Called once after isFinished returns true

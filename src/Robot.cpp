@@ -127,6 +127,8 @@ public:
 		//}
 		log->Start();
 		drivetrain->configClosedLoop();
+		drivetrain->ResetGyro();
+		drivetrain->SetBrakeMode(true);
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
@@ -152,6 +154,7 @@ public:
 		//Set Shooter for OpenLoop
 		shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
+		drivetrain->SetBrakeMode(false);
 		turret->ConfigClosedLoop();
 		m_turret_angle = 0.0;
 

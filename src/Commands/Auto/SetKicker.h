@@ -5,7 +5,7 @@
 
 class SetKicker : public CommandBase {
 public:
-	SetKicker(bool on);
+	SetKicker(bool on, double timeout);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
@@ -13,6 +13,7 @@ public:
 	void Interrupted();
 private:
 	bool m_on = false;
+	double m_timeout = 0.0;
 	bool m_IsFinished = false;
 };
 
