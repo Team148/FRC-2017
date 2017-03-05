@@ -1,4 +1,5 @@
 #include "SetIntake.h"
+#include "Subsystems/Intake.h"
 
 SetIntake::SetIntake(float angle) {
 	// Use Requires() here to declare subsystem dependencies

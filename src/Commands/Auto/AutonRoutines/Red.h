@@ -1,14 +1,14 @@
-#ifndef Blue_H
-#define Blue_H
+#ifndef Red_H
+#define Red_H
 
 #include <Commands/CommandGroup.h>
 
 /**
  * The main autonomous command to pickup and deliver the soda to the box.
  */
-class Blue: public frc::CommandGroup {
+class Red: public frc::CommandGroup {
 public:
-	Blue(int autonSelection);
+	Red(int autonSelection);
 	void Boiler_GetGear();
 	void Boiler_GetTwoGear();
 	void Boiler_ShootHopper();
@@ -20,9 +20,8 @@ public:
 	void Retrieval_GetGear();
 	void Retrieval_GetTwoGear();
 
-
 private:
 
 };
 
-#endif  // Blue_H
+#endif  // Red_H

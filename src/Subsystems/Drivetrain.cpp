@@ -118,16 +118,22 @@ void Drivetrain::configClosedLoop() {
 	m_rightMotor1->SetAllowableClosedLoopErr(0);
 	m_rightMotor1->Set(0.0);
 
-
+	m_leftMotor1->DisableNominalClosedLoopVoltage();
+	m_rightMotor1->DisableNominalClosedLoopVoltage();
+	m_leftMotor1->SetNominalClosedLoopVoltage(10.0f);
+	m_rightMotor1->SetNominalClosedLoopVoltage(10.0f);
 	//Setup Ramp Rate
 	//m_leftMotor1->SetVoltageRampRate(24);
 	//m_rightMotor1->SetVoltageRampRate(24);
 
 	//Set some PIDF values
+
 	m_leftMotor1->SetF(DRIVETRAIN_F);
 	m_rightMotor1->SetF(DRIVETRAIN_F);
 	m_leftMotor1->SetP(DRIVETRAIN_P);
 	m_rightMotor1->SetP(DRIVETRAIN_P);
+	m_leftMotor1->SetI(DRIVETRAIN_I);
+	m_rightMotor1->SetI(DRIVETRAIN_I);
 	m_leftMotor1->SetD(DRIVETRAIN_D);
 	m_rightMotor1->SetD(DRIVETRAIN_D);
 

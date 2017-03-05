@@ -20,8 +20,10 @@ void CalibrateArm::Execute() {
 	Intake::GetInstance()->SetArm(-.6);
 	if(Intake::GetInstance()->IsIntakeDown()) {
 		m_switchdelaycount++;
+		Intake::GetInstance()->SetArm(-.25 );
 	}
 	if(m_switchdelaycount == m_switchdelay) {
+		Intake::GetInstance()->SetArm(0);
 		Intake::GetInstance()->ConfigureClosedLoop();
 		m_isFinished = true;
 	}

@@ -92,7 +92,7 @@ void Intake::ResetArm(float actual_pos) {
 void Intake::SetArmAngle(float angle) {
 	if(m_isClosedLoop)
 		m_ArmMotor->Set(angle);
-	std::cout << angle*INTAKE_ARM_ROTATIONS_PER_DEGREE << std::endl;
+	//std::cout << angle*INTAKE_ARM_ROTATIONS_PER_DEGREE << std::endl;
 }
 
 float Intake::GetArmAngle() {

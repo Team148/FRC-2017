@@ -1,4 +1,4 @@
-#include "Blue.h"
+#include "Red.h"
 
 #include <iostream>
 
@@ -10,10 +10,6 @@
 #include "Commands/SetIntakeBall.h"
 #include "Commands/SetIntakeGear.h"
 #include "Commands/Auto/SetBallGearUntilBeam.h"
-#include "Commands/SetTurretAngle.h"
-#include "Commands/Auto/SetAgitator.h"
-#include "Commands/Auto/SetKicker.h"
-#include "Commands/Auto/SetShooterSpeed.h"
 #include "Subsystems/Intake.h"
 #include "Constants.h"
 
@@ -21,7 +17,7 @@
 
 
 
-Blue::Blue(int autonSelection) : frc::CommandGroup("Blue")
+Red::Red(int autonSelection) : frc::CommandGroup("Red")
 {
 	switch(autonSelection)
 	{
@@ -39,7 +35,7 @@ Blue::Blue(int autonSelection) : frc::CommandGroup("Blue")
 
 
 //BOILER SIDE AUTONS
-void Blue::Boiler_GetGear()
+void Red::Boiler_GetGear()
 {
 //	AddSequential(new Drive(-92,25));
 //	AddSequential(new ArcadeDriveTurn(55));
@@ -47,50 +43,34 @@ void Blue::Boiler_GetGear()
 //	AddSequential(new Drive(36,15));
 
 	AddSequential(new Drive(-85,25));
-	AddSequential(new ArcadeDriveTurn(40));
+	AddSequential(new ArcadeDriveTurn(-40));
 	AddSequential(new Drive(-27,15));
 	AddSequential(new Drive(36,15));
 
 
 }
-void Blue::Boiler_GetTwoGear()
+void Red::Boiler_GetTwoGear()
 {
 
-
 }
-void Blue::Boiler_GetGear_ShootHopper()
+void Red::Boiler_GetGear_ShootHopper()
 {
-	AddSequential(new Drive(-85,30));
-	AddSequential(new ArcadeDriveTurn(48));
-	AddSequential(new Drive(-34,20));
-	AddParallel(new CalibrateArm());
-	AddSequential(new Drive(43,20));
-
-	AddParallel(new SetIntake(0.0));
-	AddSequential(new ArcadeDriveTurn(72));
-	AddSequential(new Drive(60,30));
-	AddSequential(new ArcadeDriveTurn(-35));
-	AddParallel(new SetTurretAngle(90.0));
-	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
-	AddParallel(new SetAgitator(true, 10.0));
-	AddParallel(new SetKicker(true, 10.0));
-	AddSequential(new Drive(15,30));
-
-
-//	AddSequential(new ArcadeDriveTurn(90));
-//	AddSequential(new ArcadeDriveTurn(-90));
-//	AddSequential(new ArcadeDriveTurn(45));
-//	AddSequential(new ArcadeDriveTurn(-45));
+	AddSequential(new Drive(69,-25));
+	AddSequential(new ArcadeDriveTurn(45));
+	AddSequential(new Drive(36,-25));
+	AddSequential(new Drive(36,25));
+	AddSequential(new ArcadeDriveTurn(45));
+	AddSequential(new Drive(69,25));
 
 }
-void Blue::Boiler_ShootHopper()
+void Red::Boiler_ShootHopper()
 {
 
 }
 //-------------------------------------
 
 //CENTER POSITION AUTONS
-void Blue::Center_GetGear()
+void Red::Center_GetGear()
 {
 	AddParallel(new CalibrateArm());
 	AddSequential(new Drive(79, 20));
@@ -108,14 +88,14 @@ void Blue::Center_GetGear()
 //-------------------------------------
 
 //RETRIEVAL SIDE AUTONS
-void Blue::Retrieval_GetGear()
+void Red::Retrieval_GetGear()
 {
 	AddSequential(new Drive(-84,25));
-	AddSequential(new ArcadeDriveTurn(-40));
+	AddSequential(new ArcadeDriveTurn(40));
 	AddSequential(new Drive(-30,15));
 	AddSequential(new Drive(36,15));
 }
-void Blue::Retrieval_GetTwoGear()
+void Red::Retrieval_GetTwoGear()
 {
 	AddSequential(new Drive(-84,25));
 	AddSequential(new ArcadeDriveTurn(-40));
