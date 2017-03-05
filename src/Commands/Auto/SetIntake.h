@@ -2,7 +2,6 @@
 #define SetIntake_H
 
 #include "Commands/InstantCommand.h"
-#include "Subsystems/Intake.h"
 
 class SetIntake : public InstantCommand {
 public:

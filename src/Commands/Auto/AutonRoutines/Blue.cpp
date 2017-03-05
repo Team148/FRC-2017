@@ -10,6 +10,10 @@
 #include "Commands/SetIntakeBall.h"
 #include "Commands/SetIntakeGear.h"
 #include "Commands/Auto/SetBallGearUntilBeam.h"
+#include "Commands/SetTurretAngle.h"
+#include "Commands/Auto/SetAgitator.h"
+#include "Commands/Auto/SetKicker.h"
+#include "Commands/Auto/SetShooterSpeed.h"
 #include "Subsystems/Intake.h"
 #include "Constants.h"
 
@@ -66,7 +70,11 @@ void Blue::Boiler_GetGear_ShootHopper()
 	AddSequential(new ArcadeDriveTurn(75));
 	AddSequential(new Drive(60,30));
 	AddSequential(new ArcadeDriveTurn(-35));
+	AddParallel(new SetTurretAngle(90.0));
 	AddSequential(new Drive(32,30));
+	AddSequential(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+	AddSequential(new SetAgitator(true));
+	AddSequential(new SetKicker(true));
 
 }
 void Blue::Boiler_ShootHopper()
