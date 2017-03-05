@@ -79,8 +79,12 @@ constexpr int	CENTER_GEAR = 10;
 constexpr int	RETRIEVAL_GEAR = 20;
 constexpr int	RETRIEVAL_TWOGEAR = 21;
 
-constexpr int	RED = -1;
+constexpr int	RED = 0;
 constexpr int	BLUE = 1;
+
+constexpr int	POSITION_BOILER = 1;
+constexpr int	POSITION_CENTER = 2;
+constexpr int	POSITION_RETRIEVAL =3;
 
 
 

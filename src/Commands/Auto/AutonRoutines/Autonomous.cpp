@@ -6,10 +6,12 @@
 #include "Commands/Auto/TurnPID.h"
 #include "Commands/Auto/TurnTMP.h"
 #include "Commands/Auto/ArcadeDriveTurn.h"
+#include "Commands/Auto/AutonRoutines/Red.h"
+#include "Commands/Auto/AutonRoutines/Blue.h"
 #include "Constants.h"
 
 
-Autonomous::Autonomous(bool red, int getGears, bool isShooting, bool getHopper)
+Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bool getHopper)
 {
 
 
@@ -22,15 +24,31 @@ Autonomous::Autonomous(bool red, int getGears, bool isShooting, bool getHopper)
 
 	switch(red)
 	{
-		RED:
-			switch(getGears)
+		case RED:
+			switch(position)
 			{
+				case POSITION_BOILER:
+					if(getGears && !isShooting && !getHopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR));
+					if(getGears && isShooting && getHopper) frc::Scheduler::GetInstance()->AddCommand(new Red (BOILER_GEAR_HOPPER_SHOOT));
 
+				break;
+				case POSITION_CENTER:
+				break;
+				case POSITION_RETRIEVAL:
+				break;
 			}
 		break;
 
-		BLUE:
-
+		case BLUE:
+			switch(position)
+			{
+				case POSITION_BOILER:
+				break;
+				case POSITION_CENTER:
+				break;
+				case POSITION_RETRIEVAL:
+				break;
+			}
 		break;
 	}
 
