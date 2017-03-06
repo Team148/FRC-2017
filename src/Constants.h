@@ -75,6 +75,7 @@ constexpr int	BOILER_HOPPER_SHOOT = 2;
 constexpr int	BOILER_TWO_GEAR = 3;
 
 constexpr int	CENTER_GEAR = 10;
+constexpr int	CENTER_TWO_GEAR = 11;
 
 constexpr int	RETRIEVAL_GEAR = 20;
 constexpr int	RETRIEVAL_TWOGEAR = 21;

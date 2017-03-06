@@ -124,6 +124,20 @@ public:
 
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
+		static bool red = false;
+		static bool shooting = false;
+		static bool hopper = false;
+		static int gears = 0;
+		static int position = 0;
+
+		red = OI::GetInstance()->GetSw1();
+		position = OI::GetInstance()->GetSelectorA();
+		gears = OI::GetInstance()->GetSelectorB();
+		shooting = OI::GetInstance()->GetSw2();
+		hopper = OI::GetInstance()->GetSw3();
+
+
+
 		//}
 		log->Start();
 		drivetrain->configClosedLoop();
@@ -133,6 +147,7 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 		result = doVisionWithProcessing(_angle);
+		frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
