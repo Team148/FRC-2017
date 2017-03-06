@@ -2,6 +2,26 @@
 
 Turret *Turret::m_instance = 0;
 
+//A structure to hold contour measurements a paricle
+struct RemoteContourReport {
+	double Area;
+	double CenterX;
+	double CenterY;
+	double Height;
+	double Width;
+};
+
+//Structure to represent the scores for the various tests used for target identification
+struct RemoteScores {
+	double Area;
+	double Aspect;
+};
+
+
+bool SortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs)	{
+	return lhs.Area > rhs.Area;
+};
+
 Turret::Turret() : Subsystem("Turret") {
 	std::cout << "info: creating Turret" << std::endl;
 
@@ -11,6 +31,8 @@ Turret::Turret() : Subsystem("Turret") {
 	m_Motor->ConfigPeakOutputVoltage(9,-9);
 
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
+
+	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
 }
 
 Turret* Turret::GetInstance() {
@@ -62,6 +84,7 @@ void Turret::ConfigClosedLoop() {
 void Turret::ConfigOpenLoop() {
 	m_Motor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 	m_Motor->Set(0);
+	m_isClosedLoop=false;
 }
 
 
@@ -100,3 +123,50 @@ bool Turret::IsHomed() {
 bool Turret::IsClosedLoop() {
 	return m_isClosedLoop;
 }
+
+void Turret::UpdateNetworkTable() {
+	int pix_offset = 0;
+	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>());
+	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>());
+	std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>());
+	std::vector<double> arr4 = m_network_table->GetNumberArray("height", llvm::ArrayRef<double>());
+	std::vector<double> arr5 = m_network_table->GetNumberArray("width", llvm::ArrayRef<double>());
+
+	const unsigned numberOfParticles = 1000;
+	std::vector<RemoteContourReport> RcRs(numberOfParticles);
+
+
+	if (arr1.size() > 0) {
+		for(unsigned int i = 0; i < arr1.size(); i++)
+		{
+			RcRs[i].Area = arr1[i];
+			RcRs[i].CenterX = arr2[i];
+			RcRs[i].CenterY = arr3[i];
+			RcRs[i].Height = arr4[i];
+			RcRs[i].Width = arr5[i];
+		}
+	}
+
+	std::sort(RcRs.begin(), RcRs.end(), SortByArea); //Sort the result by Area of target
+
+
+	if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 7)) {
+	//Here if we have a valid target
+	//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
+	//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
+	//CenterX-Width/2, CenterX+Width/2) where these are target cooridinates.
+	//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
+	//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
+
+		 pix_offset = (320.0 - RcRs[0].CenterX);  //.000625 may need to invert this range -0.1 to 0.1
+	}
+
+	//convert offset to degrees
+	m_vision_angle_offset = pix_offset*0.00035;
+}
+
+float Turret::GetVisionOffset() {
+	return m_vision_angle_offset;
+}
+
+

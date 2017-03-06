@@ -72,7 +72,6 @@ bool Intake::IsClosedLoop() {
 }
 
 bool Intake::IsIntakeUp() {
-
 	if(m_UpLimit)
 		return true;
 	else
@@ -102,8 +101,8 @@ float Intake::GetArmAngle() {
 
 bool Intake::IsBeamBroke() {
 	frc::SmartDashboard::PutNumber("BeamVoltage",m_beam->GetVoltage());
-	if(m_beam->GetVoltage() > 3.0)
+	if(m_beam->GetVoltage() >= 3.0)
 		return 1;
-	if(m_beam->GetVoltage() < 3.0)
+	else
 		return 0;
 }
