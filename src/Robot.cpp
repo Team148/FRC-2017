@@ -129,8 +129,7 @@ public:
 
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
-<<<<<<< HEAD
-=======
+
 		static int red = 0;
 		static bool shooting = false;
 		static bool hopper = false;
@@ -187,21 +186,16 @@ public:
 			}
 
 
->>>>>>> branch 'master' of https://github.com/Team148/FRC-2017.git
-		//}
 		log->Start();
 		drivetrain->configClosedLoop();
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
-<<<<<<< HEAD
+
 		result = doVisionWithProcessing(angle_change, m_turret_angle);
 		frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
-=======
-		result = doVisionWithProcessing(_angle);
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
->>>>>>> branch 'master' of https://github.com/Team148/FRC-2017.git
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
 
