@@ -434,18 +434,15 @@ public:
 //			frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 			//wait here to get to angle
 			result = doVisionWithProcessing(angle_change, m_turret_angle);
-			turret->SetAngle(angle_change);  //moved outside of routine
-			m_turret_angle = angle_change;
 			ringlightOn = true;
 		} else {
 			float turret_joy_in = oi->opStick->GetRawAxis(4);
 			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 			turret_joy_in = 0;
-			float angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
-			turret->SetAngle(angle_change);  //moved outside of routine
-			m_turret_angle = angle_change;
+			angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
 		}
-
+		turret->SetAngle(angle_change);  //moved outside of routine
+		m_turret_angle = angle_change;
 
 
 		//manual ringlight control
@@ -506,7 +503,9 @@ public:
 	unsigned int doVisionWithProcessing(float &angle_change, float &m_turret_angle) {
 	//this is from remote Camera via networktables
 		static int target = 0;
-		static float last_angle = 0;
+		static double last_angle = 0;
+		static double mult = 0.0002;
+		double pixel_offset = 0;
 //		static double angleOff = 0;
 //		static double pixPDegree = 0;
 //		static double pixFCenter = 0;
@@ -535,7 +534,7 @@ public:
 			std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
 
 			//only looking at top two biggest areas.  May need to sort deeper if false targets
-			if (target == 4) target = 0;
+			if (target == 6) target = 0;
 			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 7) && (target == 0) ) {
 			//Here if we have a valid target
 			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
@@ -543,8 +542,9 @@ public:
 			//CenterX-Width/2, CenterX+Width/2) where these are target cooridinates.
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
-
-			angle_change = m_turret_angle - (320.0 - RcRs[0].CenterX) * -0.0003;  //.000625 may need to invert this range -0.1 to 0.1
+			pixel_offset = (320.0 - RcRs[0].CenterX);
+			if(fabs(pixel_offset) < 5) mult = 0.0003;
+			angle_change = m_turret_angle - pixel_offset * -mult;  //.000625 may need to invert this range -0.1 to 0.1
 
 
 //below not working probably have to slow snapshot more
