@@ -120,19 +120,19 @@ void Blue::Retrieval_GetGear()
 }
 void Blue::Retrieval_GetTwoGear()
 {
-	AddSequential(new Drive(-90,40));
+	AddSequential(new Drive(-90,50)); // v 40
 	AddSequential(new ArcadeDriveTurn(-48));
-	AddSequential(new Drive(-30,20));
+	AddSequential(new Drive(-30,30));// v 20
 	// scored 1st gear
 
 	AddParallel(new CalibrateArm());
-	AddSequential(new Drive(60,40));
+	AddSequential(new Drive(60,60)); // v40
 	AddSequential(new SetIntake(0.0));
 	AddSequential(new ArcadeDriveTurn(50));
 	AddParallel(new SetBallGearUntilBeam());
-	AddSequential(new Drive(64,50));
+	AddSequential(new Drive(64,60)); // v50
 	AddParallel(new SetIntake(0.0));
-	AddSequential(new Drive(-66,50));
+	AddSequential(new Drive(-66,60)); // v50
 
 	// got 2nd gear
 	AddParallel(new SetIntake(INTAKE_ARM_POSITION_UP));

@@ -193,7 +193,7 @@ public:
 		m_turret_angle = 0.0;
 
 		result = doVisionWithProcessing(angle_change, m_turret_angle);
-		frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
+		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
