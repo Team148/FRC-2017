@@ -15,6 +15,7 @@
 #include "Commands/Auto/SetKicker.h"
 #include "Commands/Auto/SetShooterSpeed.h"
 #include "Subsystems/Intake.h"
+#include "Commands/AutoGearScore.h"
 #include "Constants.h"
 
 #include "WPILib.h"
@@ -46,10 +47,10 @@ void Blue::Boiler_GetGear()
 //	AddSequential(new Drive(-27,15));
 //	AddSequential(new Drive(36,15));
 
-	AddSequential(new Drive(-85,25));
-	AddSequential(new ArcadeDriveTurn(40));
-	AddSequential(new Drive(-27,15));
-	AddSequential(new Drive(36,15));
+	AddSequential(new Drive(-85,30));
+	AddSequential(new ArcadeDriveTurn(48));
+	AddSequential(new Drive(-34,20));
+	AddSequential(new Drive(43,20));
 
 
 }
@@ -92,10 +93,12 @@ void Blue::Boiler_ShootHopper()
 //CENTER POSITION AUTONS
 void Blue::Center_GetGear()
 {
+	 // replace with auto gear score eventually pls
 	AddParallel(new CalibrateArm());
 	AddSequential(new Drive(79, 20));
-	AddSequential(new SetIntake(0.05));
-	AddParallel(new Drive(-45, 30));
+	AddParallel(new SetIntakeBall(-0.1));
+	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+	AddSequential(new Drive(-20, 25));
 
 //	AddSequential(new Drive(-70,40));
 //	AddSequential(new Drive(70,40));
@@ -110,10 +113,10 @@ void Blue::Center_GetGear()
 //RETRIEVAL SIDE AUTONS
 void Blue::Retrieval_GetGear()
 {
-	AddSequential(new Drive(-84,25));
-	AddSequential(new ArcadeDriveTurn(-40));
-	AddSequential(new Drive(-30,15));
-	AddSequential(new Drive(36,15));
+	AddSequential(new Drive(-85,30));
+	AddSequential(new ArcadeDriveTurn(-48));
+	AddSequential(new Drive(-34,20));
+	AddSequential(new Drive(43,20));
 }
 void Blue::Retrieval_GetTwoGear()
 {

@@ -13,6 +13,8 @@
 #include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
 #include "Commands/Auto/AutonRoutines/Blue.h"
+#include "Commands/Auto/AutonRoutines/Red.h"
+
 #include "Commands/Auto/SetBallGearUntilBeam.h"
 #include "Commands/AutoGearScore.h"
 //#include "Vision/VisionAPI.h"
@@ -127,14 +129,79 @@ public:
 
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
+<<<<<<< HEAD
+=======
+		static int red = 0;
+		static bool shooting = false;
+		static bool hopper = false;
+		static int gears = 0;
+		static int position = 0;
+
+		red = oi->GetSw1();
+		position = oi->GetSelectorB();
+		gears = oi->GetSelectorA();
+		shooting = oi->GetSw2();
+		hopper = oi->GetSw3();
+
+		switch(red)
+			{
+				case RED: // CALL RED(NEW asdf123())
+					switch(position)
+					{
+						case POSITION_BOILER:
+							if(gears == 1 && shooting == 0 && hopper == 0) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR));
+							else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (BOILER_TWO_GEAR));
+							else if(gears == 1 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (BOILER_GEAR_HOPPER_SHOOT));
+							else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (BOILER_HOPPER_SHOOT));
+						break;
+						case POSITION_CENTER:
+							if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR));
+							else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (CENTER_TWO_GEAR));
+						break;
+						case POSITION_RETRIEVAL:
+							if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_GEAR));
+							else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (RETRIEVAL_TWOGEAR));
+						break;
+					}
+				break;
+
+				case BLUE: // CALL BLUE(NEW asdf123())
+					switch(position)
+					{
+					case POSITION_BOILER:
+						if(gears == 1 && shooting == 0 && hopper == 0) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR));
+						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_TWO_GEAR));
+						else if(gears == 1 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
+						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_HOPPER_SHOOT));
+					break;
+					case POSITION_CENTER:
+						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
+						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR));
+					break;
+					case POSITION_RETRIEVAL:
+						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_GEAR));
+						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_TWOGEAR));
+					break;
+					}
+				break;
+			}
+
+
+>>>>>>> branch 'master' of https://github.com/Team148/FRC-2017.git
 		//}
 		log->Start();
 		drivetrain->configClosedLoop();
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
+<<<<<<< HEAD
 		result = doVisionWithProcessing(angle_change, m_turret_angle);
 		frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
+=======
+		result = doVisionWithProcessing(_angle);
+		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
+		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
+>>>>>>> branch 'master' of https://github.com/Team148/FRC-2017.git
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
 
@@ -429,6 +496,16 @@ public:
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+
+		frc::SmartDashboard::PutNumber("SW1", oi->GetSw1());
+		frc::SmartDashboard::PutNumber("SW2", oi->GetSw2());
+		frc::SmartDashboard::PutNumber("SW3", oi->GetSw3());
+		frc::SmartDashboard::PutNumber("SW4", oi->GetSw4());
+		frc::SmartDashboard::PutNumber("SW5", oi->GetSw5());
+		frc::SmartDashboard::PutNumber("SW_A", oi->GetSelectorA());
+		frc::SmartDashboard::PutNumber("SW_B", oi->GetSelectorB());
+
+
 
 	}
 
