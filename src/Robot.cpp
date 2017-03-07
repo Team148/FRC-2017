@@ -129,7 +129,8 @@ public:
 
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
-
+		frc::Scheduler::GetInstance()->RemoveAll();
+		log->Start();
 		static int red = 0;
 		static bool shooting = false;
 		static bool hopper = false;
@@ -186,7 +187,7 @@ public:
 			}
 
 
-		log->Start();
+
 		drivetrain->configClosedLoop();
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
@@ -212,15 +213,16 @@ public:
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		frc::Scheduler::GetInstance()->RemoveAll();
 		std::cout << "starting TeleopInit" << std::endl;
 		//Set Shooter for OpenLoop
+		intake->ConfigureOpenLoop();
 		shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		turret->ConfigClosedLoop();
 		m_turret_angle = 0.0;
+		intake->SetCalibrated(false);
 
-		if(!intake->IsClosedLoop())
-			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 		result = doVisionWithProcessing(angle_change, m_turret_angle);
 
 //		if (autonomousCommand != nullptr) {
@@ -339,19 +341,25 @@ public:
 
 			if(m_armAngle <= 0.0) m_armAngle = 0.0; // Hard Stop stall Safety (down)
 			if(m_armAngle >= 1.14) m_armAngle = 1.14; // Hard Stop stall Safety (up)
-
-			intake->SetArmAngle(m_armAngle);
+			if(intake->IsCalibrated())
+			{
+				intake->SetArmAngle(m_armAngle);
+			}
 		}
 		else {  //OPEN LOOP INTAKE
-			if(oi->drvStick->GetRawButton(6)){
-				//down
-				armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
-			}
-			if(oi->drvStick->GetRawButton(5)) {
-				//up
-				armMotor = INTAKE_ARM_OPEN_LOOP_SPEED;
-			}
-		intake->SetArm(armMotor);
+
+				if(oi->drvStick->GetRawButton(6)){
+					//down
+					armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
+				}
+				if(oi->drvStick->GetRawButton(5)) {
+					//up
+					armMotor = INTAKE_ARM_OPEN_LOOP_SPEED;
+				}
+				if(intake->IsCalibrated())
+				{
+					intake->SetArm(armMotor);
+				}
 		}
 		//END INTAKE ARM
 
@@ -396,7 +404,6 @@ public:
 		if(oi->drvStick->GetRawButton(3)) {
 			m_armAngle = INTAKE_ARM_POSITION_UP*0.55;
 			frc::Scheduler::GetInstance()->AddCommand(new AutoGearScore());
-
 		}
 
 
@@ -458,7 +465,8 @@ public:
 			climberMotor =- 12.0;
 		conveyor->SetClimber(climberMotor);
 		//END CLIMBER
-
+		if(!intake->IsCalibrated())
+			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 
 		SmartDashUpdate();
 	}

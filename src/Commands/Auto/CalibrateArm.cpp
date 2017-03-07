@@ -33,6 +33,7 @@ void CalibrateArm::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool CalibrateArm::IsFinished() {
+	Intake::GetInstance()->SetCalibrated(true);
 	return m_isFinished || IsTimedOut();
 }
 

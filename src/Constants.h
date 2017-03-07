@@ -29,8 +29,8 @@ constexpr float DRIVE_TURN_TOLERANCE = 0.02;
 constexpr float TURN_DIST_P = 0.05;
 
 //Auto/ArcadeDriveTurn
-constexpr float ARCADE_TURN_P = 0.1;
-constexpr float ARCADE_TURN_I = 0.525;
+constexpr float ARCADE_TURN_P = 0.12;
+constexpr float ARCADE_TURN_I = 0.25;
 constexpr float ARCADE_TURN_TOLERANCE = 0.05;
 
 //Turret
@@ -80,8 +80,8 @@ constexpr int	CENTER_TWO_GEAR = 11;
 constexpr int	RETRIEVAL_GEAR = 20;
 constexpr int	RETRIEVAL_TWOGEAR = 21;
 
-constexpr int	RED = 0;
-constexpr int	BLUE = 1;
+constexpr int	RED = 1;
+constexpr int	BLUE = 0;
 
 constexpr int	POSITION_BOILER = 1;
 constexpr int	POSITION_CENTER = 2;

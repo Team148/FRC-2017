@@ -28,6 +28,7 @@ private:
 	static Intake *m_instance;
 	bool m_isHomed = 0;
 	bool m_isClosedLoop = 0;
+	bool m_calibrated = 0;
 public:
 	static Intake* GetInstance();
 	void InitDefaultCommand();
@@ -40,6 +41,8 @@ public:
 	void ConfigureOpenLoop();
 	void ConfigureClosedLoop();
 	bool IsClosedLoop();
+	void SetCalibrated(bool calibrate);
+	bool IsCalibrated();
 	void ResetArm(float actual_pos);
 
 	bool IsIntakeDown();

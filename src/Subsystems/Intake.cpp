@@ -70,6 +70,15 @@ void Intake::ConfigureClosedLoop() {
 bool Intake::IsClosedLoop() {
 	return m_isClosedLoop;
 }
+void Intake::SetCalibrated(bool calibrate)
+{
+	m_calibrated = calibrate;
+}
+
+bool Intake::IsCalibrated()
+{
+	return m_calibrated;
+}
 
 bool Intake::IsIntakeUp() {
 

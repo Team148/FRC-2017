@@ -20,12 +20,12 @@ void SetBallGearUntilBeam::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void SetBallGearUntilBeam::Execute() {
 
-	Intake::GetInstance()->SetBall(1.0);
+	//Intake::GetInstance()->SetBall(1.0);
 	Intake::GetInstance()->SetGear(1.0);
-//	if(Intake::GetInstance()->IsBeamBroke())
-//	{
-//		m_isFinished = true;
-//	}
+	if(Intake::GetInstance()->IsBeamBroke())
+	{
+		m_isFinished = true;
+	}
 }
 
 // Make this return true when this Command no longer needs to run execute()
