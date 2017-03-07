@@ -42,10 +42,10 @@ void Red::Boiler_GetGear()
 //	AddSequential(new Drive(-27,15));
 //	AddSequential(new Drive(36,15));
 
-	AddSequential(new Drive(-85,25));
-	AddSequential(new ArcadeDriveTurn(-40));
-	AddSequential(new Drive(-27,15));
-	AddSequential(new Drive(36,15));
+	AddSequential(new Drive(-94,30));
+	AddSequential(new ArcadeDriveTurn(-51));
+	AddSequential(new Drive(-34,20));
+	AddSequential(new Drive(43,20));
 
 
 }
@@ -74,8 +74,9 @@ void Red::Center_GetGear()
 {
 	AddParallel(new CalibrateArm());
 	AddSequential(new Drive(79, 20));
-	AddSequential(new SetIntake(0.05));
-	AddParallel(new Drive(-45, 30));
+	AddParallel(new SetIntakeBall(-0.1));
+	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+	AddSequential(new Drive(-20, 25));
 
 //	AddSequential(new Drive(-70,40));
 //	AddSequential(new Drive(70,40));
@@ -90,10 +91,10 @@ void Red::Center_GetGear()
 //RETRIEVAL SIDE AUTONS
 void Red::Retrieval_GetGear()
 {
-	AddSequential(new Drive(-84,25));
-	AddSequential(new ArcadeDriveTurn(40));
-	AddSequential(new Drive(-30,15));
-	AddSequential(new Drive(36,15));
+	AddSequential(new Drive(-91,30));
+	AddSequential(new ArcadeDriveTurn(49));
+	AddSequential(new Drive(-34,20));
+	AddSequential(new Drive(43,20));
 }
 void Red::Retrieval_GetTwoGear()
 {
