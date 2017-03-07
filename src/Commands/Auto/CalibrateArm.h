@@ -14,7 +14,7 @@ public:
 	void Interrupted();
 private:
 	bool m_isFinished = false;
-	int m_switchdelay = 2;
+	int m_switchdelay = 5;
 	int m_switchdelaycount = 0;
 };
 

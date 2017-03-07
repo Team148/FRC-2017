@@ -17,15 +17,17 @@ void CalibrateArm::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void CalibrateArm::Execute() {
-	Intake::GetInstance()->SetArm(-.6);
-	if(Intake::GetInstance()->IsIntakeDown()) {
+	Intake::GetInstance()->SetArm(-0.75);
+	if(Intake::GetInstance()->IsIntakeDown())
+	{
 		m_switchdelaycount++;
-		Intake::GetInstance()->SetArm(-.25 );
-	}
-	if(m_switchdelaycount == m_switchdelay) {
-		Intake::GetInstance()->SetArm(0);
-		Intake::GetInstance()->ConfigureClosedLoop();
-		m_isFinished = true;
+		Intake::GetInstance()->SetArm(-0.35);
+		if(m_switchdelaycount >= m_switchdelay)
+		{
+			Intake::GetInstance()->SetArm(0.0);
+			Intake::GetInstance()->ConfigureClosedLoop();
+			m_isFinished = true;
+		}
 	}
 }
 
