@@ -29,7 +29,7 @@ constexpr float DRIVE_TURN_TOLERANCE = 0.02;
 constexpr float TURN_DIST_P = 0.05;
 
 //Auto/ArcadeDriveTurn
-constexpr float ARCADE_TURN_P = 0.12;
+constexpr float ARCADE_TURN_P = 0.10;
 constexpr float ARCADE_TURN_I = 0.25;
 constexpr float ARCADE_TURN_TOLERANCE = 0.05;
 
@@ -46,10 +46,10 @@ constexpr float TURRET_JOYSTICK_DEADBAND = 0.1;
 
 //Intake
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = 84/18/360;
-constexpr float INTAKE_ARM_POSITION_P = 0.55;
+constexpr float INTAKE_ARM_POSITION_P = 0.65;
 constexpr float INTAKE_ARM_POSITION_I = 0.0001;
 constexpr float INTAKE_ARM_POSITION_UP = 1.12;
-constexpr float INTAKE_ARM_DOWN_VOLTAGE = -5.75;
+constexpr float INTAKE_ARM_DOWN_VOLTAGE = -6.0;
 constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.77;
 
 //Conveyer

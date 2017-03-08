@@ -74,21 +74,21 @@ OI* OI::GetInstance() {
 
 int OI::GetSelectorA() {
 	if(m_brickAselect1->Get())
-		return 1;
+		return 0;
 	if(m_brickAselect2->Get())
-		return 2;
+		return 1;
 	if(m_brickAselect3->Get())
-		return 3;
+		return 2;
 	if(m_brickAselect4->Get())
-		return 4;
+		return 3;
 	if(m_brickAselect5->Get())
-		return 5;
+		return 4;
 	if(m_brickAselect6->Get())
-		return 6;
+		return 5;
 	if(m_brickAselect7->Get())
-		return 7;
+		return 6;
 	if(m_brickAselect8->Get())
-		return 8;
+		return 7;
 
 	return 0;
 }

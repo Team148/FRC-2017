@@ -13,19 +13,20 @@ void CalibrateArm::Initialize() {
 	m_switchdelaycount = 0;
 	if(Intake::GetInstance()->IsClosedLoop())
 		Intake::GetInstance()->ConfigureOpenLoop();
+	Intake::GetInstance()->SetCalibrating(1);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void CalibrateArm::Execute() {
-	Intake::GetInstance()->SetArm(-0.75);
+	Intake::GetInstance()->SetArm(-0.70);
 	if(Intake::GetInstance()->IsIntakeDown())
 	{
 		m_switchdelaycount++;
 		Intake::GetInstance()->SetArm(-0.35);
 		if(m_switchdelaycount >= m_switchdelay)
 		{
-			Intake::GetInstance()->SetArm(0.0);
 			Intake::GetInstance()->ConfigureClosedLoop();
+			Intake::GetInstance()->SetArm(0.0);
 			m_isFinished = true;
 		}
 	}
@@ -33,7 +34,7 @@ void CalibrateArm::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool CalibrateArm::IsFinished() {
-	Intake::GetInstance()->SetCalibrated(true);
+
 	return m_isFinished || IsTimedOut();
 }
 
@@ -45,10 +46,12 @@ void CalibrateArm::End() {
 	}
 	else
 		Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_UP);
+	Intake::GetInstance()->SetCalibrating(false);
+
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
 void CalibrateArm::Interrupted() {
-	End();
+
 }

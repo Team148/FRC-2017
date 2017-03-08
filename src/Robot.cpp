@@ -100,6 +100,7 @@ public:
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+		frc::Scheduler::GetInstance()->RemoveAll();
 		m_turret_angle = 0.0;
 		result = doVisionWithProcessing(angle_change, m_turret_angle);
 		SmartDashUpdate();
@@ -215,19 +216,21 @@ public:
 		// this line or comment it out.
 		frc::Scheduler::GetInstance()->RemoveAll();
 		std::cout << "starting TeleopInit" << std::endl;
-		//Set Shooter for OpenLoop
-		intake->ConfigureOpenLoop();
+
+
 		shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		turret->ConfigClosedLoop();
 		m_turret_angle = 0.0;
-		intake->SetCalibrated(false);
+
 
 		result = doVisionWithProcessing(angle_change, m_turret_angle);
 
 //		if (autonomousCommand != nullptr) {
 //			autonomousCommand->Cancel();
 //		}
+		if(!intake->IsClosedLoop())
+			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
 	}
 
 	void TeleopPeriodic() override {
@@ -341,10 +344,8 @@ public:
 
 			if(m_armAngle <= 0.0) m_armAngle = 0.0; // Hard Stop stall Safety (down)
 			if(m_armAngle >= 1.14) m_armAngle = 1.14; // Hard Stop stall Safety (up)
-			if(intake->IsCalibrated())
-			{
-				intake->SetArmAngle(m_armAngle);
-			}
+
+			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
 
@@ -356,8 +357,7 @@ public:
 					//up
 					armMotor = INTAKE_ARM_OPEN_LOOP_SPEED;
 				}
-				if(intake->IsCalibrated())
-				{
+				if(!intake->IsCalibrating()){
 					intake->SetArm(armMotor);
 				}
 		}
@@ -465,8 +465,7 @@ public:
 			climberMotor =- 12.0;
 		conveyor->SetClimber(climberMotor);
 		//END CLIMBER
-		if(!intake->IsCalibrated())
-			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
+
 
 		SmartDashUpdate();
 	}
