@@ -12,7 +12,7 @@ void ArcadeDriveTurn::Initialize() {
 	m_isFinished=0;
 	tolerance_delay=0;
 	m_integral_err=0;
-	SetTimeout(2.75);
+	SetTimeout(3.0);
 	//Drivetrain::GetInstance()->ResetGyro();
 	m_init_angle = 0;
 	m_final_angle = 0;
@@ -33,20 +33,20 @@ void ArcadeDriveTurn::Execute() {
 
 	float stick_input = cur_err*ARCADE_TURN_P + ARCADE_TURN_I*m_integral_err;
 
-	//std::cout <<"info: cur_err " << cur_err << std::endl;
+	std::cout <<"info: cur_err " << cur_err << "FINAL ANGLE " << m_final_angle << std::endl;
 
-	if(abs(cur_err) <= m_final_angle*.1)
+	if(abs(cur_err) <= 10)
 	{
 		m_integral_err += cur_err*.02;
 	}
 	if(abs(cur_err)<=ARCADE_TURN_TOLERANCE) {
 
 		tolerance_delay++;
-		if(tolerance_delay > 8)
-			m_isFinished=1;
+		if(tolerance_delay > 15)
+			m_isFinished = 1;
 	}
 	else
-		tolerance_delay=0;
+		tolerance_delay = 0;
 
 	//bound input
 	if(stick_input > .7)

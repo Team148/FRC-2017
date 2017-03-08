@@ -15,12 +15,14 @@ Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bo
 {
 
 
-//	AddSequential(new ArcadeDriveTurn(-90));
-//	//AddSequential(new WaitCommand(0.5));
-//	AddSequential(new ArcadeDriveTurn(90));
-//	AddSequential(new ArcadeDriveTurn(-45));
-//	//AddSequential(new WaitCommand(0.5));
-//	AddSequential(new ArcadeDriveTurn(45));
+	AddSequential(new ArcadeDriveTurn(-90));
+	//AddSequential(new WaitCommand(0.5));
+	AddSequential(new ArcadeDriveTurn(90));
+	AddSequential(new ArcadeDriveTurn(-45));
+	//AddSequential(new WaitCommand(0.5));
+	AddSequential(new ArcadeDriveTurn(45));
+//	AddSequential(new Drive(70,70));
+//	AddSequential(new Drive(-70,70));
 
 //	switch(red)
 //	{
