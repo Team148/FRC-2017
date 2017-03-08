@@ -426,12 +426,11 @@ public:
 			angle_change = 0.0;
 		}
 
-
+		float _angle = turret->GetBigAngle();
+		frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
 //			current_angle = Drivetrain::GetInstance()->GetAngle();
 //			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
-//			_angle = turret->GetBigAngle();
-//			frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 			//wait here to get to angle
 			result = doVisionWithProcessing(angle_change, m_turret_angle);
 			ringlightOn = true;
@@ -504,13 +503,13 @@ public:
 	//this is from remote Camera via networktables
 		static int target = 0;
 		static double last_angle = 0;
-		static double mult = 0.0002;
+		static double mult = 0.000035;
 		double pixel_offset = 0;
 //		static double angleOff = 0;
 //		static double pixPDegree = 0;
 //		static double pixFCenter = 0;
 		const unsigned numberOfParticles = 1000;
-//		double VIEW_ANGLE = 60;  //HD3000 640x480
+//		double VIEW_ANGLE = 44;  //HD3000 640x480
 
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
 		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -534,8 +533,9 @@ public:
 			std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
 
 			//only looking at top two biggest areas.  May need to sort deeper if false targets
-			if (target == 6) target = 0;
-			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 7) && (target == 0) ) {
+//			if (target == 0) target = 0;
+			target = 0;
+			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
 			//Here if we have a valid target
 			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
 			//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
@@ -543,7 +543,8 @@ public:
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
 			pixel_offset = (320.0 - RcRs[0].CenterX);
-			if(fabs(pixel_offset) < 5) mult = 0.0003;
+			if(fabs(pixel_offset) < 50) mult = 0.00007;
+
 			angle_change = m_turret_angle - pixel_offset * -mult;  //.000625 may need to invert this range -0.1 to 0.1
 
 
