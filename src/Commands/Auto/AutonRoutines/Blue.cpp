@@ -51,8 +51,8 @@ void Blue::Boiler_GetGear()
 //	AddSequential(new Drive(-27,15));
 //	AddSequential(new Drive(36,15));
 
-	AddSequential(new Drive(-85,30));
-	AddSequential(new ArcadeDriveTurn(48));
+	AddSequential(new Drive(-93,30));
+	AddSequential(new ArcadeDriveTurn(53));
 	AddSequential(new Drive(-34,20));
 	AddSequential(new Drive(43,20));
 
@@ -180,8 +180,8 @@ void Blue::Center_GetTwoGear()
 //RETRIEVAL SIDE AUTONS
 void Blue::Retrieval_GetGear()
 {
-	AddSequential(new Drive(-85,30));
-	AddSequential(new ArcadeDriveTurn(-48));
+	AddSequential(new Drive(-94,30));
+	AddSequential(new ArcadeDriveTurn(-52));
 	AddSequential(new Drive(-34,20));
 	AddSequential(new Drive(43,20));
 }

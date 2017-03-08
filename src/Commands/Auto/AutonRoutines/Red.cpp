@@ -45,8 +45,8 @@ void Red::Boiler_GetGear()
 //	AddSequential(new Drive(-27,15));
 //	AddSequential(new Drive(36,15));
 
-	AddSequential(new Drive(-94,30));
-	AddSequential(new ArcadeDriveTurn(-51));
+	AddSequential(new Drive(-98,30));
+	AddSequential(new ArcadeDriveTurn(-52));
 	AddSequential(new Drive(-34,20));
 	AddSequential(new Drive(43,20));
 
