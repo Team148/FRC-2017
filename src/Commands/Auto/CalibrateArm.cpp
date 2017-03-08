@@ -1,9 +1,10 @@
 #include "CalibrateArm.h"
 
-CalibrateArm::CalibrateArm() {
+CalibrateArm::CalibrateArm(bool leaveArmDown) {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 	Requires(Intake::GetInstance());
+	m_armDown = leaveArmDown;
 }
 
 // Called just before this Command runs the first time
@@ -45,7 +46,15 @@ void CalibrateArm::End() {
 		Intake::GetInstance()->SetArm(0); //Stop Arm
 	}
 	else
-		Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_UP);
+		if(m_armDown == false)
+		{
+			Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_UP);
+		}
+		else
+		{
+			Intake::GetInstance()->SetArmAngle(0.0);
+
+		}
 	Intake::GetInstance()->SetCalibrating(false);
 
 }

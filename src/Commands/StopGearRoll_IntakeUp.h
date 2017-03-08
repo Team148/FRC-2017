@@ -15,6 +15,7 @@ private:
 	bool m_IsFinished = false;
 	float m_startTime = 0.0;
 	float m_currentTime = 0.0;
+
 };
 
 #endif  // StopGearRoll_IntakeUp_H

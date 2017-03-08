@@ -230,7 +230,7 @@ public:
 //			autonomousCommand->Cancel();
 //		}
 		if(!intake->IsClosedLoop())
-			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm());
+			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm(false));
 	}
 
 	void TeleopPeriodic() override {
@@ -486,7 +486,7 @@ public:
 	void SmartDashUpdate() {
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
 		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
-		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm());
+		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm(false));
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", -shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());

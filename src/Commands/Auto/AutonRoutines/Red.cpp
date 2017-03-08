@@ -10,6 +10,7 @@
 #include "Commands/SetIntakeBall.h"
 #include "Commands/SetIntakeGear.h"
 #include "Commands/Auto/SetBallGearUntilBeam.h"
+#include "Commands/StopGearRoll_IntakeUp.h"
 #include "Subsystems/Intake.h"
 #include "Constants.h"
 
@@ -27,6 +28,8 @@ Red::Red(int autonSelection) : frc::CommandGroup("Red")
 	case BOILER_TWO_GEAR: Boiler_GetTwoGear(); break;
 
 	case CENTER_GEAR: Center_GetGear(); break;
+	case CENTER_TWO_GEAR: Center_GetTwoGear(); break;
+
 
 	case RETRIEVAL_GEAR: Retrieval_GetGear(); break;
 	case RETRIEVAL_TWOGEAR: Retrieval_GetTwoGear(); break;
@@ -72,7 +75,7 @@ void Red::Boiler_ShootHopper()
 //CENTER POSITION AUTONS
 void Red::Center_GetGear()
 {
-	AddParallel(new CalibrateArm());
+	AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(79, 20));
 	AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
@@ -86,6 +89,29 @@ void Red::Center_GetGear()
 
 
 }
+void Red::Center_GetTwoGear()
+{
+	 //not jank use intake to score all gears
+		AddParallel(new CalibrateArm(false));
+		AddSequential(new Drive(80, 150));
+	//	AddParallel(new SetIntakeBall(-0.1));
+		AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+		//AddSequential(new Drive(-20, 40));
+		AddSequential(new Drive(-70, 150));
+
+		AddParallel(new SetIntake(0.0));
+		AddSequential(new ArcadeDriveTurn(-90));
+		AddParallel(new SetIntakeGear(1.0));
+		AddSequential(new Drive(25, 150));
+		AddParallel(new StopGearRoll_IntakeUp());
+		AddSequential(new Drive(-30, 150));
+		AddSequential(new ArcadeDriveTurn(90));
+
+		AddSequential(new Drive(65, 150));
+	//	AddParallel(new SetIntakeBall(-0.1));
+		AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+		AddSequential(new Drive(-70, 150));
+}
 //-------------------------------------
 
 //RETRIEVAL SIDE AUTONS
@@ -98,20 +124,6 @@ void Red::Retrieval_GetGear()
 }
 void Red::Retrieval_GetTwoGear()
 {
-	AddSequential(new Drive(-84,25));
-	AddSequential(new ArcadeDriveTurn(-40));
-	AddSequential(new Drive(-30,15));
-	AddParallel(new CalibrateArm());
-	AddSequential(new Drive(60,25));
-	AddSequential(new SetIntake(0.0));
-	AddSequential(new ArcadeDriveTurn(40));
-	AddParallel(new SetBallGearUntilBeam());
-	AddSequential(new Drive(26,22));
-	AddSequential(new Drive(-28,18));
-	AddParallel(new SetIntake(INTAKE_ARM_POSITION_UP));
-
-
-
 
 
 

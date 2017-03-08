@@ -9,7 +9,7 @@
 
 //Drivetrain constants.
 constexpr double DRIVETRAIN_F = 1.01;
-constexpr double DRIVETRAIN_P = 2.7;
+constexpr double DRIVETRAIN_P = 2.5;
 constexpr double DRIVETRAIN_I = 0.005;
 constexpr double DRIVETRAIN_D = 0.0;
 constexpr float DRIVETRAIN_WHEEL_DIAMETER = 4.0;
@@ -30,7 +30,7 @@ constexpr float TURN_DIST_P = 0.05;
 
 //Auto/ArcadeDriveTurn
 constexpr float ARCADE_TURN_P = 0.095;
-constexpr float ARCADE_TURN_I = 0.52;
+constexpr float ARCADE_TURN_I = 0.59;
 constexpr float ARCADE_TURN_TOLERANCE = 0.05;
 
 //Turret

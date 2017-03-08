@@ -21,7 +21,7 @@ Center1Gear::Center1Gear(int val) {
 	// e.g. if Command1 requires chassis, and Command2 requires arm,
 	// a CommandGroup containing them would require both the chassis and the
 	// arm.
-	AddParallel(new CalibrateArm());
+	AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(59,25));
 	//AddSequential(new SetIntakeArm(0,2));
 	AddSequential(new SetIntake(0));
