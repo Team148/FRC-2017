@@ -343,7 +343,7 @@ public:
 				m_armAngle = (INTAKE_ARM_POSITION_UP/2) + oi->drvStick->GetRawAxis(3)*(INTAKE_ARM_POSITION_UP/2);
 
 			if(m_armAngle <= 0.0) m_armAngle = 0.0; // Hard Stop stall Safety (down)
-			if(m_armAngle >= 1.14) m_armAngle = 1.14; // Hard Stop stall Safety (up)
+			if(m_armAngle >= 1.18) m_armAngle = 1.18; // Hard Stop stall Safety (up)
 
 			intake->SetArmAngle(m_armAngle);
 		}
@@ -395,10 +395,7 @@ public:
 		{
 			shooterRpm = 0;
 		}
-		if(shooterRpm != 0)	//If shooter is on, turn the flashlight ON
-		{
-			flashlightOn = true;
-		}
+
 
 		//AUTO SCORE
 		if(oi->drvStick->GetRawButton(3)) {
@@ -413,10 +410,7 @@ public:
 		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
-		//Manual Flashlight control
-		if(oi->drvStick->GetRawButton(1)) {
-			flashlightOn = true;
-		}
+
 
 
 		shooter->SetFlashlightOn(flashlightOn);
@@ -441,7 +435,9 @@ public:
 //			frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 			//wait here to get to angle
 			result = doVisionWithProcessing(angle_change, m_turret_angle);
+			flashlightOn = false;
 			ringlightOn = true;
+
 		} else {
 			float turret_joy_in = oi->opStick->GetRawAxis(4);
 			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
@@ -452,6 +448,10 @@ public:
 		m_turret_angle = angle_change;
 
 
+		//Manual Flashlight control
+		if(oi->drvStick->GetRawButton(1)) {
+			flashlightOn = true;
+		}
 		//manual ringlight control
 		if(oi->drvStick->GetRawButton(2)) {
 				ringlightOn = true;

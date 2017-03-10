@@ -51,7 +51,7 @@ void Blue::Boiler_GetGear()
 //	AddSequential(new Drive(-27,15));
 //	AddSequential(new Drive(36,15));
 
-	AddSequential(new Drive(-93,30));
+	AddSequential(new Drive(-104,30));
 	AddSequential(new ArcadeDriveTurn(53));
 	AddSequential(new Drive(-34,20));
 	AddSequential(new Drive(43,20));
@@ -152,24 +152,24 @@ void Blue::Center_GetTwoGear()
 
  //not jank use intake to score all gears
 	AddParallel(new CalibrateArm(false));
-	AddSequential(new Drive(80, 200));
+	AddSequential(new Drive(88, 150));
 //	AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
 	//AddSequential(new Drive(-20, 40));
-	AddSequential(new Drive(-70, 200));
+	AddSequential(new Drive(-78, 150));
 
 	AddParallel(new SetIntake(0.0));
 	AddSequential(new ArcadeDriveTurn(90));
 	AddParallel(new SetIntakeGear(1.0));
-	AddSequential(new Drive(25, 200));
+	AddSequential(new Drive(25, 150));
 	AddParallel(new StopGearRoll_IntakeUp());
-	AddSequential(new Drive(-30, 200));
+	AddSequential(new Drive(-30, 150));
 	AddSequential(new ArcadeDriveTurn(-90));
 
-	AddSequential(new Drive(65, 200));
+	AddSequential(new Drive(75, 150));
 //	AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
-	AddSequential(new Drive(-70, 200));
+	AddSequential(new Drive(-70, 150));
 
 
 
@@ -180,7 +180,7 @@ void Blue::Center_GetTwoGear()
 //RETRIEVAL SIDE AUTONS
 void Blue::Retrieval_GetGear()
 {
-	AddSequential(new Drive(-94,30));
+	AddSequential(new Drive(-104,30));
 	AddSequential(new ArcadeDriveTurn(-52));
 	AddSequential(new Drive(-34,20));
 	AddSequential(new Drive(43,20));
