@@ -27,7 +27,7 @@ void CalibrateArm::Execute() {
 		if(m_switchdelaycount >= m_switchdelay)
 		{
 			Intake::GetInstance()->ConfigureClosedLoop();
-			Intake::GetInstance()->SetArm(0.0);
+			Intake::GetInstance()->SetArm(INTAKE_ARM_POSITION_DOWN);
 			m_isFinished = true;
 		}
 	}
@@ -52,7 +52,7 @@ void CalibrateArm::End() {
 		}
 		else
 		{
-			Intake::GetInstance()->SetArmAngle(0.0);
+			Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_DOWN);
 
 		}
 	Intake::GetInstance()->SetCalibrating(false);

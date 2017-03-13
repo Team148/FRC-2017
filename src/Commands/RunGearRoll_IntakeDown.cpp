@@ -16,7 +16,7 @@ void RunGearRoll_IntakeDown::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void RunGearRoll_IntakeDown::Execute()
 {
-	Intake::GetInstance()->SetArm(0.0);
+	Intake::GetInstance()->SetArm(INTAKE_ARM_POSITION_DOWN);
 	Intake::GetInstance()->SetGear(1.0);
 	m_IsFinished = true;
 }

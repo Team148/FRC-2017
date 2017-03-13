@@ -137,12 +137,14 @@ public:
 		static bool hopper = false;
 		static int gears = 0;
 		static int position = 0;
+		static int gear_noscore = false;
 
 		red = oi->GetSw1();
 		position = oi->GetSelectorB();
 		gears = oi->GetSelectorA();
-		shooting = oi->GetSw2();
-		hopper = oi->GetSw3();
+		gear_noscore = oi->GetSw2();
+		//shooting = oi->GetSw2();
+		//hopper = oi->GetSw3();
 
 		switch(red)
 			{
@@ -156,8 +158,9 @@ public:
 							else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (BOILER_HOPPER_SHOOT));
 						break;
 						case POSITION_CENTER:
-							if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR));
-							else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (CENTER_TWO_GEAR));
+							if(gears == 1 ) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR));
+							else if (gears == 2 && gear_noscore == true) frc::Scheduler::GetInstance()->AddCommand(new Red (CENTER_TWO_GEAR_NOSCORE));
+							else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Red (CENTER_TWO_GEAR));
 						break;
 						case POSITION_RETRIEVAL:
 							if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_GEAR));
@@ -176,8 +179,9 @@ public:
 						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_HOPPER_SHOOT));
 					break;
 					case POSITION_CENTER:
-						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
-						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR));
+						if(gears == 1) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
+						else if (gears == 2 && gear_noscore == true) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE));
+						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR));
 					break;
 					case POSITION_RETRIEVAL:
 						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_GEAR));
@@ -190,6 +194,7 @@ public:
 
 
 		drivetrain->configClosedLoop();
+		drivetrain->SetBrakeMode(true);
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
@@ -220,6 +225,7 @@ public:
 
 		shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
+		drivetrain->SetBrakeMode(false);
 		turret->ConfigClosedLoop();
 		m_turret_angle = 0.0;
 
@@ -313,7 +319,7 @@ public:
 		if(intake->IsClosedLoop()) {
 			if(oi->drvStick->GetRawButton(5)){
 				//intake->SetArmAngle(0.0); //down
-				m_armAngle = 0.0;
+				m_armAngle = INTAKE_ARM_POSITION_DOWN;
 			}
 			if(oi->drvStick->GetRawButton(6)) {
 				//intake->SetArmAngle(1.12); //up
@@ -342,8 +348,8 @@ public:
 			if(oi->drvStick->GetRawAxis(3) > 0.2)
 				m_armAngle = (INTAKE_ARM_POSITION_UP/2) + oi->drvStick->GetRawAxis(3)*(INTAKE_ARM_POSITION_UP/2);
 
-			if(m_armAngle <= 0.0) m_armAngle = 0.0; // Hard Stop stall Safety (down)
-			if(m_armAngle >= 1.18) m_armAngle = 1.18; // Hard Stop stall Safety (up)
+			if(m_armAngle <= INTAKE_ARM_POSITION_DOWN) m_armAngle = INTAKE_ARM_POSITION_DOWN; // Hard Stop stall Safety (down)
+			if(m_armAngle >= INTAKE_ARM_POSITION_UP) m_armAngle = INTAKE_ARM_POSITION_UP; // Hard Stop stall Safety (up)
 
 			intake->SetArmAngle(m_armAngle);
 		}
@@ -399,7 +405,7 @@ public:
 
 		//AUTO SCORE
 		if(oi->drvStick->GetRawButton(3)) {
-			m_armAngle = INTAKE_ARM_POSITION_UP*0.55;
+			m_armAngle = INTAKE_ARM_GEAR_POSITION;
 			frc::Scheduler::GetInstance()->AddCommand(new AutoGearScore());
 		}
 
@@ -462,7 +468,11 @@ public:
 
 		//CLIMBER
 		if(oi->GetSw5())
-			climberMotor =- 12.0;
+		{
+			climberMotor =	-oi->opStick->GetRawAxis(1)*12.0;
+		}
+		if(climberMotor >= 0.0) climberMotor = 0.0;
+
 		conveyor->SetClimber(climberMotor);
 		//END CLIMBER
 

@@ -16,7 +16,7 @@ void StopGearRoll_IntakeUp::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void StopGearRoll_IntakeUp::Execute() {
 
-	Intake::GetInstance()->SetArm(1.2);
+	Intake::GetInstance()->SetArm(INTAKE_ARM_POSITION_UP);
 	if(frc::Timer::GetFPGATimestamp()-m_startTime >= 0.5)
 	{
 		Intake::GetInstance()->SetGear(0.0);

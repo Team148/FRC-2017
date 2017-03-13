@@ -12,7 +12,7 @@ void ArcadeDriveTurn::Initialize() {
 	m_isFinished=0;
 	tolerance_delay=0;
 	m_integral_err=0;
-	SetTimeout(2.5);
+	SetTimeout(2.25);
 	//Drivetrain::GetInstance()->ResetGyro();
 	m_init_angle = 0;
 	m_final_angle = 0;
@@ -49,10 +49,10 @@ void ArcadeDriveTurn::Execute() {
 		tolerance_delay = 0;
 
 	//bound input
-	if(stick_input > .7)
-		stick_input = .7;
-	if(stick_input < -.7)
-		stick_input = -.7;
+	if(stick_input > .65)
+		stick_input = .65;
+	if(stick_input < -.65)
+		stick_input = -.65;
 
 
 	Drivetrain::GetInstance()->Arcade(0,stick_input);

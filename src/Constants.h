@@ -8,8 +8,8 @@
 #define CONSTANTS_H
 
 //Drivetrain constants.
-constexpr double DRIVETRAIN_F = 1.01;
-constexpr double DRIVETRAIN_P = 2.5;
+constexpr double DRIVETRAIN_F = 1.4;
+constexpr double DRIVETRAIN_P = 1.75;
 constexpr double DRIVETRAIN_I = 0.005;
 constexpr double DRIVETRAIN_D = 0.0;
 constexpr float DRIVETRAIN_WHEEL_DIAMETER = 4.0;
@@ -29,8 +29,8 @@ constexpr float DRIVE_TURN_TOLERANCE = 0.02;
 constexpr float TURN_DIST_P = 0.05;
 
 //Auto/ArcadeDriveTurn
-constexpr float ARCADE_TURN_P = 0.095;
-constexpr float ARCADE_TURN_I = 0.59;
+constexpr float ARCADE_TURN_P = 0.092; // 0.920
+constexpr float ARCADE_TURN_I = 0.472; // 0.472
 constexpr float ARCADE_TURN_TOLERANCE = 0.05;
 
 //Turret
@@ -48,7 +48,9 @@ constexpr float TURRET_JOYSTICK_DEADBAND = 0.1;
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = 84/18/360;
 constexpr float INTAKE_ARM_POSITION_P = 0.675;
 constexpr float INTAKE_ARM_POSITION_I = 0.0001;
-constexpr float INTAKE_ARM_POSITION_UP = 1.18;
+constexpr float INTAKE_ARM_POSITION_UP = 1.25;
+constexpr float INTAKE_ARM_GEAR_POSITION = 0.649;
+constexpr float INTAKE_ARM_POSITION_DOWN = 0.050;
 constexpr float INTAKE_ARM_DOWN_VOLTAGE = -6.0;
 constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.77;
 
@@ -76,6 +78,7 @@ constexpr int	BOILER_TWO_GEAR = 3;
 
 constexpr int	CENTER_GEAR = 10;
 constexpr int	CENTER_TWO_GEAR = 11;
+constexpr int 	CENTER_TWO_GEAR_NOSCORE = 12;
 
 constexpr int	RETRIEVAL_GEAR = 20;
 constexpr int	RETRIEVAL_TWOGEAR = 21;

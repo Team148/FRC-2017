@@ -35,6 +35,8 @@ Blue::Blue(int autonSelection) : frc::CommandGroup("Blue")
 
 	case CENTER_GEAR: Center_GetGear(); break;
 	case CENTER_TWO_GEAR: Center_GetTwoGear(); break;
+	case CENTER_TWO_GEAR_NOSCORE: Center_GetTwoGear_Noscore(); break;
+
 
 
 	case RETRIEVAL_GEAR: Retrieval_GetGear(); break;
@@ -60,8 +62,9 @@ void Blue::Boiler_GetGear()
 }
 void Blue::Boiler_GetTwoGear()
 {
-
-
+	AddSequential(new Drive(70,150));
+	AddSequential(new WaitCommand(2.0));
+	AddSequential(new Drive(-70,150));
 }
 void Blue::Boiler_GetGear_ShootHopper()
 {
@@ -101,7 +104,7 @@ void Blue::Center_GetGear()
 	AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(79, 20));
 	AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	AddSequential(new Drive(-20, 25));
 
 //	AddSequential(new Drive(-70,40));
@@ -126,7 +129,7 @@ void Blue::Center_GetTwoGear()
 //	AddSequential(new Drive(50, 300));
 //	AddSequential(new ArcadeDriveTurn(-35));
 //	AddSequential(new Drive(24, 300));
-//	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+//	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 //	AddSequential(new Drive(-70, 300));
 
 
@@ -145,7 +148,7 @@ void Blue::Center_GetTwoGear()
 //	AddParallel(new StopGearRoll_IntakeUp());
 //	AddSequential(new ArcadeDriveTurn(170));
 //	AddSequential(new Drive(75, 300));
-//	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+//	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 //	AddSequential(new Drive(-70, 300));
 
 
@@ -154,22 +157,49 @@ void Blue::Center_GetTwoGear()
 	AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(88, 150));
 //	AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	//AddSequential(new Drive(-20, 40));
-	AddSequential(new Drive(-78, 150));
+	AddSequential(new Drive(-70, 150));
 
-	AddParallel(new SetIntake(0.0));
-	AddSequential(new ArcadeDriveTurn(90));
+	AddParallel(new SetIntake(INTAKE_ARM_POSITION_DOWN));
+	AddSequential(new ArcadeDriveTurn(100));
 	AddParallel(new SetIntakeGear(1.0));
 	AddSequential(new Drive(25, 150));
 	AddParallel(new StopGearRoll_IntakeUp());
-	AddSequential(new Drive(-30, 150));
-	AddSequential(new ArcadeDriveTurn(-90));
+	AddSequential(new Drive(-22.5, 150));
+	AddSequential(new ArcadeDriveTurn(-100));
 
-	AddSequential(new Drive(75, 150));
-//	AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+	AddSequential(new Drive(77, 150));
+	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	AddSequential(new Drive(-70, 150));
+
+
+
+
+}
+void Blue::Center_GetTwoGear_Noscore()
+{
+ //not jank use intake to score all gears
+	AddParallel(new CalibrateArm(false));
+	AddSequential(new Drive(88, 150));
+//	AddParallel(new SetIntakeBall(-0.1));
+	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
+	//AddSequential(new Drive(-20, 40));
+	AddSequential(new Drive(-70, 150));
+
+	AddParallel(new SetIntake(INTAKE_ARM_POSITION_DOWN));
+	AddSequential(new ArcadeDriveTurn(100));
+	AddParallel(new SetIntakeGear(1.0));
+	AddSequential(new Drive(25, 150));
+	AddParallel(new StopGearRoll_IntakeUp());
+	AddSequential(new Drive(-22.5, 150));
+
+
+//	AddSequential(new ArcadeDriveTurn(-100));
+//
+//	AddSequential(new Drive(77, 150));
+//	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
+//	AddSequential(new Drive(-70, 150));
 
 
 
@@ -212,7 +242,7 @@ void Blue::Retrieval_GetTwoGear()
 
 	AddSequential(new Drive(64,80));
 	//AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP*0.55));
+	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	AddSequential(new Drive(-30, 30));
 
 
