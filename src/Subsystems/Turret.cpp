@@ -41,8 +41,8 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SelectProfileSlot(0);
 	m_Motor->SetF(0.0);
 	m_Motor->SetP(TURRET_P);
-	m_Motor->SetI(0.0);
-	m_Motor->SetD(0.0);
+	m_Motor->SetI(TURRET_I);
+	m_Motor->SetD(TURRET_D);
 
 
 	Reset();			//assume starting at Home
