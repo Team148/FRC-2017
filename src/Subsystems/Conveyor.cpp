@@ -9,16 +9,21 @@ Conveyor::Conveyor() : Subsystem("Conveyor") {
 	m_lowerMotor = new CANTalon(CONVEYOR_LOWER_MOTOR);
 	m_upperMotor = new CANTalon(CONVEYOR_UPPER_MOTOR);
 	m_climberMotor = new CANTalon(CLIMBER_MOTOR);
+	m_climberMotor2 = new CANTalon(CLIMBER_MOTOR_2);
+
 
 
 	m_lowerMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
 	m_upperMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
 	m_climberMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
-	m_climberMotor->ConfigPeakOutputVoltage(1,-12); //climber ONLY goes backwards
+	m_climberMotor2->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
+	m_climberMotor->ConfigPeakOutputVoltage(12.0,-12); //climber ONLY goes backwards
+	m_climberMotor2->ConfigPeakOutputVoltage(12.0,-12);
 
 	m_lowerMotor->SetSafetyEnabled(false);
 	m_upperMotor->SetSafetyEnabled(false);
 	m_climberMotor->SetSafetyEnabled(false);
+	m_climberMotor2->SetSafetyEnabled(false);
 }
 
 Conveyor* Conveyor::GetInstance() {
@@ -46,4 +51,5 @@ void Conveyor::SetKicker(float voltage) {
 
 void Conveyor::SetClimber(float voltage) {
 	m_climberMotor->Set(voltage);
+	m_climberMotor2->Set(-voltage);
 }

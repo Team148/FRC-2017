@@ -11,6 +11,7 @@ private:
 	CANTalon* m_lowerMotor;
 	CANTalon* m_upperMotor;
 	CANTalon* m_climberMotor;
+	CANTalon* m_climberMotor2;
 
 	Conveyor();
 	static Conveyor *m_instance;

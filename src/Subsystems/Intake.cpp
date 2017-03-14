@@ -58,7 +58,7 @@ void Intake::ConfigureClosedLoop() {
 	m_ArmMotor->SetClosedLoopOutputDirection(false);
 	m_ArmMotor->SetAllowableClosedLoopErr(0);
 	m_ArmMotor->SelectProfileSlot(0);
-	m_ArmMotor->ConfigPeakOutputVoltage(11,INTAKE_ARM_DOWN_VOLTAGE);  //Forward is Up
+	m_ArmMotor->ConfigPeakOutputVoltage(12.0,INTAKE_ARM_DOWN_VOLTAGE);  //Forward is Up
 	m_ArmMotor->SetF(0.0);
 	m_ArmMotor->SetP(INTAKE_ARM_POSITION_P);
 	m_ArmMotor->SetI(INTAKE_ARM_POSITION_I);
@@ -69,6 +69,15 @@ void Intake::ConfigureClosedLoop() {
 
 bool Intake::IsClosedLoop() {
 	return m_isClosedLoop;
+}
+void Intake::SetCalibrating(bool calibrate)
+{
+	m_calibrating = calibrate;
+}
+
+bool Intake::IsCalibrating()
+{
+	return m_calibrating;
 }
 
 bool Intake::IsIntakeUp() {

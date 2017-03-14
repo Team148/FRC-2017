@@ -1,9 +1,10 @@
 #include "CalibrateArm.h"
 
-CalibrateArm::CalibrateArm() {
+CalibrateArm::CalibrateArm(bool leaveArmDown) {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 	Requires(Intake::GetInstance());
+	m_armDown = leaveArmDown;
 }
 
 // Called just before this Command runs the first time
@@ -13,24 +14,28 @@ void CalibrateArm::Initialize() {
 	m_switchdelaycount = 0;
 	if(Intake::GetInstance()->IsClosedLoop())
 		Intake::GetInstance()->ConfigureOpenLoop();
+	Intake::GetInstance()->SetCalibrating(1);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void CalibrateArm::Execute() {
-	Intake::GetInstance()->SetArm(-.6);
-	if(Intake::GetInstance()->IsIntakeDown()) {
+	Intake::GetInstance()->SetArm(-0.70);
+	if(Intake::GetInstance()->IsIntakeDown())
+	{
 		m_switchdelaycount++;
-		Intake::GetInstance()->SetArm(-.25 );
-	}
-	if(m_switchdelaycount == m_switchdelay) {
-		Intake::GetInstance()->SetArm(0);
-		Intake::GetInstance()->ConfigureClosedLoop();
-		m_isFinished = true;
+		Intake::GetInstance()->SetArm(-0.35);
+		if(m_switchdelaycount >= m_switchdelay)
+		{
+			Intake::GetInstance()->ConfigureClosedLoop();
+			Intake::GetInstance()->SetArm(INTAKE_ARM_POSITION_DOWN);
+			m_isFinished = true;
+		}
 	}
 }
 
 // Make this return true when this Command no longer needs to run execute()
 bool CalibrateArm::IsFinished() {
+
 	return m_isFinished || IsTimedOut();
 }
 
@@ -41,11 +46,21 @@ void CalibrateArm::End() {
 		Intake::GetInstance()->SetArm(0); //Stop Arm
 	}
 	else
-		Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_UP);
+		if(m_armDown == false)
+		{
+			Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_UP);
+		}
+		else
+		{
+			Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_DOWN);
+
+		}
+	Intake::GetInstance()->SetCalibrating(false);
+
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
 void CalibrateArm::Interrupted() {
-	End();
+
 }

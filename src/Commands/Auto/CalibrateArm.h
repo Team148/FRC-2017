@@ -6,7 +6,7 @@
 
 class CalibrateArm : public CommandBase {
 public:
-	CalibrateArm();
+	CalibrateArm(bool leaveArmDown);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
@@ -14,8 +14,9 @@ public:
 	void Interrupted();
 private:
 	bool m_isFinished = false;
-	int m_switchdelay = 2;
+	int m_switchdelay = 10;
 	int m_switchdelaycount = 0;
+	bool m_armDown = false;
 };
 
 #endif  // CalibrateArm_H

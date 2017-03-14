@@ -15,6 +15,9 @@ public:
 	void Boiler_GetGear_ShootHopper();
 
 	void Center_GetGear();
+	void Center_GetTwoGear();
+	void Center_GetTwoGear_Noscore();
+
 
 
 	void Retrieval_GetGear();

@@ -14,12 +14,15 @@ void ArcadeDriveTurn::Initialize() {
 	SetTimeout(5);
 
 	m_integral_err=0;
-	SetTimeout(5.0);
+	SetTimeout(2.25);
 	//Drivetrain::GetInstance()->ResetGyro();
+	m_init_angle = 0;
+	m_final_angle = 0;
 
 	m_init_angle = Drivetrain::GetInstance()->GetAngle();
 	m_final_angle = m_init_angle + m_input_angle;
 	std::cout <<"info: final_angle: " << m_final_angle << std::endl;
+
 	Drivetrain::GetInstance()->configOpenLoop();
 	Drivetrain::GetInstance()->SetBrakeMode(1);
 }
@@ -32,29 +35,37 @@ void ArcadeDriveTurn::Execute() {
 
 	float stick_input = cur_err*ARCADE_TURN_P + ARCADE_TURN_I*m_integral_err;
 
-	//std::cout <<"info: cur_err " << cur_err << std::endl;
+	std::cout <<"info: cur_err " << cur_err << "FINAL ANGLE " << m_final_angle << std::endl;
 
-	if(abs(cur_err) <= m_final_angle*.1)
+	if(abs(cur_err) <= 4.5)
 	{
 		m_integral_err += cur_err*.02;
 	}
 	if(abs(cur_err)<=ARCADE_TURN_TOLERANCE) {
 
 		tolerance_delay++;
-		if(tolerance_delay > 10)
-			m_isFinished=1;
+		if(tolerance_delay > 7)
+			m_isFinished = 1;
 	}
 	else
-		tolerance_delay=0;
+		tolerance_delay = 0;
 
 	//bound input
-	if(stick_input > .7)
-		stick_input = .7;
-	if(stick_input < -.7)
-		stick_input = -.7;
+	if(stick_input > .65)
+		stick_input = .65;
+	if(stick_input < -.65)
+		stick_input = -.65;
 
 
 	Drivetrain::GetInstance()->Arcade(0,stick_input);
+
+	SmartDashboard::PutNumber("Final Angle: ", m_final_angle);
+	SmartDashboard::PutNumber("init Angle: ", m_init_angle);
+	SmartDashboard::PutNumber("input Angle: ", m_input_angle);
+	SmartDashboard::PutNumber("Integral: ", m_integral_err);
+	SmartDashboard::PutNumber("current error: ", cur_err);
+
+
 }
 
 // Make this return true when this Command no longer needs to run execute()

@@ -8,7 +8,7 @@
  */
 class Autonomous: public frc::CommandGroup {
 public:
-	Autonomous(bool red, int getGears, bool isShooting, bool getHopper);
+	Autonomous(bool red, int position, int getGears, bool isShooting, bool getHopper);
 
 private:
 

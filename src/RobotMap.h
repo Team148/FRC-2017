@@ -45,5 +45,7 @@ constexpr int TURRET_MOTOR 			= 6;
 constexpr int TURRET_HOME_SWITCH	= 2;
 
 constexpr int CLIMBER_MOTOR 		= 15;
+constexpr int CLIMBER_MOTOR_2		= 7;
+
 
 #endif  // ROBOTMAP_H
