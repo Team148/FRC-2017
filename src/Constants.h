@@ -9,7 +9,7 @@
 
 //Drivetrain constants.
 constexpr double DRIVETRAIN_F = 1.4;
-constexpr double DRIVETRAIN_P = 1.75;
+constexpr double DRIVETRAIN_P = 3.5;
 constexpr double DRIVETRAIN_I = 0.005;
 constexpr double DRIVETRAIN_D = 0.0;
 constexpr float DRIVETRAIN_WHEEL_DIAMETER = 4.0;
@@ -48,8 +48,9 @@ constexpr float TURRET_JOYSTICK_DEADBAND = 0.1;
 
 //Intake
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = 84/18/360;
-constexpr float INTAKE_ARM_POSITION_P = 0.675;
+constexpr float INTAKE_ARM_POSITION_P = 1.5;
 constexpr float INTAKE_ARM_POSITION_I = 0.0001;
+constexpr float INTAKE_ARM_POSITION_D = 5.0;
 constexpr float INTAKE_ARM_POSITION_UP = 1.25;
 constexpr float INTAKE_ARM_GEAR_POSITION = 0.649;
 constexpr float INTAKE_ARM_POSITION_DOWN = 0.050;
@@ -84,6 +85,7 @@ constexpr int 	CENTER_TWO_GEAR_NOSCORE = 12;
 
 constexpr int	RETRIEVAL_GEAR = 20;
 constexpr int	RETRIEVAL_TWOGEAR = 21;
+constexpr int 	RETRIEVAL_GEAR_SHOOT = 22;
 
 constexpr int	RED = 1;
 constexpr int	BLUE = 0;

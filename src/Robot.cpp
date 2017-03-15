@@ -291,7 +291,6 @@ public:
 		{
 			gearIntake = -1.0;
 		}
-		intake->SetGear(gearIntake);
 
 		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
@@ -307,10 +306,7 @@ public:
 			ballIntake = 0.25;
 		}	//Run Agitator and fire (Voltage control)
 
-		conveyor->SetAgitator(agitator);
-		conveyor->SetKicker(kicker);
-		//END AGITATOR AND FIRE
-		intake->SetBall(ballIntake);
+
 
 
 		//CLOSED LOOP ARM CODE
@@ -468,7 +464,6 @@ public:
 		if(oi->drvStick->GetRawButton(2)) {
 				ringlightOn = true;
 		}
-		shooter->SetRingLightOn(ringlightOn);
 
 
 
@@ -480,6 +475,14 @@ public:
 		if(climberMotor >= 0.0) climberMotor = 0.0;
 
 		conveyor->SetClimber(climberMotor);
+		conveyor->SetAgitator(agitator);
+		conveyor->SetKicker(kicker);
+		//END AGITATOR AND FIRE
+		intake->SetBall(ballIntake);
+		shooter->SetRingLightOn(ringlightOn);
+		intake->SetGear(gearIntake);
+
+
 		//END CLIMBER
 
 

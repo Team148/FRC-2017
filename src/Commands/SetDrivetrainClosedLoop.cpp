@@ -16,6 +16,7 @@ void SetDrivetrainClosedLoop::Initialize() {
 	}
 	else
 	{
+		Drivetrain::GetInstance()->SetBrakeMode(false);
 		Drivetrain::GetInstance()->configOpenLoop();
 	}
 }
