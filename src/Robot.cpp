@@ -511,6 +511,7 @@ public:
 //		static double pixFCenter = 0;
 		const unsigned numberOfParticles = 1000;
 //		double VIEW_ANGLE = 44;  //HD3000 640x480
+		static bool targeted = false;
 
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
 		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -549,7 +550,8 @@ public:
 
 			angle_change = m_turret_angle - pixel_offset * -mult;  //.000625 may need to invert this range -0.1 to 0.1
 
-
+			if(RcRs[0].CenterX == 320.0) targeted = true;
+			else targeted = false;
 //below not working probably have to slow snapshot more
 //			angle_change = ((320.0 - RcRs[0].CenterX) * 0.095);  // +/-30deg
 //			turret->SetBigAngle(angle_change);
@@ -572,6 +574,8 @@ public:
 		frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
 		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
 		frc::SmartDashboard::PutNumber("Target detected", target);
+		frc::SmartDashboard::PutBoolean("Locked On", targeted);
+
 
 		}
 		return target;
