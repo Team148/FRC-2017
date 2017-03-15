@@ -438,8 +438,6 @@ public:
 		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
 //			current_angle = Drivetrain::GetInstance()->GetAngle();
 //			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
-//			_angle = turret->GetBigAngle();
-//			frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 			//wait here to get to angle
 			result = doVisionWithProcessing(angle_change, m_turret_angle);
 			//turret->SetBigAngle(angle_change);
@@ -458,7 +456,8 @@ public:
 		turret->SetAngle(angle_change);  //moved outside of routine
 		m_turret_angle = angle_change;
 		result = doVisionWithProcessing(angle_change, m_turret_angle);
-
+		double _angle = turret->GetBigAngle();
+		frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 
 		//Manual Flashlight control
 		if(oi->drvStick->GetRawButton(1)) {
