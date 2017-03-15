@@ -37,9 +37,9 @@ constexpr float ARCADE_TURN_TOLERANCE = 0.05;
 constexpr float TURRET_DEG_PER_ROTATION = 190/11;
 constexpr float TURRET_DEG_IN_BIG_GEAR = TURRET_DEG_PER_ROTATION * 0.002777778;  // 1/360= .0027...
 constexpr float TURRET_INV_DEG_BIG_GEAR = 20.84210;
-constexpr float TURRET_P = 0.7;
+constexpr float TURRET_P = 0.7; //0.7
 constexpr float TURRET_I = 0.0;
-constexpr float TURRET_D = 30.0;
+constexpr float TURRET_D = 30.0; //30.0
 constexpr float TURRET_SPEED = 0.025;
 constexpr float TURRET_FORWARD_TRAVEL_LIMIT = 100;		//forward limit of travel in Degrees
 constexpr float TURRET_REVERSE_TRAVEL_LIMIT = -90;		//reverse limit of travel in Degrees
