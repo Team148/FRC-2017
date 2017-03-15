@@ -442,6 +442,7 @@ public:
 		}
 		turret->SetAngle(angle_change);  //moved outside of routine
 		m_turret_angle = angle_change;
+		result = doVisionWithProcessing(angle_change, m_turret_angle);
 
 
 		//manual ringlight control
@@ -503,7 +504,7 @@ public:
 	//this is from remote Camera via networktables
 		static int target = 0;
 		static double last_angle = 0;
-		static double mult = 0.000035;
+		static double mult = 0.0004;
 		double pixel_offset = 0;
 //		static double angleOff = 0;
 //		static double pixPDegree = 0;
@@ -543,7 +544,8 @@ public:
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
 			pixel_offset = (320.0 - RcRs[0].CenterX);
-			if(fabs(pixel_offset) < 50) mult = 0.00007;
+			if(fabs(pixel_offset) < 60) mult = 0.00015;
+			if(fabs(pixel_offset) < 40) mult = 0.00007;
 
 			angle_change = m_turret_angle - pixel_offset * -mult;  //.000625 may need to invert this range -0.1 to 0.1
 
