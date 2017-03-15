@@ -450,14 +450,14 @@ public:
 			float turret_joy_in = oi->opStick->GetRawAxis(4);
 			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 			turret_joy_in = 0;
-			float angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
+			angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
 			m_turret_angle = angle_change;
 			turret->SetAngle(angle_change);  //moved outside of routine
 			isAiming = false;
 		}
-		//turret->SetAngle(angle_change);  //moved outside of routine
-		//m_turret_angle = angle_change;
-		//result = doVisionWithProcessing(angle_change, m_turret_angle);
+		turret->SetAngle(angle_change);  //moved outside of routine
+		m_turret_angle = angle_change;
+		result = doVisionWithProcessing(angle_change, m_turret_angle);
 
 
 		//Manual Flashlight control
@@ -527,14 +527,14 @@ public:
 	//this is from remote Camera via networktables
 		static int target = 0;
 		static double last_angle = 0;
-		static double mult = 0.0012;
-		static double current_angle = 0.0;
+		static double mult = 0.0004;
 		double pixel_offset = 0;
 //		static double angleOff = 0;
 //		static double pixPDegree = 0;
 //		static double pixFCenter = 0;
 		const unsigned numberOfParticles = 1000;
 //		double VIEW_ANGLE = 44;  //HD3000 640x480
+		static bool targeted = false;
 
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
 		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -558,7 +558,8 @@ public:
 			std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
 
 			//only looking at top two biggest areas.  May need to sort deeper if false targets
-			if (target == 40) target = 0;
+//			if (target == 0) target = 0;
+			target = 0;
 			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
 			//Here if we have a valid target
 			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
@@ -567,25 +568,21 @@ public:
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
 			pixel_offset = (320.0 - RcRs[0].CenterX);
-			if(fabs(pixel_offset) < 35) mult = 0.0006;
-			//angle_change = m_turret_angle - pixel_offset * -mult;  //.000625 may need to invert this range -0.1 to 0.1
+			if(fabs(pixel_offset) < 60) mult = 0.00015;
+			if(fabs(pixel_offset) < 40) mult = 0.00007;
 
+			angle_change = m_turret_angle - pixel_offset * -mult;  //.000625 may need to invert this range -0.1 to 0.1
 
+			if(RcRs[0].CenterX == 320.0) targeted = true;
+			else targeted = false;
 //below not working probably have to slow snapshot more
-			angle_change = ((320.0 - RcRs[0].CenterX) * 0.06875);  // +/-22deg
-			current_angle = turret->GetBigAngle();
+//			angle_change = ((320.0 - RcRs[0].CenterX) * 0.095);  // +/-30deg
+//			turret->SetBigAngle(angle_change);
 
-
-
-//			if(isAiming == false)
-//			{
-//				turret->SetBigAngle(current_angle+angle_change);
-//				isAiming = true;
-//			}
 		}
 
 		target = target + 1;
-		turret->SetBigAngle(current_angle+angle_change);
+
 
 		//Publish the sorted 1st two results
 		frc::SmartDashboard::PutNumber("angleOff", angle_change);
@@ -600,6 +597,8 @@ public:
 		frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
 		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
 		frc::SmartDashboard::PutNumber("Target detected", target);
+		frc::SmartDashboard::PutBoolean("Locked On", targeted);
+
 
 		}
 		return target;
