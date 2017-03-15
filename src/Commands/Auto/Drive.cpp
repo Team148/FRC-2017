@@ -10,7 +10,12 @@ Drive::Drive(double inches, double velocity) {
 		m_isReverse=true;
 		m_travelDistance = -m_travelDistance;
 	}
-	log = new Logger("DriveProfile-Log");
+
+	if(m_cruiseVelocity > m_maxdrivevelocity) {
+		m_cruiseVelocity = m_maxdrivevelocity;
+	}
+
+	log = new Logger();
 }
 
 // Called just before this Command runs the first time
@@ -18,7 +23,7 @@ void Drive::Initialize() {
 	log->Start();
 	//reset isFinished
 	m_isFinished=0;
-	float accel_dist,hold_time,hold_segments=0;
+	float decel_dist,accel_dist,hold_time,hold_segments=0;
 	bool isTriangular=0;
 
 
@@ -35,37 +40,45 @@ void Drive::Initialize() {
 	Drivetrain::GetInstance()->SetBrakeMode(true);
 
 	//ensure queue is empty
-	while(!m_output.empty())
-		m_output.pop();
+	while(!m_velocity.empty())
+		m_velocity.pop();
 
-	while(!m_dist.empty())
-		m_dist.pop();
+	while(!m_distance.empty())
+		m_distance.pop();
 
 	//to begin, calculate the time we would need to accelerate to the theoretical max speed.
-	float accel_time = sqrt(m_travelDistance/m_maxAccelRate);
-	float max_vel = m_maxAccelRate*accel_time;
+	float decel_time = sqrt((2*m_travelDistance)/((pow(m_maxDecelRate,2)/m_maxAccelRate) + m_maxDecelRate));
+	float accel_time = (m_maxDecelRate/m_maxAccelRate)*decel_time;
 
+	float max_accel_vel = m_maxAccelRate*accel_time;
+	float max_decel_vel = m_maxDecelRate*decel_time;
+	float max_vel = min(max_accel_vel,max_decel_vel);
 
    if(max_vel>m_cruiseVelocity) {
     max_vel = m_cruiseVelocity;
-    cout <<"trapezoid" << endl;
+    cout <<"trapezoid profile" << endl;
     accel_time = m_cruiseVelocity/m_maxAccelRate;
     accel_dist = 0.5*m_maxAccelRate*pow(accel_time,2);
 
-    hold_time = (m_travelDistance-accel_dist-accel_dist)/m_cruiseVelocity;
+	decel_time = m_cruiseVelocity/m_maxDecelRate;
+	decel_dist = 0.5*m_maxDecelRate*pow(decel_time,2);
+
+	hold_time = (m_travelDistance-accel_dist-decel_dist)/m_cruiseVelocity;
     //hold_dist = m_travelDistance - accel_dist - accel_dist;
     hold_segments = ceil(hold_time/m_dt);
    }
    else {
-    cout <<"triangle" << endl;
-    isTriangular=true;
-    accel_dist = 0.5*m_maxAccelRate*pow(accel_time,2);
+	   cout <<"triangle profile" << endl;
+	   isTriangular=true;
+	   accel_dist = 0.5*m_maxAccelRate*pow(accel_time,2);
+	   decel_dist = 0.5*m_maxDecelRate*pow(decel_time,2);
+	   hold_time = 0;
    }
 
 	//calculate the segments needed
     float end_time = accel_time + accel_time + hold_time;
     int accel_segments = ceil(accel_time/m_dt);
-	int decel_segments = accel_segments;
+	int decel_segments = ceil(decel_time/m_dt);
 
 	log->AddtoBuffer("accel_segments", accel_segments);
 	log->AddtoBuffer("decel_segments", decel_segments);
@@ -82,8 +95,8 @@ void Drive::Initialize() {
         d = -d;
         }
 
-	    m_output.push(v);
-	    m_dist.push(d);
+	    m_velocity.push(v);
+	    m_distance.push(d);
 	    //Log
 	    log->AddtoBuffer("Vel", v);
 	    log->AddtoBuffer("Dist", d);
@@ -102,8 +115,8 @@ void Drive::Initialize() {
 				d = -d;
 			}
 
-			m_output.push(v);
-			m_dist.push(d);
+			m_velocity.push(v);
+			m_distance.push(d);
 			//LOG
 			log->AddtoBuffer("Vel",v);
 			log->AddtoBuffer("Dist", d);
@@ -114,28 +127,28 @@ void Drive::Initialize() {
 	for(int i=1 ;i < decel_segments;i++) {
 		float t = m_dt*i;
 		float curr_t = t + accel_time + hold_time;
-	    float v = max_vel-(m_maxAccelRate*t);
-	    float d = m_travelDistance - 0.5*m_maxAccelRate*pow(curr_t-end_time,2);								//very negative
+	    float v = max_vel-(m_maxDecelRate*t);
+	    float d = m_travelDistance - 0.5*m_maxDecelRate*pow(curr_t-end_time,2);								//very negative
 
 		if(m_isReverse) {
 			v=-v;
 			d = -d;
 		}
 
-	    m_output.push(v);
-	    m_dist.push(d);
+	    m_velocity.push(v);
+	    m_distance.push(d);
 
 	    //LOG
 	    log->AddtoBuffer("Vel",v);
 	    log->AddtoBuffer("Dist", d);
 	 }
 	 //push last point
-	 m_output.push(0);
+	 m_velocity.push(0);
 
 	 if(m_isReverse)
-		m_dist.push(-m_travelDistance);
+		m_distance.push(-m_travelDistance);
 	else
-		m_dist.push(m_travelDistance);
+		m_distance.push(m_travelDistance);
 
 	 log->AddtoBuffer("Vel",0);
 	 log->AddtoBuffer("Dist", m_travelDistance);
@@ -150,12 +163,12 @@ void Drive::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void Drive::Execute() {
 
-	float cur_vel = m_output.front();
-	float cur_dist = m_dist.front();
+	float cur_vel = m_velocity.front();
+	float cur_dist = m_distance.front();
 
 	//after setting, remove from queue
-	m_output.pop();
-	m_dist.pop();
+	m_velocity.pop();
+	m_distance.pop();
 
 
 	//find actual velocity(rpm)
@@ -210,7 +223,7 @@ void Drive::Execute() {
 	frc::SmartDashboard::PutNumber("outputRightV", Drivetrain::GetInstance()->GetRightThrottle());
 
 	//once the queue is empty, set isFinished
-	if(m_output.empty())
+	if(m_velocity.empty())
 		m_isFinished=true;
 }
 
@@ -226,11 +239,11 @@ void Drive::End() {
 	cout <<"info: set drivetrain to " << 0 <<" RPM" << endl;
 
 	//empty the queue if interrupted
-	while(!m_output.empty())
-		m_output.pop();
+	while(!m_velocity.empty())
+		m_velocity.pop();
 
-	while(!m_dist.empty())
-		m_dist.pop();
+	while(!m_distance.empty())
+		m_distance.pop();
 	log->CloseFile();
 }
 

@@ -27,11 +27,11 @@ private:
 
 	//drivetrain constraints
 	float m_maxAccelRate = 40; 		//Inches per sec^2
-	float m_maxDecelRate= -30;		//Inches per sec^2
-	float m_maxdrivevelocity = 100; //Inches per sec
+	float m_maxDecelRate = 40;		//Inches per sec^2
+	float m_maxdrivevelocity = 100; //Inches per sec, the max velocity the drivetrain is capable of
 	float m_dt = 0.02;				//time step set to 20ms(50Hz).
-	queue <float> m_output;
-	queue <float> m_dist;
+	queue <float> m_velocity;
+	queue <float> m_distance;
 };
 
 #endif  // Drive_H
