@@ -527,14 +527,14 @@ public:
 	//this is from remote Camera via networktables
 		static int target = 0;
 		static double last_angle = 0;
-		static double mult = 0.0004;
+		static double mult = 0.00007;
 		double pixel_offset = 0;
 //		static double angleOff = 0;
 //		static double pixPDegree = 0;
 //		static double pixFCenter = 0;
 		const unsigned numberOfParticles = 1000;
 //		double VIEW_ANGLE = 44;  //HD3000 640x480
-		static bool targeted = false;
+		static double targeted, targeted2 = 0.0;
 
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
 		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -568,13 +568,16 @@ public:
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
 			pixel_offset = (320.0 - RcRs[0].CenterX);
-			if(fabs(pixel_offset) < 60) mult = 0.00015;
-			if(fabs(pixel_offset) < 40) mult = 0.00007;
+			if(fabs(pixel_offset) < 60) mult = 0.0001;
+			if(fabs(pixel_offset) < 35) mult = 0.00015;
 
 			angle_change = m_turret_angle - pixel_offset * -mult;  //.000625 may need to invert this range -0.1 to 0.1
 
-			if(RcRs[0].CenterX == 320.0) targeted = true;
-			else targeted = false;
+			targeted2 = pixel_offset * 0.06875;
+			if(fabs(pixel_offset) <= 72.75) {
+				targeted = 5.0 - (fabs(pixel_offset) * 0.06875);
+			}
+			else targeted = 0.0;
 //below not working probably have to slow snapshot more
 //			angle_change = ((320.0 - RcRs[0].CenterX) * 0.095);  // +/-30deg
 //			turret->SetBigAngle(angle_change);
@@ -596,8 +599,8 @@ public:
 		frc::SmartDashboard::PutNumber("ArrayHeight2: ", RcRs[1].Height);
 		frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
 		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
-		frc::SmartDashboard::PutNumber("Target detected", target);
-		frc::SmartDashboard::PutBoolean("Locked On", targeted);
+		frc::SmartDashboard::PutNumber("Target detected", targeted2);
+		frc::SmartDashboard::PutNumber("Locked On", targeted);
 
 
 		}
