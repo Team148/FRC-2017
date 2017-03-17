@@ -439,7 +439,7 @@ public:
 			//turret->SetBigAngle(angle_change);
 			flashlightOn = false;
 			ringlightOn = true;
-
+			isAiming = true;
 		} else {
 			float turret_joy_in = oi->opStick->GetRawAxis(4);
 			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
@@ -536,7 +536,8 @@ public:
 //		static double pixFCenter = 0;
 		const unsigned numberOfParticles = 1000;
 //		double VIEW_ANGLE = 44;  //HD3000 640x480
-		static double targeted, targeted2 = 0.0;
+		static double targeted, targeted2 = 0.0, tmpbigangle = 0.0;
+		double bigangle = 0.0;
 
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
 		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -560,6 +561,9 @@ public:
 			std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
 
 			//only looking at top two biggest areas.  May need to sort deeper if false targets
+
+			bigangle = turret->GetBigAngle();
+
 //			if (target == 0) target = 0;
 			target = 0;
 			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
@@ -569,11 +573,23 @@ public:
 			//CenterX-Width/2, CenterX+Width/2) where these are target cooridinates.
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
-			pixel_offset = (320.0 - RcRs[0].CenterX);
-			if(fabs(pixel_offset) < 60) mult = 0.00008;
-			if(fabs(pixel_offset) < 35) mult = 0.00015;
+			//isAiming = false;
 
-			angle_change = m_turret_angle - pixel_offset * -mult;  //.000625 may need to invert this range -0.1 to 0.1
+			if(isAiming) {
+				pixel_offset = (320.0 - RcRs[0].CenterX);
+				tmpbigangle = (pixel_offset * 0.06875);
+				//isAiming = false;
+			}
+			//if(fabs(pixel_offset) < 60) mult = 0.00008;
+			if(fabs(tmpbigangle) < 90) mult = 0.00009;
+			if(fabs(tmpbigangle) < 15) mult = 0.00008;
+			//if(fabs(pixel_offset) < 35) mult = 0.00015;
+			if(fabs(tmpbigangle) < 5) mult = 0.00007;
+			if(fabs(tmpbigangle) < 2) mult = 0.00008;
+
+
+			angle_change = m_turret_angle - (tmpbigangle * 14.545) * -mult;  //.000625 may need to invert this range -0.1 to 0.1
+
 
 			targeted2 = pixel_offset * 0.06875;
 			if(fabs(pixel_offset) <= 72.75) {
