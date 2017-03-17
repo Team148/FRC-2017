@@ -8,22 +8,25 @@
 #define CONSTANTS_H
 
 //Drivetrain constants.
-constexpr double DRIVETRAIN_F = 1.4;
-constexpr double DRIVETRAIN_P = 3.5;
-constexpr double DRIVETRAIN_I = 0.005;
+constexpr double DRIVETRAIN_F = 0.95;
+constexpr double DRIVETRAIN_P = 1.5;
+constexpr double DRIVETRAIN_I = 0.005; // 0.005
+//constexpr double DRIVETRAIN_I_ZONE_L = 128.0;
+//constexpr double DRIVETRAIN_I_ZONE_R = 128.0;
+
 constexpr double DRIVETRAIN_D = 0.0;
 constexpr float DRIVETRAIN_WHEEL_DIAMETER = 4.0;
 constexpr float DRIVETRAIN_BASE_DIAMETER = 39; 		//distance(in) from wheel to wheel
 constexpr float DRIVETRAIN_GEAR_REDUCTION = 66/12;
 
 //Auto/Drive
-constexpr float DRIVE_GYRO_P = 15.0; //
+constexpr float DRIVE_GYRO_P = 25.0; //
 constexpr float DRIVE_VELOCITY_P = .0;
 
 //Auto/TurnPID
-constexpr float DRIVE_TURN_P = 0.009;
-constexpr float DRIVE_TURN_I = 0.0;
-constexpr float DRIVE_TURN_TOLERANCE = 0.02;
+constexpr float DRIVE_TURN_P = 0.01;
+constexpr float DRIVE_TURN_I = 0.000;
+constexpr float DRIVE_TURN_TOLERANCE = 0.05;
 
 //Auto/TurnTMP
 constexpr float TURN_DIST_P = 0.05;

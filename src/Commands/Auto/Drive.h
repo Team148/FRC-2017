@@ -27,7 +27,7 @@ private:
 
 	//drivetrain constraints
 	float m_maxAccelRate = 100; 		//Inches per sec^2
-	float m_maxDecelRate= -90;		//Inches per sec^2
+	float m_maxDecelRate= -100;		//Inches per sec^2
 	float m_maxdrivevelocity = 150; //Inches per sec
 	float m_dt = 0.02;				//time step set to 20ms(50Hz).
 	queue <float> m_output;

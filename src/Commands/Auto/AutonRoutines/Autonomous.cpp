@@ -13,11 +13,18 @@
 
 Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bool getHopper)
 {
+//	AddSequential(new Drive(100,150));
+//	AddSequential(new WaitCommand(5.0));
+//	AddSequential(new Drive(-100,150));
+
+	AddSequential(new ArcadeDriveTurn(90));
+	AddSequential(new ArcadeDriveTurn(-90));
+	AddSequential(new ArcadeDriveTurn(45));
+	AddSequential(new ArcadeDriveTurn(-45));
+//
 
 
-	AddSequential(new Drive(100,150));
-	AddSequential(new WaitCommand(2.0));
-	AddSequential(new Drive(-100,150));
+
 
 //	switch(red)
 //	{

@@ -131,8 +131,8 @@ public:
 
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
-		frc::Scheduler::GetInstance()->RemoveAll();
 		log->Start();
+		frc::Scheduler::GetInstance()->ResetAll();
 		static int red = 0;
 		static bool shooting = false;
 		static bool hopper = false;
@@ -144,8 +144,8 @@ public:
 		position = oi->GetSelectorB();
 		gears = oi->GetSelectorA();
 		gear_noscore = oi->GetSw2();
-		//shooting = oi->GetSw2();
-		//hopper = oi->GetSw3();
+		shooting = oi->GetSw3();
+		hopper = oi->GetSw4();
 
 		switch(red)
 			{
@@ -603,6 +603,15 @@ public:
 		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
 		frc::SmartDashboard::PutNumber("Target detected", targeted2);
 		frc::SmartDashboard::PutNumber("Locked On", targeted);
+
+		frc::SmartDashboard::PutNumber("s1", oi->GetSw1());
+		frc::SmartDashboard::PutNumber("SelectorB", oi->GetSelectorB());
+		frc::SmartDashboard::PutNumber("SelectorA", oi->GetSelectorA());
+		frc::SmartDashboard::PutNumber("sw2", oi->GetSw2());
+		frc::SmartDashboard::PutNumber("sw3", oi->GetSw3());
+		frc::SmartDashboard::PutNumber("sw4", oi->GetSw4());
+
+
 
 
 		}
