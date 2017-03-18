@@ -131,8 +131,8 @@ public:
 
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
+		frc::Scheduler::GetInstance()->RemoveAll();
 		log->Start();
-		frc::Scheduler::GetInstance()->ResetAll();
 		static int red = 0;
 		static bool shooting = false;
 		static bool hopper = false;
@@ -144,8 +144,8 @@ public:
 		position = oi->GetSelectorB();
 		gears = oi->GetSelectorA();
 		gear_noscore = oi->GetSw2();
-		shooting = oi->GetSw3();
-		hopper = oi->GetSw4();
+		//shooting = oi->GetSw2();
+		//hopper = oi->GetSw3();
 
 		switch(red)
 			{
@@ -430,12 +430,12 @@ public:
 			angle_change = 0.0;
 		}
 
-
+		isAiming = false;
 		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
 //			current_angle = Drivetrain::GetInstance()->GetAngle();
 //			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
 			//wait here to get to angle
-			result = doVisionWithProcessing(angle_change, m_turret_angle);
+			//result = doVisionWithProcessing(angle_change, m_turret_angle);
 			//turret->SetBigAngle(angle_change);
 			flashlightOn = false;
 			ringlightOn = true;
@@ -446,10 +446,11 @@ public:
 			turret_joy_in = 0;
 			angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
 			m_turret_angle = angle_change;
-			turret->SetAngle(angle_change);  //moved outside of routine
+			turret->SetBigAngle(angle_change);  //moved outside of routine
+			//turret->SetBigAngle(turret_joy_in*22);
 			isAiming = false;
 		}
-		turret->SetAngle(angle_change);  //moved outside of routine
+		//turret->SetAngle(angle_change);  //moved outside of routine
 		m_turret_angle = angle_change;
 		result = doVisionWithProcessing(angle_change, m_turret_angle);
 		double _angle = turret->GetBigAngle();
@@ -539,14 +540,13 @@ public:
 		static double targeted, targeted2 = 0.0, tmpbigangle = 0.0;
 		double bigangle = 0.0;
 
+		std::vector<RemoteContourReport> RcRs(numberOfParticles);
+
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
 		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
 		std::vector<double> arr3 = table->GetNumberArray("centerY", llvm::ArrayRef<double>());
 		std::vector<double> arr4 = table->GetNumberArray("height", llvm::ArrayRef<double>());
 		std::vector<double> arr5 = table->GetNumberArray("width", llvm::ArrayRef<double>());
-
-		std::vector<RemoteContourReport> RcRs(numberOfParticles);
-
 
 		if (arr1.size() > 0) {
 			for(unsigned int i = 0; i < arr1.size(); i++)
@@ -564,8 +564,8 @@ public:
 
 			bigangle = turret->GetBigAngle();
 
-//			if (target == 0) target = 0;
-			target = 0;
+			if (target == 25) target = 0;
+			//target = 0;
 			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
 			//Here if we have a valid target
 			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
@@ -575,31 +575,30 @@ public:
 			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
 			//isAiming = false;
 
-			if(isAiming) {
-				pixel_offset = (320.0 - RcRs[0].CenterX);
-				tmpbigangle = (pixel_offset * 0.06875);
+//			if(isAiming) {
+//				pixel_offset = (320.0 - RcRs[0].CenterX);
+//				tmpbigangle = (pixel_offset * 0.06875);
 				//isAiming = false;
-			}
+//			}
 			//if(fabs(pixel_offset) < 60) mult = 0.00008;
-			if(fabs(tmpbigangle) < 90) mult = 0.00009;
-			if(fabs(tmpbigangle) < 15) mult = 0.00008;
+//			if(fabs(tmpbigangle) < 90) mult = 0.00009;
+//			if(fabs(tmpbigangle) < 15) mult = 0.00008;
 			//if(fabs(pixel_offset) < 35) mult = 0.00015;
-			if(fabs(tmpbigangle) < 5) mult = 0.00007;
-			if(fabs(tmpbigangle) < 2) mult = 0.00008;
+//			if(fabs(tmpbigangle) < 5) mult = 0.00007;
+//			if(fabs(tmpbigangle) < 2) mult = 0.00008;
 
 
-			angle_change = m_turret_angle - (tmpbigangle * 14.545) * -mult;  //.000625 may need to invert this range -0.1 to 0.1
-
+//			angle_change = m_turret_angle - (tmpbigangle * 14.545) * -mult;  //.000625 may need to invert this range -0.1 to 0.1
+//			or to jump angle use below
+			tmpbigangle = turret->GetBigAngle();
+			angle_change = (((320.0 - RcRs[0].CenterX) * 0.06875) + tmpbigangle);  // +/-22deg
+			if(isAiming) turret->SetBigAngle(angle_change);
 
 			targeted2 = pixel_offset * 0.06875;
 			if(fabs(pixel_offset) <= 72.75) {
 				targeted = 5.0 - (fabs(pixel_offset) * 0.06875);
 			}
 			else targeted = 0.0;
-//below not working probably have to slow snapshot more
-//			angle_change = ((320.0 - RcRs[0].CenterX) * 0.095);  // +/-30deg
-//			turret->SetBigAngle(angle_change);
-
 		}
 
 		target = target + 1;
@@ -619,15 +618,6 @@ public:
 		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
 		frc::SmartDashboard::PutNumber("Target detected", targeted2);
 		frc::SmartDashboard::PutNumber("Locked On", targeted);
-
-		frc::SmartDashboard::PutNumber("s1", oi->GetSw1());
-		frc::SmartDashboard::PutNumber("SelectorB", oi->GetSelectorB());
-		frc::SmartDashboard::PutNumber("SelectorA", oi->GetSelectorA());
-		frc::SmartDashboard::PutNumber("sw2", oi->GetSw2());
-		frc::SmartDashboard::PutNumber("sw3", oi->GetSw3());
-		frc::SmartDashboard::PutNumber("sw4", oi->GetSw4());
-
-
 
 
 		}

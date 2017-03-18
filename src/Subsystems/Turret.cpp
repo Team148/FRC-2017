@@ -39,9 +39,12 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetClosedLoopOutputDirection(false);
 	m_Motor->SetAllowableClosedLoopErr(0);
 	m_Motor->SelectProfileSlot(0);
+	m_Motor->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_10Ms);
+	m_Motor->SetVelocityMeasurementWindow(1);
 	m_Motor->SetF(0.0);
 	m_Motor->SetP(TURRET_P);
 	m_Motor->SetI(TURRET_I);
+	m_Motor->SetIzone(TURRET_I_ZONE);
 	m_Motor->SetD(TURRET_D);
 
 
