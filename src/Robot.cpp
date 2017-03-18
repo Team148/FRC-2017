@@ -318,9 +318,21 @@ public:
 				//intake->SetArmAngle(0.0); //down
 				m_armAngle = INTAKE_ARM_POSITION_DOWN;
 			}
+			static bool gearWhileUp = false;
 			if(oi->drvStick->GetRawButton(6)) {
 				//intake->SetArmAngle(1.12); //up
 				m_armAngle = INTAKE_ARM_POSITION_UP;
+				gearWhileUp = true;
+			}
+			if(gearWhileUp)
+			{
+				int wp_curTime = Timer::GetFPGATimestamp();
+				gearIntake = 1.0;
+				if(Timer::GetFPGATimestamp() - wp_curTime >= 0.75)
+				{
+					gearIntake = 0.0;
+					gearWhileUp = false;
+				}
 			}
 
 			//increment Arm Up/Down

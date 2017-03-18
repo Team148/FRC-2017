@@ -8,9 +8,9 @@
 #define CONSTANTS_H
 
 //Drivetrain constants.
-constexpr double DRIVETRAIN_F = 0.95;
-constexpr double DRIVETRAIN_P = 1.5;
-constexpr double DRIVETRAIN_I = 0.005; // 0.005
+constexpr double DRIVETRAIN_F = .95;
+constexpr double DRIVETRAIN_P = 1.5; // 1.5
+constexpr double DRIVETRAIN_I = 0.001; // 0.005
 //constexpr double DRIVETRAIN_I_ZONE_L = 128.0;
 //constexpr double DRIVETRAIN_I_ZONE_R = 128.0;
 
@@ -57,13 +57,13 @@ constexpr float TURRET_JOYSTICK_DEADBAND = 0.1;
 
 //Intake
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = 84/18/360;
-constexpr float INTAKE_ARM_POSITION_P = 1.5;
+constexpr float INTAKE_ARM_POSITION_P = 0.15;
 constexpr float INTAKE_ARM_POSITION_I = 0.0001;
 constexpr float INTAKE_ARM_POSITION_D = 5.0;
-constexpr float INTAKE_ARM_POSITION_UP = 1.25;
+constexpr float INTAKE_ARM_POSITION_UP = 1.5;
 constexpr float INTAKE_ARM_GEAR_POSITION = 0.649;
-constexpr float INTAKE_ARM_POSITION_DOWN = 0.050;
-constexpr float INTAKE_ARM_DOWN_VOLTAGE = -6.0;
+constexpr float INTAKE_ARM_POSITION_DOWN = 0.001;
+constexpr float INTAKE_ARM_DOWN_VOLTAGE = -12.0;
 constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.77;
 
 //Conveyer

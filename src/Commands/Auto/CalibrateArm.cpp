@@ -9,7 +9,7 @@ CalibrateArm::CalibrateArm(bool leaveArmDown) {
 
 // Called just before this Command runs the first time
 void CalibrateArm::Initialize() {
-	SetTimeout(2.5);
+	SetTimeout(2.0);
 	m_isFinished = false;
 	m_switchdelaycount = 0;
 	if(Intake::GetInstance()->IsClosedLoop())
@@ -19,11 +19,11 @@ void CalibrateArm::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void CalibrateArm::Execute() {
-	Intake::GetInstance()->SetArm(-0.70);
+	Intake::GetInstance()->SetArm(-0.3);
 	if(Intake::GetInstance()->IsIntakeDown())
 	{
 		m_switchdelaycount++;
-		Intake::GetInstance()->SetArm(-0.35);
+		Intake::GetInstance()->SetArm(-0.15);
 		if(m_switchdelaycount >= m_switchdelay)
 		{
 			Intake::GetInstance()->ConfigureClosedLoop();

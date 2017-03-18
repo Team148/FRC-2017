@@ -62,12 +62,9 @@ void Red::Boiler_GetGear()
 }
 void Red::Boiler_GetTwoGear()
 {
-	AddSequential(new ArcadeDriveTurn(-90));
-	//AddSequential(new WaitCommand(0.5));
-	AddSequential(new ArcadeDriveTurn(90));
-	AddSequential(new ArcadeDriveTurn(-45));
-	//AddSequential(new WaitCommand(0.5));
-	AddSequential(new ArcadeDriveTurn(45));
+	AddSequential(new Drive(100,150));
+	AddSequential(new WaitCommand(5.0));
+	AddSequential(new Drive(-100,150));
 }
 void Red::Boiler_GetGear_ShootHopper()
 {
