@@ -10,8 +10,15 @@
 #include "Commands/SetIntakeBall.h"
 #include "Commands/SetIntakeGear.h"
 #include "Commands/Auto/SetBallGearUntilBeam.h"
+#include "Commands/SetTurretAngle.h"
+#include "Commands/Auto/SetAgitator.h"
+#include "Commands/Auto/SetKicker.h"
+#include "Commands/Auto/SetShooterSpeed.h"
 #include "Commands/StopGearRoll_IntakeUp.h"
+#include "Commands/RunGearRoll_IntakeDown.h"
+#include "Commands/FeedShooter.h"
 #include "Subsystems/Intake.h"
+#include "Commands/AutoGearScore.h"
 #include "Constants.h"
 
 #include "WPILib.h"
@@ -74,6 +81,14 @@ void Red::Boiler_GetGear_ShootHopper()
 }
 void Red::Boiler_ShootHopper()
 {
+	AddParallel(new SetTurretAngle(90.0));
+	AddSequential(new Drive(-130, 150));
+	AddSequential(new ArcadeDriveTurn(90));
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+	AddSequential(new Drive(-55, 150));
+	AddParallel(new FeedShooter(true));
+
+
 
 }
 //-------------------------------------

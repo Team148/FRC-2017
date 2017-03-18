@@ -136,6 +136,9 @@ void Drivetrain::configClosedLoop() {
 	m_rightMotor1->SetI(DRIVETRAIN_I);
 	m_leftMotor1->SetD(DRIVETRAIN_D);
 	m_rightMotor1->SetD(DRIVETRAIN_D);
+	//m_leftMotor1->SetIzone(DRIVETRAIN_I_ZONE_L);
+	//m_rightMotor1->SetIzone(DRIVETRAIN_I_ZONE_R);
+
 
 	m_closedLoop = true;
 }
