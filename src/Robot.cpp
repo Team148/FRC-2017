@@ -458,7 +458,13 @@ public:
 
 		//Manual Flashlight control
 		if(oi->drvStick->GetRawButton(1)) {
+			ringlightOn = false;
 			flashlightOn = true;
+		}
+		else
+		{
+			ringlightOn = true;
+
 		}
 		//manual ringlight control
 		if(oi->drvStick->GetRawButton(2)) {
@@ -576,10 +582,11 @@ public:
 			//isAiming = false;
 
 //			if(isAiming) {
-//				pixel_offset = (320.0 - RcRs[0].CenterX);
+
 //				tmpbigangle = (pixel_offset * 0.06875);
 				//isAiming = false;
 //			}
+				pixel_offset = (320.0 - RcRs[0].CenterX);
 			//if(fabs(pixel_offset) < 60) mult = 0.00008;
 //			if(fabs(tmpbigangle) < 90) mult = 0.00009;
 //			if(fabs(tmpbigangle) < 15) mult = 0.00008;
