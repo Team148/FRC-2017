@@ -26,9 +26,9 @@ private:
 	bool m_isReverse = false;
 
 	//drivetrain constraints
-	float m_maxAccelRate = 40; 		//Inches per sec^2
-	float m_maxDecelRate = 40;		//Inches per sec^2
-	float m_maxdrivevelocity = 100; //Inches per sec, the max velocity the drivetrain is capable of
+	float m_maxAccelRate = 100; 		//Inches per sec^2
+	float m_maxDecelRate= 90;		//Inches per sec^2
+	float m_maxdrivevelocity = 150; //Inches per se
 	float m_dt = 0.02;				//time step set to 20ms(50Hz).
 	queue <float> m_velocity;
 	queue <float> m_distance;

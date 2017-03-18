@@ -59,10 +59,11 @@ void Intake::ConfigureClosedLoop() {
 	m_ArmMotor->SetAllowableClosedLoopErr(0);
 	m_ArmMotor->SelectProfileSlot(0);
 	m_ArmMotor->ConfigPeakOutputVoltage(12.0,INTAKE_ARM_DOWN_VOLTAGE);  //Forward is Up
+	//m_ArmMotor->SetVoltageRampRate(12.0);
 	m_ArmMotor->SetF(0.0);
 	m_ArmMotor->SetP(INTAKE_ARM_POSITION_P);
 	m_ArmMotor->SetI(INTAKE_ARM_POSITION_I);
-	m_ArmMotor->SetD(0.0);
+	m_ArmMotor->SetD(INTAKE_ARM_POSITION_D);
 	ResetArm(0.0);
 	m_isClosedLoop = 1;
 }

@@ -13,11 +13,37 @@
 #include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
 #include "Commands/Auto/AutonRoutines/Blue.h"
+#include "Commands/Auto/AutonRoutines/Red.h"
+
 #include "Commands/Auto/SetBallGearUntilBeam.h"
 #include "Commands/AutoGearScore.h"
 //#include "Vision/VisionAPI.h"
 //#include <CameraServer.h>
 //#include <Vision/USBCamera.h>
+
+
+
+//A structure to hold contour measurements a paricle
+struct RemoteContourReport {
+	double Area;
+	double CenterX;
+	double CenterY;
+	double Height;
+	double Width;
+};
+
+//Structure to represent the scores for the various tests used for target identification
+struct RemoteScores {
+	double Area;
+	double Aspect;
+};
+
+
+
+unsigned int doVisionWithProcessing(float &angle_change, float &m_turret_angle);
+
+// Sort Container by Area function
+bool sortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs) { return lhs.Area > rhs.Area; }
 
 
 class Robot: public frc::IterativeRobot {
@@ -28,10 +54,14 @@ private:
 	float m_armAngle = 0.0;
 	float m_turret_angle = 0.0;
 	float angle_change = 0.0;
-	float _angle;
+	bool isAiming = false;
+	unsigned int result;
+
+
+//	unsigned int doVisionWithProcessing(float angle, float &m_turret_angle);
 
 public:
-
+	std::shared_ptr<NetworkTable> table;
 	Drivetrain *drivetrain = 0;
 	OI* oi = 0;
 	Conveyor* conveyor = 0;
@@ -42,6 +72,7 @@ public:
 
 	void RobotInit() override {
 		std::cout << "info: starting RobotInit" << std::endl;
+		table = NetworkTable::GetTable("GRIP/myContoursReport");
 		oi = OI::GetInstance();
 		drivetrain = Drivetrain::GetInstance();
 		conveyor = Conveyor::GetInstance();
@@ -64,14 +95,15 @@ public:
 	 */
 	void DisabledInit() override {
 		m_turret_angle = 0.0;
-		turret->UpdateNetworkTable();
+		result = doVisionWithProcessing(angle_change, m_turret_angle);
 	}
 
 
 	void DisabledPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+		frc::Scheduler::GetInstance()->RemoveAll();
 		m_turret_angle = 0.0;
-		turret->UpdateNetworkTable();
+		result = doVisionWithProcessing(angle_change, m_turret_angle);
 		SmartDashUpdate();
 	}
 
@@ -99,16 +131,79 @@ public:
 
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
-		//}
+		frc::Scheduler::GetInstance()->RemoveAll();
 		log->Start();
+		static int red = 0;
+		static bool shooting = false;
+		static bool hopper = false;
+		static int gears = 0;
+		static int position = 0;
+		static int gear_noscore = false;
+
+		red = oi->GetSw1();
+		position = oi->GetSelectorB();
+		gears = oi->GetSelectorA();
+		gear_noscore = oi->GetSw2();
+		//shooting = oi->GetSw2();
+		//hopper = oi->GetSw3();
+
+		switch(red)
+			{
+				case RED: // CALL RED(NEW asdf123())
+					switch(position)
+					{
+						case POSITION_BOILER:
+							if(gears == 1 && shooting == 0 && hopper == 0) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR));
+							else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (BOILER_TWO_GEAR));
+							else if(gears == 1 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (BOILER_GEAR_HOPPER_SHOOT));
+							else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (BOILER_HOPPER_SHOOT));
+						break;
+						case POSITION_CENTER:
+							if(gears == 1 ) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR));
+							else if (gears == 2 && gear_noscore == true) frc::Scheduler::GetInstance()->AddCommand(new Red (CENTER_TWO_GEAR_NOSCORE));
+							else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Red (CENTER_TWO_GEAR));
+						break;
+						case POSITION_RETRIEVAL:
+							if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_GEAR));
+							else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red (RETRIEVAL_TWOGEAR));
+						break;
+					}
+				break;
+
+				case BLUE: // CALL BLUE(NEW asdf123())
+					switch(position)
+					{
+					case POSITION_BOILER:
+						if(gears == 1 && shooting == 0 && hopper == 0) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR));
+						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_TWO_GEAR));
+						else if(gears == 1 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
+						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_HOPPER_SHOOT));
+					break;
+					case POSITION_CENTER:
+						if(gears == 1) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
+						else if (gears == 2 && gear_noscore == true) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE));
+						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR));
+					break;
+					case POSITION_RETRIEVAL:
+						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_GEAR));
+						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_TWOGEAR));
+					break;
+					}
+				break;
+			}
+
+
+
 		drivetrain->configClosedLoop();
-		drivetrain->ResetGyro();
 		drivetrain->SetBrakeMode(true);
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 
-		frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
+		result = doVisionWithProcessing(angle_change, m_turret_angle);
+		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
+		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
+		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
 
@@ -116,7 +211,7 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		turret->UpdateNetworkTable();
+		//result = doVisionWithProcessing(angle_change, m_turret_angle);
 		SmartDashUpdate();
 	}
 
@@ -125,25 +220,28 @@ public:
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		frc::Scheduler::GetInstance()->RemoveAll();
 		std::cout << "starting TeleopInit" << std::endl;
-		//Set Shooter for OpenLoop
+
+
 		shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		drivetrain->SetBrakeMode(false);
 		turret->ConfigClosedLoop();
 		m_turret_angle = 0.0;
 
-		if(!intake->IsClosedLoop())
-			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm(1));
+
+		result = doVisionWithProcessing(angle_change, m_turret_angle);
 
 //		if (autonomousCommand != nullptr) {
 //			autonomousCommand->Cancel();
 //		}
+		if(!intake->IsClosedLoop())
+			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm(false));
 	}
 
 	void TeleopPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		turret->UpdateNetworkTable();
 
 		static float ballIntake = 0.0;
 		static float gearIntake = 0.0;
@@ -157,7 +255,7 @@ public:
 		static bool flashlightOn = false;
 		static bool ringlightOn = false;
 		static float temp_angle = 0.0;
-		float current_angle = 0.0;
+//		float current_angle = 0.0;
 
 
 
@@ -193,7 +291,6 @@ public:
 		{
 			gearIntake = -1.0;
 		}
-		intake->SetGear(gearIntake);
 
 		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
@@ -209,10 +306,7 @@ public:
 			ballIntake = 0.25;
 		}	//Run Agitator and fire (Voltage control)
 
-		conveyor->SetAgitator(agitator);
-		conveyor->SetKicker(kicker);
-		//END AGITATOR AND FIRE
-		intake->SetBall(ballIntake);
+
 
 
 		//CLOSED LOOP ARM CODE
@@ -222,7 +316,7 @@ public:
 		if(intake->IsClosedLoop()) {
 			if(oi->drvStick->GetRawButton(5)){
 				//intake->SetArmAngle(0.0); //down
-				m_armAngle = 0.0;
+				m_armAngle = INTAKE_ARM_POSITION_DOWN;
 			}
 			if(oi->drvStick->GetRawButton(6)) {
 				//intake->SetArmAngle(1.12); //up
@@ -251,21 +345,24 @@ public:
 			if(oi->drvStick->GetRawAxis(3) > 0.2)
 				m_armAngle = (INTAKE_ARM_POSITION_UP/2) + oi->drvStick->GetRawAxis(3)*(INTAKE_ARM_POSITION_UP/2);
 
-			if(m_armAngle <= 0.0) m_armAngle = 0.0; // Hard Stop stall Safety (down)
-			if(m_armAngle >= 1.14) m_armAngle = 1.14; // Hard Stop stall Safety (up)
+			if(m_armAngle <= INTAKE_ARM_POSITION_DOWN) m_armAngle = INTAKE_ARM_POSITION_DOWN; // Hard Stop stall Safety (down)
+			if(m_armAngle >= INTAKE_ARM_POSITION_UP) m_armAngle = INTAKE_ARM_POSITION_UP; // Hard Stop stall Safety (up)
 
 			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
-			if(oi->drvStick->GetRawButton(6)){
-				//down
-				armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
-			}
-			if(oi->drvStick->GetRawButton(5)) {
-				//up
-				armMotor = INTAKE_ARM_OPEN_LOOP_SPEED;
-			}
-		intake->SetArm(armMotor);
+
+				if(oi->drvStick->GetRawButton(6)){
+					//down
+					armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
+				}
+				if(oi->drvStick->GetRawButton(5)) {
+					//up
+					armMotor = INTAKE_ARM_OPEN_LOOP_SPEED;
+				}
+				if(!intake->IsCalibrating()){
+					intake->SetArm(armMotor);
+				}
 		}
 		//END INTAKE ARM
 
@@ -301,16 +398,12 @@ public:
 		{
 			shooterRpm = 0;
 		}
-		if(shooterRpm != 0)	//If shooter is on, turn the flashlight ON
-		{
-			flashlightOn = true;
-		}
+
 
 		//AUTO SCORE
 		if(oi->drvStick->GetRawButton(3)) {
-			m_armAngle = INTAKE_ARM_POSITION_UP*0.55;
+			m_armAngle = INTAKE_ARM_GEAR_POSITION;
 			frc::Scheduler::GetInstance()->AddCommand(new AutoGearScore());
-
 		}
 
 
@@ -320,10 +413,7 @@ public:
 		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
-		//Manual Flashlight control
-		if(oi->drvStick->GetRawButton(1)) {
-			flashlightOn = true;
-		}
+
 
 
 		shooter->SetFlashlightOn(flashlightOn);
@@ -332,42 +422,73 @@ public:
 
 
 		//TURRET
-		float turret_joy_in = oi->opStick->GetRawAxis(4);
-		if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)   //Adds deadband to joystick
-			turret_joy_in = 0;
-		float angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
-		m_turret_angle = angle_change;
 
-		if(oi->opStick->GetRawButton(8)) { //Home Turret
+
+		if(oi->opStick->GetRawButton(8)) //Home Turret
+		{
 			m_turret_angle = 0.0;
 			angle_change = 0.0;
 		}
 
-
+		isAiming = false;
 		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
-			current_angle = Drivetrain::GetInstance()->GetAngle();
-			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
-
+//			current_angle = Drivetrain::GetInstance()->GetAngle();
+//			turret->SetBigAngle(current_angle); //turret follows the gyro angle degs
 			//wait here to get to angle
-			turret->GetVisionOffset();
-//			turret->SetAngle(_angle);
+			//result = doVisionWithProcessing(angle_change, m_turret_angle);
+			//turret->SetBigAngle(angle_change);
+			flashlightOn = false;
 			ringlightOn = true;
-		} else turret->SetAngle(angle_change);  //this call set motor small gear angle on turret
+			isAiming = true;
+		} else {
+			float turret_joy_in = oi->opStick->GetRawAxis(4);
+			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
+			turret_joy_in = 0;
+			angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
+			m_turret_angle = angle_change;
+			turret->SetBigAngle(angle_change);  //moved outside of routine
+			//turret->SetBigAngle(turret_joy_in*22);
+			isAiming = false;
+		}
+		//turret->SetAngle(angle_change);  //moved outside of routine
+		m_turret_angle = angle_change;
+		result = doVisionWithProcessing(angle_change, m_turret_angle);
+		double _angle = turret->GetBigAngle();
+		frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 
+		//Manual Flashlight control
+		if(oi->drvStick->GetRawButton(1)) {
+			ringlightOn = false;
+			flashlightOn = true;
+		}
+		else
+		{
+			ringlightOn = true;
 
-
+		}
 		//manual ringlight control
 		if(oi->drvStick->GetRawButton(2)) {
 				ringlightOn = true;
 		}
-		shooter->SetRingLightOn(ringlightOn);
 
 
 
 		//CLIMBER
 		if(oi->GetSw5())
-			climberMotor =- 12.0;
+		{
+			climberMotor =	-oi->opStick->GetRawAxis(1)*12.0;
+		}
+		if(climberMotor >= 0.0) climberMotor = 0.0;
+
 		conveyor->SetClimber(climberMotor);
+		conveyor->SetAgitator(agitator);
+		conveyor->SetKicker(kicker);
+		//END AGITATOR AND FIRE
+		intake->SetBall(ballIntake);
+		shooter->SetRingLightOn(ringlightOn);
+		intake->SetGear(gearIntake);
+
+
 		//END CLIMBER
 
 
@@ -390,7 +511,7 @@ public:
 	void SmartDashUpdate() {
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
 		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
-		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm(1));
+		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm(false));
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", -shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());
@@ -398,8 +519,116 @@ public:
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
-		frc::SmartDashboard::PutNumber("Turret Angle", turret->GetBigAngle());
 
+		frc::SmartDashboard::PutNumber("SW1", oi->GetSw1());
+		frc::SmartDashboard::PutNumber("SW2", oi->GetSw2());
+		frc::SmartDashboard::PutNumber("SW3", oi->GetSw3());
+		frc::SmartDashboard::PutNumber("SW4", oi->GetSw4());
+		frc::SmartDashboard::PutNumber("SW5", oi->GetSw5());
+		frc::SmartDashboard::PutNumber("SW_A", oi->GetSelectorA());
+		frc::SmartDashboard::PutNumber("SW_B", oi->GetSelectorB());
+
+
+
+	}
+
+	unsigned int doVisionWithProcessing(float &angle_change, float &m_turret_angle) {
+	//this is from remote Camera via networktables
+		static int target = 0;
+		static double last_angle = 0;
+		static double mult = 0.00005;
+		double pixel_offset = 0;
+//		static double angleOff = 0;
+//		static double pixPDegree = 0;
+//		static double pixFCenter = 0;
+		const unsigned numberOfParticles = 1000;
+//		double VIEW_ANGLE = 44;  //HD3000 640x480
+		static double targeted, targeted2 = 0.0, tmpbigangle = 0.0;
+		double bigangle = 0.0;
+
+		std::vector<RemoteContourReport> RcRs(numberOfParticles);
+
+		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
+		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
+		std::vector<double> arr3 = table->GetNumberArray("centerY", llvm::ArrayRef<double>());
+		std::vector<double> arr4 = table->GetNumberArray("height", llvm::ArrayRef<double>());
+		std::vector<double> arr5 = table->GetNumberArray("width", llvm::ArrayRef<double>());
+
+		if (arr1.size() > 0) {
+			for(unsigned int i = 0; i < arr1.size(); i++)
+			{
+				RcRs[i].Area = arr1[i];
+				RcRs[i].CenterX = arr2[i];
+				RcRs[i].CenterY = arr3[i];
+				RcRs[i].Height = arr4[i];
+				RcRs[i].Width = arr5[i];
+			}
+
+			std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
+
+			//only looking at top two biggest areas.  May need to sort deeper if false targets
+
+			bigangle = turret->GetBigAngle();
+
+			if (target == 25) target = 0;
+			//target = 0;
+			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
+			//Here if we have a valid target
+			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
+			//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
+			//CenterX-Width/2, CenterX+Width/2) where these are target cooridinates.
+			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
+			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
+			//isAiming = false;
+
+//			if(isAiming) {
+
+//				tmpbigangle = (pixel_offset * 0.06875);
+				//isAiming = false;
+//			}
+				pixel_offset = (320.0 - RcRs[0].CenterX);
+			//if(fabs(pixel_offset) < 60) mult = 0.00008;
+//			if(fabs(tmpbigangle) < 90) mult = 0.00009;
+//			if(fabs(tmpbigangle) < 15) mult = 0.00008;
+			//if(fabs(pixel_offset) < 35) mult = 0.00015;
+//			if(fabs(tmpbigangle) < 5) mult = 0.00007;
+//			if(fabs(tmpbigangle) < 2) mult = 0.00008;
+
+
+//			angle_change = m_turret_angle - (tmpbigangle * 14.545) * -mult;  //.000625 may need to invert this range -0.1 to 0.1
+//			or to jump angle use below
+			tmpbigangle = turret->GetBigAngle();
+			angle_change = (((320.0 - RcRs[0].CenterX) * 0.06875) + tmpbigangle);  // +/-22deg
+			if(isAiming) turret->SetBigAngle(angle_change);
+
+			targeted2 = pixel_offset * 0.06875;
+			if(fabs(pixel_offset) <= 72.75) {
+				targeted = 5.0 - (fabs(pixel_offset) * 0.06875);
+			}
+			else targeted = 0.0;
+		}
+
+		target = target + 1;
+
+
+		//Publish the sorted 1st two results
+		frc::SmartDashboard::PutNumber("angleOff", angle_change);
+		frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
+		frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
+		frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
+		frc::SmartDashboard::PutNumber("ArrayX2: ", RcRs[1].CenterX);
+		frc::SmartDashboard::PutNumber("ArrayY1: ", RcRs[0].CenterY);
+		frc::SmartDashboard::PutNumber("ArrayY2: ", RcRs[1].CenterY);
+		frc::SmartDashboard::PutNumber("ArrayHeight1: ", RcRs[0].Height);
+		frc::SmartDashboard::PutNumber("ArrayHeight2: ", RcRs[1].Height);
+		frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
+		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
+		frc::SmartDashboard::PutNumber("Target detected", targeted2);
+		frc::SmartDashboard::PutNumber("Locked On", targeted);
+
+
+		}
+		return target;
 	}
 
 };

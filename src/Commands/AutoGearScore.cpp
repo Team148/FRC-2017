@@ -2,6 +2,7 @@
 #include "Subsystems/Intake.h"
 #include "Commands/Auto/SetIntake.h"
 #include "Commands/SetIntakeBall.h"
+#include "Commands/SetIntakeGear.h"
 #include "Commands/Auto/Drive.h"
 #include "SetDrivetrainClosedLoop.h"
 
@@ -13,10 +14,14 @@ AutoGearScore::AutoGearScore() {
 	//      AddSequential(new Command2());
 	// these will run in order.
 	AddSequential(new SetDrivetrainClosedLoop(true));
-	AddParallel(new SetIntakeBall(-0.1));
+	AddParallel(new SetIntakeGear(-1.0));
+
 	//AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP/2));
 	AddSequential(new Drive(-20, 25));
+	AddParallel(new SetIntakeGear(0.0));
 	AddSequential(new SetDrivetrainClosedLoop(false));
+
+
 
 	// To run multiple commands at the same time,
 	// use AddParallel()
