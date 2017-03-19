@@ -24,8 +24,9 @@ private:
 	bool m_isClosedLoop = false;
 	std::shared_ptr<NetworkTable> m_network_table;
 
-	float m_vision_angle_offset=-99;
+
 public:
+
 	static Turret* GetInstance();
 	void InitDefaultCommand();
 	void ConfigOpenLoop();

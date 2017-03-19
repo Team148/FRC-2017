@@ -95,7 +95,7 @@ public:
 	 */
 	void DisabledInit() override {
 		m_turret_angle = 0.0;
-		result = doVisionWithProcessing(angle_change, m_turret_angle);
+		//result = doVisionWithProcessing(angle_change, m_turret_angle);
 	}
 
 
@@ -103,7 +103,8 @@ public:
 		frc::Scheduler::GetInstance()->Run();
 		frc::Scheduler::GetInstance()->RemoveAll();
 		m_turret_angle = 0.0;
-		result = doVisionWithProcessing(angle_change, m_turret_angle);
+		//result = doVisionWithProcessing(angle_change, m_turret_angle);
+		turret->UpdateNetworkTable();
 		SmartDashUpdate();
 	}
 
@@ -497,7 +498,7 @@ public:
 			turret_joy_in = 0;
 			angle_change = m_turret_angle + turret_joy_in * TURRET_SPEED;
 			m_turret_angle = angle_change;
-			turret->SetBigAngle(angle_change);  //moved outside of routine
+			turret->SetBigAngle(-angle_change);  //moved outside of routine
 			//turret->SetBigAngle(turret_joy_in*22);
 			isAiming = false;
 		}
@@ -570,6 +571,8 @@ public:
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+		frc::SmartDashboard::PutNumber("Vision Offset", turret->GetVisionOffset());
+
 
 		frc::SmartDashboard::PutNumber("SW1", oi->GetSw1());
 		frc::SmartDashboard::PutNumber("SW2", oi->GetSw2());
@@ -593,11 +596,12 @@ public:
 //		static double pixPDegree = 0;
 //		static double pixFCenter = 0;
 		const unsigned numberOfParticles = 1000;
-//		double VIEW_ANGLE = 44;  //HD3000 640x480
+//		double VIEW_ANGLE = 44;  //HD3000 640x480 // 52?
+		constexpr double view_angle_fact = 0.08276;
 		static double targeted, targeted2 = 0.0, tmpbigangle = 0.0;
 		double bigangle = 0.0;
 
-		std::vector<RemoteContourReport> RcRs(numberOfParticles);
+		//std::vector<RemoteContourReport> RcRs(numberOfParticles);
 
 		std::vector<double> arr1 = table->GetNumberArray("area", llvm::ArrayRef<double>());
 		std::vector<double> arr2 = table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -606,24 +610,24 @@ public:
 		std::vector<double> arr5 = table->GetNumberArray("width", llvm::ArrayRef<double>());
 
 		if (arr1.size() > 0) {
-			for(unsigned int i = 0; i < arr1.size(); i++)
-			{
-				RcRs[i].Area = arr1[i];
-				RcRs[i].CenterX = arr2[i];
-				RcRs[i].CenterY = arr3[i];
-				RcRs[i].Height = arr4[i];
-				RcRs[i].Width = arr5[i];
-			}
+//			for(unsigned int i = 0; i < arr1.size(); i++)
+//			{
+//				RcRs[i].Area = arr1[i];
+//				RcRs[i].CenterX = arr2[i];
+//				RcRs[i].CenterY = arr3[i];
+//				RcRs[i].Height = arr4[i];
+//				RcRs[i].Width = arr5[i];
+//			}
 
-			std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
+			//std::sort(RcRs.begin(), RcRs.end(), sortByArea); //Sort the result by Area of target
 
 			//only looking at top two biggest areas.  May need to sort deeper if false targets
 
 			bigangle = turret->GetBigAngle();
 
-			if (target == 25) target = 0;
+			if (target == 40) target = 0;
 			//target = 0;
-			if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
+			if((arr1[1] > 64) && (abs(arr5[1] - arr5[0]) < 10) && (target == 0) ) {
 			//Here if we have a valid target
 			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
 			//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
@@ -637,7 +641,7 @@ public:
 //				tmpbigangle = (pixel_offset * 0.06875);
 				//isAiming = false;
 //			}
-				pixel_offset = (320.0 - RcRs[0].CenterX);
+				pixel_offset = (320.0 - arr2[1]);
 			//if(fabs(pixel_offset) < 60) mult = 0.00008;
 //			if(fabs(tmpbigangle) < 90) mult = 0.00009;
 //			if(fabs(tmpbigangle) < 15) mult = 0.00008;
@@ -649,12 +653,12 @@ public:
 //			angle_change = m_turret_angle - (tmpbigangle * 14.545) * -mult;  //.000625 may need to invert this range -0.1 to 0.1
 //			or to jump angle use below
 			tmpbigangle = turret->GetBigAngle();
-			angle_change = (((320.0 - RcRs[0].CenterX) * 0.06875) + tmpbigangle);  // +/-22deg
-			if(isAiming) turret->SetBigAngle(angle_change);
+			angle_change = (((320.0 - arr2[1]) * view_angle_fact) - tmpbigangle);  // +/-22deg
+			if(isAiming) turret->SetBigAngle(-angle_change);
 
-			targeted2 = pixel_offset * 0.06875;
+			targeted2 = pixel_offset * view_angle_fact;
 			if(fabs(pixel_offset) <= 72.75) {
-				targeted = 5.0 - (fabs(pixel_offset) * 0.06875);
+				targeted = 5.0 - (fabs(pixel_offset) * view_angle_fact);
 			}
 			else targeted = 0.0;
 		}
@@ -664,16 +668,16 @@ public:
 
 		//Publish the sorted 1st two results
 		frc::SmartDashboard::PutNumber("angleOff", angle_change);
-		frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
-		frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
-		frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
-		frc::SmartDashboard::PutNumber("ArrayX2: ", RcRs[1].CenterX);
-		frc::SmartDashboard::PutNumber("ArrayY1: ", RcRs[0].CenterY);
-		frc::SmartDashboard::PutNumber("ArrayY2: ", RcRs[1].CenterY);
-		frc::SmartDashboard::PutNumber("ArrayHeight1: ", RcRs[0].Height);
-		frc::SmartDashboard::PutNumber("ArrayHeight2: ", RcRs[1].Height);
-		frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
-		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
+		frc::SmartDashboard::PutNumber("ArrayArea1: ", arr1[1]);
+		frc::SmartDashboard::PutNumber("ArrayArea2: ", arr1[0]);
+		frc::SmartDashboard::PutNumber("ArrayX1: ", arr2[1]);
+		frc::SmartDashboard::PutNumber("ArrayX2: ", arr2[0]);
+		frc::SmartDashboard::PutNumber("ArrayY1: ", arr3[1]);
+		frc::SmartDashboard::PutNumber("ArrayY2: ", arr4[0]);
+		frc::SmartDashboard::PutNumber("ArrayHeight1: ", arr4[1]);
+		frc::SmartDashboard::PutNumber("ArrayHeight2: ", arr4[0]);
+		frc::SmartDashboard::PutNumber("ArrayWidth1: ", arr5[1]);
+		frc::SmartDashboard::PutNumber("ArrayWidt2: ", arr5[0]);
 		frc::SmartDashboard::PutNumber("Target detected", targeted2);
 		frc::SmartDashboard::PutNumber("Locked On", targeted);
 

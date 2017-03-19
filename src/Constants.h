@@ -45,10 +45,10 @@ constexpr float ARCADE_DRIVE_GYRO_P = 0.02;
 constexpr float TURRET_DEG_PER_ROTATION = 190/11;
 constexpr float TURRET_DEG_IN_BIG_GEAR = TURRET_DEG_PER_ROTATION * 0.002777778;  // 1/360= .0027...
 constexpr float TURRET_INV_DEG_BIG_GEAR = 20.84210;
-constexpr float TURRET_P = 0.7; //0.7
-constexpr float TURRET_I = 0.005;
-constexpr float TURRET_I_ZONE = 2.0;
-constexpr float TURRET_D = 3.0; //30.0
+constexpr float TURRET_P = 0.6; //0.7
+constexpr float TURRET_I = 0.000; // 0.002
+constexpr float TURRET_I_ZONE = 0.0;
+constexpr float TURRET_D = 0.0; //30.0
 constexpr float TURRET_SPEED = 0.432;
 constexpr float TURRET_FORWARD_TRAVEL_LIMIT = 100;		//forward limit of travel in Degrees
 constexpr float TURRET_REVERSE_TRAVEL_LIMIT = -90;		//reverse limit of travel in Degrees

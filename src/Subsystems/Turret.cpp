@@ -22,13 +22,15 @@ bool SortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs)	
 	return lhs.Area > rhs.Area;
 };
 
+static float m_vision_angle_offset = 0.0;
+
 Turret::Turret() : Subsystem("Turret") {
 	std::cout << "info: creating Turret" << std::endl;
 
 	m_Motor = new CANTalon(TURRET_MOTOR);
 	m_Motor->SetSafetyEnabled(false);
 	m_Motor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
-	m_Motor->ConfigPeakOutputVoltage(9,-9);
+	m_Motor->ConfigPeakOutputVoltage(12,-12);
 
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
 
@@ -128,6 +130,7 @@ bool Turret::IsClosedLoop() {
 }
 
 void Turret::UpdateNetworkTable() {
+	static int target = 0;
 	int pix_offset = 0;
 	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>());
 	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -150,10 +153,11 @@ void Turret::UpdateNetworkTable() {
 		}
 	}
 
-	std::sort(RcRs.begin(), RcRs.end(), SortByArea); //Sort the result by Area of target
+	//std::sort(RcRs.begin(), RcRs.end(), SortByArea); //Sort the result by Area of target
 
-
-	if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 7)) {
+	if (target == 25) target = 0;
+	//target = 0;
+	if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
 	//Here if we have a valid target
 	//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
 	//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
@@ -161,15 +165,21 @@ void Turret::UpdateNetworkTable() {
 	//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 	//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
 
-		 pix_offset = (320.0 - RcRs[0].CenterX);  //.000625 may need to invert this range -0.1 to 0.1
-	}
+	pix_offset = (320.0 - RcRs[0].CenterX);
+
+	m_vision_angle_offset = (((320.0 - RcRs[0].CenterX) * 0.08125) - GetBigAngle());  // +/-22deg
+
+
+}
+
+target = target + 1;
 
 	//convert offset to degrees
-	m_vision_angle_offset = pix_offset*0.00035;
+	//m_vision_angle_offset = pix_offset*0.00035;
 }
 
 float Turret::GetVisionOffset() {
-	return m_vision_angle_offset;
+	return -m_vision_angle_offset;
 }
 
 
