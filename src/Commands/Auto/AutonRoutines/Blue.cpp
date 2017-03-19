@@ -100,12 +100,13 @@ void Blue::Boiler_ShootHopper()
 }
 void Blue::Boiler_GetGear_Shoot()
 {
-	AddSequential(new Drive(104,75));
+	AddSequential(new Drive(95,75));
 	AddSequential(new ArcadeDriveTurn(60));
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
-	AddSequential(new Drive(34,50));
+	AddSequential(new Drive(34,30));
 	AddParallel(new IntakeAutoGearScore());
-	AddSequential(new Drive(-43,50));
+	AddParallel(new SetTurretAngle(-15));
+	AddSequential(new Drive(-33,30));
 	AddParallel(new FeedShooter(true));
 
 }

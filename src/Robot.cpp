@@ -144,8 +144,8 @@ public:
 		position = oi->GetSelectorB();
 		gears = oi->GetSelectorA();
 		gear_noscore = oi->GetSw2();
-		shooting = oi->GetSw2();
-		hopper = oi->GetSw3();
+		shooting = oi->GetSw3();
+		hopper = oi->GetSw4();
 
 		switch(red)
 			{
@@ -161,8 +161,8 @@ public:
 					break;
 					case POSITION_CENTER:
 						if(gears == 1) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
-						else if (gears == 2 && gear_noscore == true && shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE));
-						else if (gears == 2 && gear_noscore == true  && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE_SHOOT));
+						else if (gears == 2 && gear_noscore == true && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE));
+						else if (gears == 2 && gear_noscore == true  && shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE_SHOOT));
 						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR));
 					break;
 					case POSITION_RETRIEVAL:
@@ -186,8 +186,8 @@ public:
 					break;
 					case POSITION_CENTER:
 						if(gears == 1) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
-						else if (gears == 2 && gear_noscore == true && shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE));
-						else if (gears == 2 && gear_noscore == true  && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE_SHOOT));
+						else if (gears == 2 && gear_noscore == true && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE));
+						else if (gears == 2 && gear_noscore == true  && shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE_SHOOT));
 						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR));
 					break;
 					case POSITION_RETRIEVAL:
@@ -381,7 +381,7 @@ public:
 				if(oi->drvStick->GetRawButton(6)) {
 					//up
 					gearIntake = 1.0;
-					armMotor = INTAKE_ARM_OPEN_LOOP_SPEED*.25;
+					armMotor = INTAKE_ARM_OPEN_LOOP_SPEED*0.75;
 				}
 				if(!intake->IsCalibrating()){
 					intake->SetArm(armMotor);
@@ -495,7 +495,7 @@ public:
 			float turret_joy_in = oi->opStick->GetRawAxis(4);
 			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 			turret_joy_in = 0;
-			angle_change = m_turret_angle - turret_joy_in * TURRET_SPEED;
+			angle_change = m_turret_angle + turret_joy_in * TURRET_SPEED;
 			m_turret_angle = angle_change;
 			turret->SetBigAngle(angle_change);  //moved outside of routine
 			//turret->SetBigAngle(turret_joy_in*22);

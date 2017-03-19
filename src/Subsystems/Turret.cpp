@@ -57,8 +57,8 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetTalonControlMode(CANTalon::TalonControlMode::kPositionMode);
 
 
-	m_Motor->SetSensorDirection(false);
-	m_Motor->SetClosedLoopOutputDirection(false);
+	m_Motor->SetSensorDirection(true);
+	m_Motor->SetClosedLoopOutputDirection(true);
 	m_Motor->SetAllowableClosedLoopErr(0);
 	m_Motor->SelectProfileSlot(0);
 	m_Motor->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_10Ms);
