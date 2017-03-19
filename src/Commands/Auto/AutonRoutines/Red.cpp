@@ -1,3 +1,5 @@
+#include <Commands/Auto/IntakeAutoGearScore.h>
+#include <Commands/AutoGearScoreSub.h>
 #include "Red.h"
 
 #include <iostream>
@@ -18,7 +20,6 @@
 #include "Commands/RunGearRoll_IntakeDown.h"
 #include "Commands/FeedShooter.h"
 #include "Subsystems/Intake.h"
-#include "Commands/AutoGearScore.h"
 #include "Constants.h"
 
 #include "WPILib.h"
@@ -33,14 +34,16 @@ Red::Red(int autonSelection) : frc::CommandGroup("Red")
 	case BOILER_GEAR_HOPPER_SHOOT: Boiler_GetGear_ShootHopper(); break;
 	case BOILER_HOPPER_SHOOT: Boiler_ShootHopper(); break;
 	case BOILER_TWO_GEAR: Boiler_GetTwoGear(); break;
+	case BOILER_GEAR_SHOOT:Boiler_GetGear_Shoot(); break;
 
 	case CENTER_GEAR: Center_GetGear(); break;
 	case CENTER_TWO_GEAR: Center_GetTwoGear(); break;
-	case CENTER_TWO_GEAR_NOSCORE: Center_GetTwoGear_Noscore(); break;
-
+	case CENTER_TWO_GEAR_NOSCORE: Center_GetTwoGear_Noscore(false); break;
+	case CENTER_TWO_GEAR_NOSCORE_SHOOT: Center_GetTwoGear_Noscore_Shoot(); break;
 
 	case RETRIEVAL_GEAR: Retrieval_GetGear(); break;
 	case RETRIEVAL_TWOGEAR: Retrieval_GetTwoGear(); break;
+	case RETRIEVAL_GEAR_SHOOT: Retrieval_GetGear_Shoot(); break;
 	}
 }
 
@@ -62,9 +65,7 @@ void Red::Boiler_GetGear()
 }
 void Red::Boiler_GetTwoGear()
 {
-	AddSequential(new Drive(100,150));
-	AddSequential(new WaitCommand(5.0));
-	AddSequential(new Drive(-100,150));
+
 }
 void Red::Boiler_GetGear_ShootHopper()
 {
@@ -87,6 +88,16 @@ void Red::Boiler_ShootHopper()
 
 
 
+}
+void Red::Boiler_GetGear_Shoot()
+{
+	AddSequential(new Drive(104,75));
+	AddSequential(new ArcadeDriveTurn(-60));
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+	AddSequential(new Drive(34,50));
+	AddParallel(new IntakeAutoGearScore());
+	AddSequential(new Drive(-43,50));
+	AddParallel(new FeedShooter(true));
 }
 //-------------------------------------
 
@@ -131,7 +142,7 @@ void Red::Center_GetTwoGear()
 		AddSequential(new Drive(-70, 150));
 }
 
-void Red::Center_GetTwoGear_Noscore()
+void Red::Center_GetTwoGear_Noscore(bool isShooting)
 {
 	 //not jank use intake to score all gears
 		AddParallel(new CalibrateArm(false));
@@ -146,8 +157,18 @@ void Red::Center_GetTwoGear_Noscore()
 		AddParallel(new SetIntakeGear(1.0));
 		AddSequential(new Drive(25, 150));
 		AddParallel(new StopGearRoll_IntakeUp());
+		if(isShooting)
+		{
+			AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
+			AddParallel(new SetTurretAngle(20));
+		}
 		AddSequential(new Drive(-22.5, 150));
 
+}
+void Red::Center_GetTwoGear_Noscore_Shoot()
+{
+	Center_GetTwoGear_Noscore(true);
+	AddSequential(new FeedShooter(true));
 }
 //-------------------------------------
 
@@ -162,8 +183,12 @@ void Red::Retrieval_GetGear()
 void Red::Retrieval_GetTwoGear()
 {
 
-
-
-
+}
+void Red::Retrieval_GetGear_Shoot()
+{
+	AddSequential(new Drive(-104,75));
+	AddSequential(new ArcadeDriveTurn(52));
+	AddSequential(new Drive(-34,75));
+	AddSequential(new Drive(43,75));
 }
 //-------------------------------------

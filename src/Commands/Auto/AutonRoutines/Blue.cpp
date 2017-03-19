@@ -1,3 +1,5 @@
+#include <Commands/Auto/IntakeAutoGearScore.h>
+#include <Commands/AutoGearScoreSub.h>
 #include "Blue.h"
 
 #include <iostream>
@@ -16,8 +18,8 @@
 #include "Commands/Auto/SetShooterSpeed.h"
 #include "Commands/StopGearRoll_IntakeUp.h"
 #include "Commands/RunGearRoll_IntakeDown.h"
+#include "Commands/FeedShooter.h"
 #include "Subsystems/Intake.h"
-#include "Commands/AutoGearScore.h"
 #include "Constants.h"
 
 #include "WPILib.h"
@@ -32,15 +34,16 @@ Blue::Blue(int autonSelection) : frc::CommandGroup("Blue")
 	case BOILER_GEAR_HOPPER_SHOOT: Boiler_GetGear_ShootHopper(); break;
 	case BOILER_HOPPER_SHOOT: Boiler_ShootHopper(); break;
 	case BOILER_TWO_GEAR: Boiler_GetTwoGear(); break;
+	case BOILER_GEAR_SHOOT:Boiler_GetGear_Shoot(); break;
 
 	case CENTER_GEAR: Center_GetGear(); break;
 	case CENTER_TWO_GEAR: Center_GetTwoGear(); break;
-	case CENTER_TWO_GEAR_NOSCORE: Center_GetTwoGear_Noscore(); break;
-
-
+	case CENTER_TWO_GEAR_NOSCORE: Center_GetTwoGear_Noscore(false); break;
+	case CENTER_TWO_GEAR_NOSCORE_SHOOT: Center_GetTwoGear_Noscore_Shoot(); break;
 
 	case RETRIEVAL_GEAR: Retrieval_GetGear(); break;
 	case RETRIEVAL_TWOGEAR: Retrieval_GetTwoGear(); break;
+	case RETRIEVAL_GEAR_SHOOT: Retrieval_GetGear_Shoot(); break;
 	}
 }
 
@@ -93,6 +96,17 @@ void Blue::Boiler_GetGear_ShootHopper()
 }
 void Blue::Boiler_ShootHopper()
 {
+
+}
+void Blue::Boiler_GetGear_Shoot()
+{
+	AddSequential(new Drive(104,75));
+	AddSequential(new ArcadeDriveTurn(60));
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+	AddSequential(new Drive(34,50));
+	AddParallel(new IntakeAutoGearScore());
+	AddSequential(new Drive(-43,50));
+	AddParallel(new FeedShooter(true));
 
 }
 //-------------------------------------
@@ -177,7 +191,7 @@ void Blue::Center_GetTwoGear()
 
 
 }
-void Blue::Center_GetTwoGear_Noscore()
+void Blue::Center_GetTwoGear_Noscore(bool isShooting)
 {
  //not jank use intake to score all gears
 	AddParallel(new CalibrateArm(false));
@@ -192,6 +206,11 @@ void Blue::Center_GetTwoGear_Noscore()
 	AddParallel(new SetIntakeGear(1.0));
 	AddSequential(new Drive(25, 150));
 	AddParallel(new StopGearRoll_IntakeUp());
+	if(isShooting)
+	{
+		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
+		AddParallel(new SetTurretAngle(-20));
+	}
 	AddSequential(new Drive(-22.5, 150));
 
 
@@ -204,6 +223,11 @@ void Blue::Center_GetTwoGear_Noscore()
 
 
 
+}
+void Blue::Center_GetTwoGear_Noscore_Shoot()
+{
+	Center_GetTwoGear_Noscore(true);
+	AddSequential(new FeedShooter(true));
 }
 //-------------------------------------
 
@@ -244,12 +268,9 @@ void Blue::Retrieval_GetTwoGear()
 	//AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	AddSequential(new Drive(-30, 30));
-
-
-
-
-
-
+}
+void Blue::Retrieval_GetGear_Shoot()
+{
 
 }
 //-------------------------------------

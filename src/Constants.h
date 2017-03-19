@@ -64,7 +64,7 @@ constexpr float INTAKE_ARM_POSITION_UP = 1.5;
 constexpr float INTAKE_ARM_GEAR_POSITION = 0.649;
 constexpr float INTAKE_ARM_POSITION_DOWN = 0.001;
 constexpr float INTAKE_ARM_DOWN_VOLTAGE = -12.0;
-constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.77;
+constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.80;
 
 //Conveyer
 constexpr float CONVEYER_AGITATOR_VOLTAGE = 8.75;
@@ -87,10 +87,14 @@ constexpr int	BOILER_GEAR = 0;
 constexpr int	BOILER_GEAR_HOPPER_SHOOT = 1;
 constexpr int	BOILER_HOPPER_SHOOT = 2;
 constexpr int	BOILER_TWO_GEAR = 3;
+constexpr int	BOILER_GEAR_SHOOT = 4;
+
 
 constexpr int	CENTER_GEAR = 10;
 constexpr int	CENTER_TWO_GEAR = 11;
 constexpr int 	CENTER_TWO_GEAR_NOSCORE = 12;
+constexpr int 	CENTER_TWO_GEAR_NOSCORE_SHOOT = 13;
+
 
 constexpr int	RETRIEVAL_GEAR = 20;
 constexpr int	RETRIEVAL_TWOGEAR = 21;
@@ -101,7 +105,7 @@ constexpr int	BLUE = 0;
 
 constexpr int	POSITION_BOILER = 1;
 constexpr int	POSITION_CENTER = 2;
-constexpr int	POSITION_RETRIEVAL =3;
+constexpr int	POSITION_RETRIEVAL = 3;
 
 
 
