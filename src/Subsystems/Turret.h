@@ -44,6 +44,7 @@ public:
 
 	void UpdateNetworkTable();
 	bool IsOnTarget();
+	void TargetBoiler(bool isAiming = 0);
 	float GetVisionOffset();
 
 
