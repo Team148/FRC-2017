@@ -1,6 +1,6 @@
+#include <Commands/Auto/CalibrateDownArm.h>
 #include "Center1Gear.h"
 #include "Commands/Auto/Drive.h"
-#include "Commands/Auto/CalibrateArm.h"
 #include "Commands/SetIntakeArm.h"
 #include "Commands/Auto/SetIntake.h"
 
@@ -21,7 +21,7 @@ Center1Gear::Center1Gear(int val) {
 	// e.g. if Command1 requires chassis, and Command2 requires arm,
 	// a CommandGroup containing them would require both the chassis and the
 	// arm.
-	AddParallel(new CalibrateArm(false));
+	//AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(59,25));
 	//AddSequential(new SetIntakeArm(0,2));
 	AddSequential(new SetIntake(0));

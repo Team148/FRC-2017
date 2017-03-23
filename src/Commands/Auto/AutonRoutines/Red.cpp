@@ -1,3 +1,4 @@
+#include <Commands/Auto/CalibrateDownArm.h>
 #include <Commands/Auto/IntakeAutoGearScore.h>
 #include <Commands/AutoGearScoreSub.h>
 #include "Red.h"
@@ -6,7 +7,6 @@
 
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/ArcadeDriveTurn.h"
-#include "Commands/Auto/CalibrateArm.h"
 #include "Commands/SetIntakeArm.h"
 #include "Commands/Auto/SetIntake.h"
 #include "Commands/SetIntakeBall.h"
@@ -104,7 +104,7 @@ void Red::Boiler_GetGear_Shoot()
 //CENTER POSITION AUTONS
 void Red::Center_GetGear()
 {
-	AddParallel(new CalibrateArm(false));
+	//AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(79, 20));
 	AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
@@ -121,7 +121,7 @@ void Red::Center_GetGear()
 void Red::Center_GetTwoGear()
 {
 	 //not jank use intake to score all gears
-		AddParallel(new CalibrateArm(false));
+		//AddParallel(new CalibrateArm(false));
 		AddSequential(new Drive(88, 150));
 	//	AddParallel(new SetIntakeBall(-0.1));
 		AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
@@ -145,7 +145,7 @@ void Red::Center_GetTwoGear()
 void Red::Center_GetTwoGear_Noscore(bool isShooting)
 {
 	 //not jank use intake to score all gears
-		AddParallel(new CalibrateArm(false));
+		//AddParallel(new CalibrateArm(false));
 		AddSequential(new Drive(88, 150));
 	//	AddParallel(new SetIntakeBall(-0.1));
 		AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));

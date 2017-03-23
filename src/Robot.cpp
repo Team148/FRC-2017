@@ -1,3 +1,4 @@
+#include <Commands/Auto/CalibrateDownArm.h>
 #include <Commands/Auto/IntakeAutoGearScore.h>
 #include <Commands/AutoGearScoreSub.h>
 #include <memory>
@@ -13,7 +14,6 @@
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/AutonRoutines/Autonomous.h"
 #include "commands/Auto/Center1Gear.h"
-#include "Commands/Auto/CalibrateArm.h"
 #include "Commands/Auto/AutonRoutines/Blue.h"
 #include "Commands/Auto/AutonRoutines/Red.h"
 #include "Commands/Auto/SetBallGearUntilBeam.h"
@@ -180,6 +180,11 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 
+		//Setup Intake, (the intake should start every match up)
+		if(intake->IsIntakeUp()) {
+			intake->ConfigureClosedLoop(INTAKE_ARM_POSITION_UP);
+		}
+
 		turret->UpdateNetworkTable();
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
@@ -218,7 +223,16 @@ public:
 //		}
 //		if(!intake->IsClosedLoop())
 //			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm(false));
-		intake->ConfigureOpenLoop();
+		//intake->ConfigureOpenLoop();
+
+		//if the intake is up or down, reset the arm
+		if(intake->IsIntakeUp()) {
+			intake->ConfigureClosedLoop(INTAKE_ARM_POSITION_UP);
+		}
+
+		if(intake->IsIntakeDown()) {
+			intake->ConfigureClosedLoop(INTAKE_ARM_POSITION_DOWN);
+		}
 	}
 
 	void TeleopPeriodic() override {
@@ -335,29 +349,37 @@ public:
 //				armIncPressed = false;
 //			} // ---
 
-			//right trigger arm control (absolute position
+			//right trigger arm control (absolute position)
 			if(oi->drvStick->GetRawAxis(3) > 0.2)
 				m_armAngle = (INTAKE_ARM_POSITION_UP/2) + oi->drvStick->GetRawAxis(3)*(INTAKE_ARM_POSITION_UP/2);
 
 			if(m_armAngle <= INTAKE_ARM_POSITION_DOWN) m_armAngle = INTAKE_ARM_POSITION_DOWN; // Hard Stop stall Safety (down)
 			if(m_armAngle >= INTAKE_ARM_POSITION_UP) m_armAngle = INTAKE_ARM_POSITION_UP; // Hard Stop stall Safety (up)
 
+			//check the limit switches and set the encoder to the "actual position"
+//			if(intake->IsIntakeUp()) {
+//				intake->ResetArm(INTAKE_ARM_POSITION_UP);
+//			}
+//
+//			if(intake->IsIntakeDown()) {
+//				intake->ResetArm(INTAKE_ARM_POSITION_DOWN);
+//			}
+
 			intake->SetArmAngle(m_armAngle);
 		}
 		else {  //OPEN LOOP INTAKE
-
-				if(oi->drvStick->GetRawButton(5)){
-					//down
-					armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
-				}
-				if(oi->drvStick->GetRawButton(6)) {
-					//up
-					gearIntake = 1.0;
-					armMotor = INTAKE_ARM_OPEN_LOOP_SPEED*0.75;
-				}
-				if(!intake->IsCalibrating()){
-					intake->SetArm(armMotor);
-				}
+			if(oi->drvStick->GetRawButton(5)){
+				//down
+				armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
+			}
+			if(oi->drvStick->GetRawButton(6)) {
+				//up
+				gearIntake = 1.0;
+				armMotor = INTAKE_ARM_OPEN_LOOP_SPEED*0.75;
+			}
+			if(!intake->IsCalibrating()){
+				intake->SetArm(armMotor);
+			}
 		}
 		//END INTAKE ARM
 
@@ -368,7 +390,6 @@ public:
 		{
 			if(openLoopMode == 0)
 			{
-				frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm(false));
 				op_s = false;
 			}
 			if(openLoopMode == 1)
@@ -530,7 +551,7 @@ public:
 	void SmartDashUpdate() {
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
 		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
-		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm(false));
+		frc::SmartDashboard::PutData("Calibrate Down Arm", new CalibrateDownArm(false));
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", -shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());

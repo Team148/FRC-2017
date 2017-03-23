@@ -51,7 +51,7 @@ void Intake::ConfigureOpenLoop() {
 	m_isClosedLoop = 0;
 }
 
-void Intake::ConfigureClosedLoop() {
+void Intake::ConfigureClosedLoop(float position) {
 	m_ArmMotor->SetTalonControlMode(CANTalon::TalonControlMode::kPositionMode);
 	m_ArmMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_ArmMotor->SetSensorDirection(false);
@@ -82,10 +82,7 @@ bool Intake::IsCalibrating()
 }
 
 bool Intake::IsIntakeUp() {
-	if(m_UpLimit)
-		return true;
-	else
-		return false;
+	return !m_UpLimit->Get();
 }
 
 
@@ -99,8 +96,19 @@ void Intake::ResetArm(float actual_pos) {
 }
 
 void Intake::SetArmAngle(float angle) {
-	if(m_isClosedLoop)
+	if(m_isClosedLoop) {
+		//check limit switches and requested direction
+		//if limit is reached and angle is in that direction, then break
+		if(IsIntakeUp() && angle > GetArmAngle()) {
+			m_ArmMotor->Set(GetArmAngle());
+			return;
+		}
+		if(IsIntakeDown() && angle < GetArmAngle()) {
+			m_ArmMotor->Set(GetArmAngle());
+			return;
+		}
 		m_ArmMotor->Set(angle);
+	}
 	//std::cout << angle*INTAKE_ARM_ROTATIONS_PER_DEGREE << std::endl;
 }
 

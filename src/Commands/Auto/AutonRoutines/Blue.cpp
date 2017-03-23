@@ -1,3 +1,4 @@
+#include <Commands/Auto/CalibrateDownArm.h>
 #include <Commands/Auto/IntakeAutoGearScore.h>
 #include <Commands/AutoGearScoreSub.h>
 #include "Blue.h"
@@ -6,7 +7,6 @@
 
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/ArcadeDriveTurn.h"
-#include "Commands/Auto/CalibrateArm.h"
 #include "Commands/SetIntakeArm.h"
 #include "Commands/Auto/SetIntake.h"
 #include "Commands/SetIntakeBall.h"
@@ -74,7 +74,7 @@ void Blue::Boiler_GetGear_ShootHopper()
 	AddSequential(new Drive(-85,30));
 	AddSequential(new ArcadeDriveTurn(48));
 	AddSequential(new Drive(-34,20));
-	AddParallel(new CalibrateArm(false));
+	//AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(43,20));
 
 	AddParallel(new SetIntake(0.0));
@@ -116,7 +116,7 @@ void Blue::Boiler_GetGear_Shoot()
 void Blue::Center_GetGear()
 {
 	 // replace with auto gear score eventually pls
-	AddParallel(new CalibrateArm(false));
+	//AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(79, 20));
 	AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
@@ -169,7 +169,7 @@ void Blue::Center_GetTwoGear()
 
 
  //not jank use intake to score all gears
-	AddParallel(new CalibrateArm(false));
+	//AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(88, 150));
 //	AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
@@ -195,7 +195,7 @@ void Blue::Center_GetTwoGear()
 void Blue::Center_GetTwoGear_Noscore(bool isShooting)
 {
  //not jank use intake to score all gears
-	AddParallel(new CalibrateArm(false));
+	//AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(88, 150));
 //	AddParallel(new SetIntakeBall(-0.1));
 	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
@@ -247,7 +247,7 @@ void Blue::Retrieval_GetTwoGear()
 	AddSequential(new Drive(-32,80));// v 20
 	// scored 1st gear
 
-	AddParallel(new CalibrateArm(false));
+	//AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(60,200)); // v40
 	AddSequential(new SetIntake(0.0));
 	AddSequential(new ArcadeDriveTurn(52));

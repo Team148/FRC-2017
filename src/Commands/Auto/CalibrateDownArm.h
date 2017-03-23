@@ -1,12 +1,12 @@
-#ifndef CalibrateArm_H
-#define CalibrateArm_H
+#ifndef CalibrateDownArm_H
+#define CalibrateDownArm_H
 
 #include "../../CommandBase.h"
 #include "Subsystems/Intake.h"
 
-class CalibrateArm : public CommandBase {
+class CalibrateDownArm : public CommandBase {
 public:
-	CalibrateArm(bool leaveArmDown);
+	CalibrateDownArm(bool leaveArmDown);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
@@ -19,4 +19,4 @@ private:
 	bool m_armDown = false;
 };
 
-#endif  // CalibrateArm_H
+#endif  // CalibrateDownArm_H

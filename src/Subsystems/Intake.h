@@ -39,7 +39,7 @@ public:
 
 	void SetBrakeMode(bool on);
 	void ConfigureOpenLoop();
-	void ConfigureClosedLoop();
+	void ConfigureClosedLoop(float position);
 	bool IsClosedLoop();
 	void SetCalibrating(bool calibrate);
 	bool IsCalibrating();

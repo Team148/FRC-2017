@@ -9,6 +9,7 @@ SetIntake::SetIntake(float angle) {
 
 // Called once when the command executes
 void SetIntake::Initialize() {
-	if(Intake::GetInstance()->IsClosedLoop())
+	if(Intake::GetInstance()->IsClosedLoop()) {
 		Intake::GetInstance()->SetArmAngle(m_angle);
+	}
 }
