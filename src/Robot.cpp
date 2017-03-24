@@ -467,7 +467,7 @@ public:
 			turret_joy_in = 0;
 			angle_change = m_turret_angle + turret_joy_in * TURRET_SPEED;
 			m_turret_angle = angle_change;
-			turret->SetBigAngle(-angle_change);  //moved outside of routine
+			turret->SetBigAngle(angle_change);  //moved outside of routine
 			//turret->SetBigAngle(turret_joy_in*22);
 			isAiming = false;
 		}

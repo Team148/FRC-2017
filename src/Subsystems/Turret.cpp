@@ -61,8 +61,8 @@ void Turret::ConfigClosedLoop() {
 	m_Motor->SetTalonControlMode(CANTalon::TalonControlMode::kPositionMode);
 
 
-	m_Motor->SetSensorDirection(true);
-	m_Motor->SetClosedLoopOutputDirection(true);
+	m_Motor->SetSensorDirection(false);
+	m_Motor->SetClosedLoopOutputDirection(false);
 	m_Motor->SetAllowableClosedLoopErr(0);
 	m_Motor->SelectProfileSlot(0);
 	m_Motor->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_10Ms);
@@ -177,7 +177,7 @@ void Turret::UpdateNetworkTable() {
 
 			pix_offset = (320.0 - RcRs[0].CenterX);
 
-			m_vision_angle_offset = (((320.0 - RcRs[0].CenterX) * 0.09375) - GetBigAngle());  // +/-22deg
+			m_vision_angle_offset = (((320.0 - RcRs[0].CenterX) * 0.08125) - GetBigAngle());  // +/-22deg
 
 			targeted2 = pix_offset * view_angle_fact;
 			if(fabs(pix_offset) <= 72.75) {

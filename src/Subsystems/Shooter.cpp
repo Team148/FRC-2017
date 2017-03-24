@@ -47,8 +47,8 @@ void Shooter::ConfigureClosedLoop() {
 	m_Motor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 	m_Motor1->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	m_Motor2->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
-	m_Motor1->SetSensorDirection(false);
-	m_Motor1->SetClosedLoopOutputDirection(true);
+	m_Motor1->SetSensorDirection(true);
+	m_Motor1->SetClosedLoopOutputDirection(false);
 	m_Motor1->ConfigEncoderCodesPerRev(256);
 	m_Motor1->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_50Ms);
 	m_Motor1->SetVelocityMeasurementWindow(32);
@@ -80,7 +80,7 @@ void Shooter::SetOpenLoop(float value) {
 
 void Shooter::SetRPM(int rpm) {
 	m_rpm = rpm;
-	m_Motor1->Set(-m_rpm);
+	m_Motor1->Set(m_rpm);
 }
 
 int Shooter::GetRPM() {

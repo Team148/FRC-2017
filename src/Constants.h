@@ -44,7 +44,7 @@ constexpr float ARCADE_DRIVE_GYRO_P = 0.02;
 //Turret
 constexpr float TURRET_DEG_PER_ROTATION = 475/27;
 constexpr float TURRET_DEG_IN_BIG_GEAR = TURRET_DEG_PER_ROTATION * 0.002777778;  // 1/360= .0027...
-constexpr float TURRET_INV_DEG_BIG_GEAR = 20.84210;
+constexpr float TURRET_INV_DEG_BIG_GEAR = 20.463156;
 constexpr float TURRET_P = 0.6; //0.7
 constexpr float TURRET_I = 0.000; // 0.002
 constexpr float TURRET_I_ZONE = 0.0;
