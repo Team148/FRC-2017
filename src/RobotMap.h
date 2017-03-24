@@ -29,7 +29,7 @@ constexpr int DRIVE_RIGHTMOTOR_3 	= 2;
 constexpr int SHOOTER_MOTOR_1 		= 3;
 constexpr int SHOOTER_MOTOR_2 		= 11;
 constexpr int FLASHLIGHT_SOLENOID	= 0;
-constexpr int VISION_LIGHT_SOLENOID = 1;
+constexpr int VISION_LIGHT_SOLENOID = 2;
 
 constexpr int CONVEYOR_LOWER_MOTOR  = 4;
 constexpr int CONVEYOR_UPPER_MOTOR  = 5;

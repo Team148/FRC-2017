@@ -42,7 +42,7 @@ constexpr float ARCADE_DRIVE_I = 0.02;
 constexpr float ARCADE_DRIVE_GYRO_P = 0.02;
 
 //Turret
-constexpr float TURRET_DEG_PER_ROTATION = 190/11;
+constexpr float TURRET_DEG_PER_ROTATION = 475/27;
 constexpr float TURRET_DEG_IN_BIG_GEAR = TURRET_DEG_PER_ROTATION * 0.002777778;  // 1/360= .0027...
 constexpr float TURRET_INV_DEG_BIG_GEAR = 20.84210;
 constexpr float TURRET_P = 0.6; //0.7
@@ -67,13 +67,13 @@ constexpr float INTAKE_ARM_DOWN_VOLTAGE = -12.0;
 constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.80;
 
 //Conveyer
-constexpr float CONVEYER_AGITATOR_VOLTAGE = 8.75;
-constexpr float CONVEYER_KICKER_VOLTAGE = 10.0;
+constexpr float CONVEYER_AGITATOR_VOLTAGE = 10.0;
+constexpr float CONVEYER_KICKER_VOLTAGE = 12.0;
 
 //Shooter
-constexpr float SHOOTER_F = 0.1;
-constexpr float SHOOTER_P = 0.2;
-constexpr float SHOOTER_D = 1.2;
+constexpr float SHOOTER_F = 0.049;
+constexpr float SHOOTER_P = 0.25;
+constexpr float SHOOTER_D = 1.25;
 
 constexpr int SHOOTER_SET_POINT_A = 3260;
 constexpr int SHOOTER_SET_POINT_B = 3580;

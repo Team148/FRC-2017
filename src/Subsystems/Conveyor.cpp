@@ -20,6 +20,9 @@ Conveyor::Conveyor() : Subsystem("Conveyor") {
 	m_climberMotor->ConfigPeakOutputVoltage(12.0,-12); //climber ONLY goes backwards
 	m_climberMotor2->ConfigPeakOutputVoltage(12.0,-12);
 
+	m_lowerMotor->SetVoltageRampRate(48.0);
+	m_upperMotor->SetVoltageRampRate(48.0);
+
 	m_lowerMotor->SetSafetyEnabled(false);
 	m_upperMotor->SetSafetyEnabled(false);
 	m_climberMotor->SetSafetyEnabled(false);

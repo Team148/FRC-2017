@@ -177,7 +177,7 @@ void Turret::UpdateNetworkTable() {
 
 			pix_offset = (320.0 - RcRs[0].CenterX);
 
-			m_vision_angle_offset = (((320.0 - RcRs[0].CenterX) * 0.08125) - GetBigAngle());  // +/-22deg
+			m_vision_angle_offset = (((320.0 - RcRs[0].CenterX) * 0.09375) - GetBigAngle());  // +/-22deg
 
 			targeted2 = pix_offset * view_angle_fact;
 			if(fabs(pix_offset) <= 72.75) {
@@ -211,7 +211,7 @@ void Turret::TargetBoiler(bool isAiming) {
 }
 
 float Turret::GetVisionOffset() {
-	return -m_vision_angle_offset;
+	return m_vision_angle_offset;
 }
 
 

@@ -459,7 +459,7 @@ public:
 			flashlightOn = false;
 			ringlightOn = true;
 			isAiming = true;
-			turret->TargetBoiler(isAiming);
+			turret->TargetBoiler(true);
 			m_turret_angle = -turret->GetBigAngle();
 		} else {
 			float turret_joy_in = oi->opStick->GetRawAxis(4);
