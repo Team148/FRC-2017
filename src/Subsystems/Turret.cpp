@@ -1,6 +1,7 @@
 #include "Turret.h"
 #include <vector>
 #include <cmath>
+#include "WPILib.h"
 
 Turret *Turret::m_instance = 0;
 
@@ -23,7 +24,9 @@ bool SortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs)	
 	return lhs.Area > rhs.Area;
 };
 
+static bool applyOffset = true;
 static float m_vision_angle_offset = 0.0;
+static float m_turret_angle = 0.0;
 constexpr double view_angle_fact = 0.08276;
 
 Turret::Turret() : Subsystem("Turret") {
@@ -32,7 +35,7 @@ Turret::Turret() : Subsystem("Turret") {
 	m_Motor = new CANTalon(TURRET_MOTOR);
 	m_Motor->SetSafetyEnabled(false);
 	m_Motor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
-	m_Motor->ConfigPeakOutputVoltage(12,-12);
+	m_Motor->ConfigPeakOutputVoltage(6.0,-6.0);
 
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
 
@@ -130,7 +133,11 @@ bool Turret::IsHomed() {
 bool Turret::IsClosedLoop() {
 	return m_isClosedLoop;
 }
+void Turret::TargetBoiler(bool isAiming) {
 
+	isAutoAiming = true;
+	SetBigAngle(GetVisionOffset());
+}
 void Turret::UpdateNetworkTable() {
 	static int target = 0;
 	int pix_offset = 0;
@@ -165,8 +172,8 @@ void Turret::UpdateNetworkTable() {
 
 		std::sort(RcRs.begin(), RcRs.end(), SortByArea); //Sort the result by Area of target
 
-		if (target == 25) target = 0;
-		//target = 0;
+		//if (target == 0) target = 0;
+		target = 0;
 		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
 			//Here if we have a valid target
 			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
@@ -177,9 +184,34 @@ void Turret::UpdateNetworkTable() {
 
 			pix_offset = (320.0 - RcRs[0].CenterX);
 
-			m_vision_angle_offset = (((320.0 - RcRs[0].CenterX) * 0.08125) - GetBigAngle());  // +/-22deg
+			static float startTime = 0.0;
+			if(isAutoAiming)
+			{
+				if(applyOffset)
+				{
+					startTime = Timer::GetFPGATimestamp();
+					m_vision_angle_offset = ((pix_offset * view_angle_fact) - GetBigAngle());  // +/-22deg
+					applyOffset = false;
+				}
+				if(Timer::GetFPGATimestamp() - startTime >= 1.0)
+				{
+					applyOffset = true;
+				}
+				if(applyOffset == false)
+				{
+					if(GetBigAngle() - abs(m_vision_angle_offset) <= 3.0)
+					{
+						applyOffset = true;
+					}
+				}
+			}
+			else
+			{
+				applyOffset = true;
+				m_vision_angle_offset = ((pix_offset * view_angle_fact) - GetBigAngle());
+			}
 
-			targeted2 = pix_offset * view_angle_fact;
+			targeted2 = pix_offset * view_angle_fact;  //camera offset from its center in deg
 			if(fabs(pix_offset) <= 72.75) {
 				targeted = 5.0 - (fabs(pix_offset) * view_angle_fact);
 			}
@@ -187,7 +219,7 @@ void Turret::UpdateNetworkTable() {
 			frc::SmartDashboard::PutNumber("Target detected", targeted2);
 			frc::SmartDashboard::PutNumber("Locked On", targeted);
 		}
-		target = target + 1;
+		//target = target + 1;
 
 		//Publish the sorted 1st two results
 		frc::SmartDashboard::PutNumber("angleOff", m_vision_angle_offset);
@@ -206,12 +238,11 @@ void Turret::UpdateNetworkTable() {
 
 }
 
-void Turret::TargetBoiler(bool isAiming) {
-	if(isAiming) SetBigAngle(GetVisionOffset());
-}
+
+
 
 float Turret::GetVisionOffset() {
-	return m_vision_angle_offset;
+	return -m_vision_angle_offset;
 }
 
 

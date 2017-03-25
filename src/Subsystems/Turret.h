@@ -23,6 +23,7 @@ private:
 	Turret();
 	bool m_isClosedLoop = false;
 	std::shared_ptr<NetworkTable> m_network_table;
+	bool isAutoAiming = false;
 
 
 public:

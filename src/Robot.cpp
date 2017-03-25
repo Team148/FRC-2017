@@ -460,7 +460,7 @@ public:
 			ringlightOn = true;
 			isAiming = true;
 			turret->TargetBoiler(true);
-			m_turret_angle = -turret->GetBigAngle();
+			m_turret_angle = turret->GetBigAngle();
 		} else {
 			float turret_joy_in = oi->opStick->GetRawAxis(4);
 			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
@@ -470,6 +470,8 @@ public:
 			turret->SetBigAngle(angle_change);  //moved outside of routine
 			//turret->SetBigAngle(turret_joy_in*22);
 			isAiming = false;
+			//turret->TargetBoiler(false);
+
 		}
 
 		double _angle = turret->GetBigAngle();

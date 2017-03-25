@@ -98,8 +98,8 @@ void Blue::Boiler_ShootHopper()
 {
 	AddParallel(new SetShooterSpeed(7410));
 	AddParallel(new SetTurretAngle(-90.0));
-	AddSequential(new Drive(-120, 150));
-	AddSequential(new ArcadeDriveTurn(-90));
+	AddSequential(new Drive(-110, 150));
+	AddSequential(new ArcadeDriveTurn(-80));
 	AddSequential(new Drive(-55, 150));
 	AddParallel(new FeedShooter(true));
 }
