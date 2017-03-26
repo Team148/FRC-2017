@@ -279,7 +279,8 @@ public:
 		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
 		{
-			agitator = CONVEYER_AGITATOR_VOLTAGE;
+			kicker = CONVEYER_KICKER_VOLTAGE;
+
 			//ballIntake = 0.25;
 
 		}	//Run Agitator (Voltage control)

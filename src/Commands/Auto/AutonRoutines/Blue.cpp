@@ -1,5 +1,3 @@
-#include <Commands/Auto/IntakeAutoGearScore.h>
-#include <Commands/AutoGearScoreSub.h>
 #include "Blue.h"
 
 #include <iostream>
@@ -18,6 +16,9 @@
 #include "Commands/Auto/SetShooterSpeed.h"
 #include "Commands/StopGearRoll_IntakeUp.h"
 #include "Commands/RunGearRoll_IntakeDown.h"
+#include <Commands/Auto/IntakeAutoGearScore.h>
+#include <Commands/AutoGearScoreSub.h>
+
 #include "Commands/FeedShooter.h"
 #include "Subsystems/Intake.h"
 #include "Constants.h"
@@ -98,9 +99,9 @@ void Blue::Boiler_ShootHopper()
 {
 	AddParallel(new SetShooterSpeed(6550));
 	AddParallel(new SetTurretAngle(-82.0));
-	AddSequential(new Drive(-110, 150));
+	AddSequential(new Drive(-113, 150));
 	AddSequential(new ArcadeDriveTurn(-80));
-	AddSequential(new Drive(-55, 150));
+	AddSequential(new Drive(-45, 150));
 	AddParallel(new FeedShooter(true));
 }
 void Blue::Boiler_GetGear_Shoot()

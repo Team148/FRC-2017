@@ -1,4 +1,5 @@
 #include "OI.h"
+//#include "Commands/AutoGearScore.h"
 
 #include <WPILib.h>
 
@@ -57,6 +58,8 @@ OI::OI() {
 
 
 	//-----------------DRIVER CONTROLS---------------------
+
+	//m_drvButton3->WhileHeld(new )
 
 	//-----------------OPERATOR CONTROLS---------------------
 
