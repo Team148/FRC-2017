@@ -43,6 +43,7 @@ public:
 	bool IsHomed();
 
 
+	void lockTurretAngle(bool lock);
 	void UpdateNetworkTable();
 	bool IsOnTarget();
 	void TargetBoiler(bool isAiming = 0);

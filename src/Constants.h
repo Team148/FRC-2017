@@ -67,16 +67,16 @@ constexpr float INTAKE_ARM_DOWN_VOLTAGE = -12.0;
 constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.80;
 
 //Conveyer
-constexpr float CONVEYER_AGITATOR_VOLTAGE = 8.0;
+constexpr float CONVEYER_AGITATOR_VOLTAGE = 9.0;
 constexpr float CONVEYER_KICKER_VOLTAGE = -1.0;
 
 //Shooter
-constexpr float SHOOTER_F = 0.0575;
-constexpr float SHOOTER_P = 0.3;
+constexpr float SHOOTER_F = 0.06; // 0.0575
+constexpr float SHOOTER_P = 0.3; // 0.3
 constexpr float SHOOTER_D = 0.0;
 
-constexpr int SHOOTER_SET_POINT_A = 6550;
-constexpr int SHOOTER_SET_POINT_B = 3580;
+constexpr int SHOOTER_SET_POINT_A = 6400;
+constexpr int SHOOTER_SET_POINT_B = 6800;
 
 //AUTON
 

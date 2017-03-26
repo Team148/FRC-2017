@@ -1,4 +1,5 @@
 #include "Turret.h"
+//#include "Drivetrain.h"
 #include <vector>
 #include <cmath>
 #include "WPILib.h"
@@ -27,6 +28,8 @@ bool SortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs)	
 static bool applyOffset = true;
 static float m_vision_angle_offset = 0.0;
 static float m_turret_angle = 0.0;
+static float m_gyro_angle = 0.0;//Drivetrain::GetInstance()->GetAngle();
+
 constexpr double view_angle_fact = 0.08276;
 
 Turret::Turret() : Subsystem("Turret") {
@@ -133,6 +136,19 @@ bool Turret::IsHomed() {
 bool Turret::IsClosedLoop() {
 	return m_isClosedLoop;
 }
+void Turret::lockTurretAngle(bool lock)
+{
+	static float lockAngle = GetBigAngle() - m_gyro_angle;
+	if(lock)
+	{
+		SetBigAngle(lockAngle + GetBigAngle());
+	}
+	else
+	{
+
+	}
+}
+
 void Turret::TargetBoiler(bool isAiming) {
 
 	isAutoAiming = true;
