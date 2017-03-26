@@ -14,14 +14,14 @@ Conveyor::Conveyor() : Subsystem("Conveyor") {
 
 
 	m_lowerMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
-	m_upperMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
+	m_upperMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 	m_climberMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
 	m_climberMotor2->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
 	m_climberMotor->ConfigPeakOutputVoltage(12.0,-12); //climber ONLY goes backwards
 	m_climberMotor2->ConfigPeakOutputVoltage(12.0,-12);
 
-	m_lowerMotor->SetVoltageRampRate(48.0);
-	m_upperMotor->SetVoltageRampRate(48.0);
+	//m_lowerMotor->SetVoltageRampRate(48.0);
+	//m_upperMotor->SetVoltageRampRate(48.0);
 
 	m_lowerMotor->SetSafetyEnabled(false);
 	m_upperMotor->SetSafetyEnabled(false);

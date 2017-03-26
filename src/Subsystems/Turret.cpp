@@ -193,7 +193,7 @@ void Turret::UpdateNetworkTable() {
 					m_vision_angle_offset = ((pix_offset * view_angle_fact) - GetBigAngle());  // +/-22deg
 					applyOffset = false;
 				}
-				if(Timer::GetFPGATimestamp() - startTime >= 1.0)
+				if(Timer::GetFPGATimestamp() - startTime >= 0.6)
 				{
 					applyOffset = true;
 				}
@@ -201,7 +201,7 @@ void Turret::UpdateNetworkTable() {
 				{
 					if(GetBigAngle() - abs(m_vision_angle_offset) <= 3.0)
 					{
-						applyOffset = true;
+						//applyOffset = true;
 					}
 				}
 			}

@@ -23,7 +23,7 @@ void SetAgitator::Initialize() {
 void SetAgitator::Execute() {
 	if(m_on)
 	{
-		Conveyor::GetInstance()->SetAgitator(-CONVEYER_AGITATOR_VOLTAGE);
+		Conveyor::GetInstance()->SetAgitator(CONVEYER_AGITATOR_VOLTAGE);
 	}
 	else
 	{

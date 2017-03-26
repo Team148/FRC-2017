@@ -67,13 +67,14 @@ public:
 	 */
 	void DisabledInit() override {
 		m_turret_angle = 0.0;
-		turret->UpdateNetworkTable();
+		//turret->UpdateNetworkTable();
+
 	}
 
 
 	void DisabledPeriodic() override {
-		frc::Scheduler::GetInstance()->Run();
-		frc::Scheduler::GetInstance()->RemoveAll();
+//		frc::Scheduler::GetInstance()->Run();
+//		frc::Scheduler::GetInstance()->RemoveAll();
 		m_turret_angle = 0.0;
 		turret->UpdateNetworkTable();
 		SmartDashUpdate();
@@ -174,6 +175,8 @@ public:
 
 
 
+		shooter->ConfigureClosedLoop();
+		turret->ConfigClosedLoop();
 		drivetrain->configClosedLoop();
 		drivetrain->SetBrakeMode(true);
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
@@ -276,15 +279,15 @@ public:
 		//AGITATOR AND SHOOTER FIRE
 		if(oi->opStick->GetRawButton(5))
 		{
-			agitator = -CONVEYER_AGITATOR_VOLTAGE;
-			ballIntake = 0.25;
+			agitator = CONVEYER_AGITATOR_VOLTAGE;
+			//ballIntake = 0.25;
 
 		}	//Run Agitator (Voltage control)
 		if(oi->opStick->GetRawButton(6))
 		{
-			agitator = -CONVEYER_AGITATOR_VOLTAGE;
+			agitator = CONVEYER_AGITATOR_VOLTAGE;
 			kicker = CONVEYER_KICKER_VOLTAGE;
-			ballIntake = 0.25;
+			//ballIntake = 0.25;
 		}	//Run Agitator and fire (Voltage control)
 
 
@@ -534,9 +537,9 @@ public:
 		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
 		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm(false));
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
-		frc::SmartDashboard::PutNumber("ShooterRPM", -shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());
-		frc::SmartDashboard::PutNumber("Shooter Voltage", -shooter->GetVoltage());
+		frc::SmartDashboard::PutNumber("Shooter Voltage", shooter->GetVoltage());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());

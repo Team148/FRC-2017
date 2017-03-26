@@ -15,7 +15,7 @@ void FeedShooter::Initialize()
 {
 	if(m_on)
 	{
-		Conveyor::GetInstance()->SetAgitator(-CONVEYER_AGITATOR_VOLTAGE);
+		Conveyor::GetInstance()->SetAgitator(CONVEYER_AGITATOR_VOLTAGE);
 		Conveyor::GetInstance()->SetKicker(CONVEYER_KICKER_VOLTAGE);
 	}
 	else

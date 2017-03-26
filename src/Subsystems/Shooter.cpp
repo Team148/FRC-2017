@@ -6,8 +6,8 @@ Shooter *Shooter::m_instance = 0;
 
 Shooter::Shooter() : Subsystem("Shooter") {
 	std::cout << "Creating Shooter Subsystem" << std::endl;
-	m_Motor1 = new CANTalon(SHOOTER_MOTOR_1,1);
-	m_Motor2 = new CANTalon(SHOOTER_MOTOR_2,1);
+	m_Motor1 = new CANTalon(SHOOTER_MOTOR_1);
+	m_Motor2 = new CANTalon(SHOOTER_MOTOR_2);
 
 	m_Motor1->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	m_Motor2->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
