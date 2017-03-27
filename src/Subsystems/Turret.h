@@ -49,6 +49,9 @@ public:
 	void TargetBoiler(bool isAiming = 0);
 	float GetVisionOffset();
 
+	float m_gyro_angle = 0.0;
+
+
 
 
 

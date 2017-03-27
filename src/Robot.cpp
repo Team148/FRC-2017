@@ -37,6 +37,7 @@ public:
 //	std::shared_ptr<NetworkTable> table;
 	Drivetrain *drivetrain = 0;
 	OI* oi = 0;
+	Climber* climber = 0;
 	Conveyor* conveyor = 0;
 	Intake* intake = 0;
 	Shooter* shooter = 0;
@@ -47,6 +48,7 @@ public:
 		std::cout << "info: starting RobotInit" << std::endl;
 		oi = OI::GetInstance();
 		drivetrain = Drivetrain::GetInstance();
+		climber = Climber::GetInstance();
 		conveyor = Conveyor::GetInstance();
 		intake = Intake::GetInstance();
 		shooter = Shooter::GetInstance();
@@ -177,6 +179,7 @@ public:
 
 		shooter->ConfigureClosedLoop();
 		turret->ConfigClosedLoop();
+		drivetrain->ResetGyro();
 		drivetrain->configClosedLoop();
 		drivetrain->SetBrakeMode(true);
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
@@ -195,6 +198,7 @@ public:
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
 		turret->UpdateNetworkTable();
+		turret->m_gyro_angle = drivetrain->GetAngle();
 		SmartDashUpdate();
 	}
 
@@ -505,7 +509,7 @@ public:
 		}
 		if(climberMotor >= 0.0) climberMotor = 0.0;
 
-		conveyor->SetClimber(climberMotor);
+		climber->Set(climberMotor);
 		conveyor->SetAgitator(agitator);
 		conveyor->SetKicker(kicker);
 		//END AGITATOR AND FIRE

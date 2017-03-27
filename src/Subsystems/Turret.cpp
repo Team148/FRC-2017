@@ -28,7 +28,6 @@ bool SortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs)	
 static bool applyOffset = true;
 static float m_vision_angle_offset = 0.0;
 static float m_turret_angle = 0.0;
-static float m_gyro_angle = 0.0;//Drivetrain::GetInstance()->GetAngle();
 
 constexpr double view_angle_fact = 0.08276;
 

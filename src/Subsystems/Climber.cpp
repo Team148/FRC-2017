@@ -5,9 +5,21 @@
 Climber *Climber::m_instance = 0;
 
 Climber::Climber() : Subsystem("Climber") {
-	m_motor = new CANTalon(CLIMBER_MOTOR);
-	m_motor->SetSafetyEnabled(false);
-	m_motor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
+
+	m_climberMotor = new CANTalon(CLIMBER_MOTOR);
+	m_climberMotor2 = new CANTalon(CLIMBER_MOTOR_2);
+
+	m_climberMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
+	m_climberMotor2->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
+	m_climberMotor->ConfigPeakOutputVoltage(12.0,-12); //climber ONLY goes backwards
+	m_climberMotor2->ConfigPeakOutputVoltage(12.0,-12);
+
+	m_climberMotor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
+	m_climberMotor2->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Brake);
+
+
+	m_climberMotor->SetSafetyEnabled(false);
+	m_climberMotor2->SetSafetyEnabled(false);
 }
 
 Climber* Climber::GetInstance() {
@@ -22,6 +34,6 @@ void Climber::InitDefaultCommand() {
 
 }
 
-void Climber::Set(float val) {
-	m_motor->Set(val);
-}
+void Climber::Set(float voltage) {
+	m_climberMotor->Set(voltage);
+	m_climberMotor2->Set(-voltage);}

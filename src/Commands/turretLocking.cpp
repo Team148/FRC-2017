@@ -9,6 +9,23 @@ turretLocking::turretLocking(bool lock) {
 }
 
 // Called once when the command executes
-void turretLocking::Initialize() {
+void turretLocking::Initialize()
+{
+	m_IsFinished = false;
+}
+void turretLocking::Execute()
+{
 	Turret::GetInstance()->lockTurretAngle(m_lock);
+}
+bool turretLocking::IsFinished()
+{
+	return m_IsFinished;
+}
+void turretLocking::End()
+{
+
+}
+void turretLocking::Interrupted()
+{
+
 }
