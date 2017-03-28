@@ -177,10 +177,10 @@ void Blue::Center_GetTwoGear()
 
 
  //not jank use intake to score all gears
-	AddParallel(new CalibrateArm(false));
+	//AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(88, 150));
 //	AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
+	AddParallel(new IntakeAutoGearScore());	//AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	//AddSequential(new Drive(-20, 40));
 	AddSequential(new Drive(-70, 150));
 
@@ -193,7 +193,7 @@ void Blue::Center_GetTwoGear()
 	AddSequential(new ArcadeDriveTurn(-100));
 
 	AddSequential(new Drive(77, 150));
-	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
+	AddParallel(new IntakeAutoGearScore()); //AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	AddSequential(new Drive(-70, 150));
 
 
@@ -206,7 +206,7 @@ void Blue::Center_GetTwoGear_Noscore()
 	AddParallel(new CalibrateArm(false));
 	AddSequential(new Drive(88, 150));
 //	AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
+	AddParallel(new IntakeAutoGearScore()); //AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	//AddSequential(new Drive(-20, 40));
 	AddSequential(new Drive(-65, 150));
 

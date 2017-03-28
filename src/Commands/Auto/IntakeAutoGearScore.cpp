@@ -1,4 +1,6 @@
 #include <Commands/Auto/IntakeAutoGearScore.h>
+#include <Commands/AutoGearScoreSub.h>
+
 #include "Subsystems/Intake.h"
 
 IntakeAutoGearScore::IntakeAutoGearScore() {
@@ -14,6 +16,7 @@ void IntakeAutoGearScore::Initialize()
 	m_startTime = Timer::GetFPGATimestamp();
 	Intake::GetInstance()->SetGear(.05);
 	Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_DOWN);
+	//Scheduler::GetInstance()->AddCommand(new AutoGearScoreSub());
 }
 
 // Called repeatedly when this Command is scheduled to run
