@@ -1,5 +1,7 @@
 #include "OI.h"
-//#include "Commands/AutoGearScore.h"
+#include "Commands/AutoGearScoreSub.h"
+#include "Commands/SetDrivetrainClosedLoop.h"
+
 
 #include <WPILib.h>
 
@@ -56,6 +58,8 @@ OI::OI() {
 	m_dsiSw4 = new JoystickButton(dsiBrickA, 10);
 	m_dsiSw5 = new JoystickButton(dsiBrickA, 11);
 
+	m_drvButton6->WhenPressed(new AutoGearScoreSub());
+	m_drvButton6->WhenReleased(new SetDrivetrainClosedLoop(false));
 
 	//-----------------DRIVER CONTROLS---------------------
 

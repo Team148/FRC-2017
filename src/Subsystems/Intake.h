@@ -50,6 +50,7 @@ public:
 	void SetArmAngle(float angle);
 	float GetArmAngle();
 	bool IsBeamBroke();
+	void setPID(double P, double I, double D);
 
 };
 

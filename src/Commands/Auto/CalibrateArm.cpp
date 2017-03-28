@@ -19,18 +19,18 @@ void CalibrateArm::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void CalibrateArm::Execute() {
-	Intake::GetInstance()->SetArm(-0.3);
-	if(Intake::GetInstance()->IsIntakeDown())
-	{
-		m_switchdelaycount++;
-		Intake::GetInstance()->SetArm(-0.15);
-		if(m_switchdelaycount >= m_switchdelay)
-		{
-			Intake::GetInstance()->ConfigureClosedLoop();
-			Intake::GetInstance()->SetArm(INTAKE_ARM_POSITION_DOWN);
-			m_isFinished = true;
-		}
-	}
+//	Intake::GetInstance()->SetArm(-0.3);
+//	if(Intake::GetInstance()->IsIntakeDown())
+//	{
+//		m_switchdelaycount++;
+//		Intake::GetInstance()->SetArm(-0.15);
+//		if(m_switchdelaycount >= m_switchdelay)
+//		{
+//			Intake::GetInstance()->ConfigureClosedLoop();
+//			Intake::GetInstance()->SetArm(INTAKE_ARM_POSITION_DOWN);
+//			m_isFinished = true;
+//		}
+//	}
 }
 
 // Make this return true when this Command no longer needs to run execute()

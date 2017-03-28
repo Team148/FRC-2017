@@ -14,7 +14,7 @@ public:
 private:
 	bool m_IsFinished = false;
 	int m_startTime = 0.0;
-	int m_delay = 0.75;
+	int m_delay = 0.5;
 };
 
 #endif  // IntakeAutoGearScore_H

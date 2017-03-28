@@ -58,7 +58,7 @@ void Intake::ConfigureClosedLoop() {
 	m_ArmMotor->SetClosedLoopOutputDirection(false);
 	m_ArmMotor->SetAllowableClosedLoopErr(0);
 	m_ArmMotor->SelectProfileSlot(0);
-	m_ArmMotor->ConfigPeakOutputVoltage(12.0,INTAKE_ARM_DOWN_VOLTAGE);  //Forward is Up
+	m_ArmMotor->ConfigPeakOutputVoltage(8.0,INTAKE_ARM_DOWN_VOLTAGE);  //Forward is Up
 	//m_ArmMotor->SetVoltageRampRate(12.0);
 	m_ArmMotor->SetF(0.0);
 	m_ArmMotor->SetP(INTAKE_ARM_POSITION_P);
@@ -96,6 +96,8 @@ bool Intake::IsIntakeDown() {
 
 void Intake::ResetArm(float actual_pos) {
 	m_ArmMotor->SetPosition(actual_pos);
+	m_ArmMotor->SetEncPosition(actual_pos);
+
 }
 
 void Intake::SetArmAngle(float angle) {
@@ -115,4 +117,11 @@ bool Intake::IsBeamBroke() {
 		return 1;
 	else
 		return 0;
+}
+
+void Intake::setPID(double P, double I, double D)
+{
+	m_ArmMotor->SetP(P);
+	m_ArmMotor->SetI(I);
+	m_ArmMotor->SetD(D);
 }

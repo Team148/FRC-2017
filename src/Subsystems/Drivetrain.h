@@ -18,7 +18,7 @@ private:
 	CANTalon* m_rightMotor3;
 
 	RobotDrive *m_drive;
-	PowerDistributionPanel* m_pdp;
+
 	ADXRS450_Gyro *m_gyro;
 
 
@@ -27,7 +27,7 @@ private:
 
 	bool m_closedLoop = 0;
 public:
-
+	PowerDistributionPanel* m_pdp;
 	static Drivetrain* GetInstance();
 	void InitDefaultCommand();
 	void Arcade(float ystick, float xstick);

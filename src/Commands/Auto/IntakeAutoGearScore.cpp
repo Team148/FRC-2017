@@ -12,8 +12,8 @@ void IntakeAutoGearScore::Initialize()
 {
 	m_IsFinished = false;
 	m_startTime = Timer::GetFPGATimestamp();
-	Intake::GetInstance()->SetGear(-1.0);
-	Intake::GetInstance()->SetArmAngle(INTAKE_ARM_GEAR_POSITION);
+	Intake::GetInstance()->SetGear(.05);
+	Intake::GetInstance()->SetArmAngle(INTAKE_ARM_POSITION_DOWN);
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -39,5 +39,5 @@ void IntakeAutoGearScore::End() {
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
 void IntakeAutoGearScore::Interrupted() {
-
+	End();
 }

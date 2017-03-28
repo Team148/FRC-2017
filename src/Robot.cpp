@@ -217,6 +217,8 @@ public:
 		turret->ConfigClosedLoop();
 		m_turret_angle = 0.0;
 
+		//intake->ResetArm(0.0);
+		intake->ConfigureClosedLoop();
 
 		turret->UpdateNetworkTable();
 
@@ -225,7 +227,7 @@ public:
 //		}
 //		if(!intake->IsClosedLoop())
 //			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm(false));
-		intake->ConfigureOpenLoop();
+		//intake->ConfigureOpenLoop();
 	}
 
 	void TeleopPeriodic() override {
@@ -243,6 +245,7 @@ public:
 		static bool flashlightOn = false;
 		static bool ringlightOn = false;
 		static float temp_angle = 0.0;
+		static float cur_armPosition = 0.0;
 //		float current_angle = 0.0;
 
 
@@ -260,22 +263,22 @@ public:
 
 
 
-		if(oi->opStick->GetRawButton(1)) //Ball Intake
-		{
-			ballIntake = 1.0; // intake
-		}
-		if(oi->opStick->GetRawButton(2))
-		{
-			ballIntake = -1.0; // outake
-		}
+//		if(oi->opStick->GetRawButton(1)) //Ball Intake
+//		{
+//			ballIntake = 1.0; // intake
+//		}
+//		if(oi->opStick->GetRawButton(2))
+//		{
+//			ballIntake = -1.0; // outake
+//		}
 
 
 
-		if(oi->opStick->GetRawButton(3)) //GearIntake In
+		if(oi->opStick->GetRawButton(2)) //GearIntake In
 		{
 			gearIntake = 1.0;
 		}
-		if(oi->opStick->GetRawButton(4)) //GearIntake Out
+		if(oi->opStick->GetRawButton(3)) //GearIntake Out
 		{
 			gearIntake = -1.0;
 		}
@@ -300,29 +303,55 @@ public:
 
 		//CLOSED LOOP ARM CODE
 		//Shoulder Buttons
-
+		static bool goingDown = false;
+		static bool enableGearTolerance = false;
+		static bool gearWhileUp = false;
+		static int wp_startTime = 0.0;
+		cur_armPosition = intake->GetArmAngle();
 
 		if(intake->IsClosedLoop()) {
-			if(oi->drvStick->GetRawButton(5)){
+			if(oi->opStick->GetRawButton(1)){
 				//intake->SetArmAngle(0.0); //down
 				m_armAngle = INTAKE_ARM_POSITION_DOWN;
+				goingDown = true;
+				gearWhileUp = false;
 			}
-			static bool gearWhileUp = false;
-			if(oi->drvStick->GetRawButton(6)) {
+			if(goingDown)
+			{
+				if(intake->GetArmAngle() <= (INTAKE_ARM_POSITION_DOWN*0.95))
+				{
+					enableGearTolerance = true;
+				}
+			}
+			if(enableGearTolerance)
+			{
+				m_armAngle = cur_armPosition;
+				intake->setPID(0,0,0);
+				if(cur_armPosition >= INTAKE_ARM_POSITION_DOWN*0.94)
+				{
+					intake->setPID(INTAKE_ARM_POSITION_P,INTAKE_ARM_POSITION_I,INTAKE_ARM_POSITION_D);
+					m_armAngle = INTAKE_ARM_POSITION_DOWN;
+				}
+			}
+			else
+			{
+				intake->setPID(INTAKE_ARM_POSITION_P,INTAKE_ARM_POSITION_I,INTAKE_ARM_POSITION_D);
+			}
+			if(oi->opStick->GetRawButton(4)) {
+				goingDown = false;
+				enableGearTolerance = false;
 				//intake->SetArmAngle(1.12); //up
 				m_armAngle = INTAKE_ARM_POSITION_UP;
 				gearWhileUp = true;
 			}
 			if(gearWhileUp)
 			{
-				static int wp_curTime = 0.0;
-				wp_curTime = Timer::GetFPGATimestamp();
-				gearIntake = 1.0;
-				if(Timer::GetFPGATimestamp() - wp_curTime >= 0.75)
+				if(cur_armPosition < INTAKE_ARM_POSITION_UP-0.01)
 				{
-					gearIntake = 0.0;
-					gearWhileUp = false;
+					gearIntake = -1.0;
 				}
+				else
+					gearWhileUp = false;
 			}
 
 			//increment Arm Up/Down
@@ -344,8 +373,8 @@ public:
 //			} // ---
 
 			//right trigger arm control (absolute position
-			if(oi->drvStick->GetRawAxis(3) > 0.2)
-				m_armAngle = (INTAKE_ARM_POSITION_UP/2) + oi->drvStick->GetRawAxis(3)*(INTAKE_ARM_POSITION_UP/2);
+//			if(oi->drvStick->GetRawAxis(3) > 0.2)
+//				m_armAngle = (INTAKE_ARM_POSITION_UP/2) + oi->drvStick->GetRawAxis(3)*(INTAKE_ARM_POSITION_UP/2);
 
 			if(m_armAngle <= INTAKE_ARM_POSITION_DOWN) m_armAngle = INTAKE_ARM_POSITION_DOWN; // Hard Stop stall Safety (down)
 			if(m_armAngle >= INTAKE_ARM_POSITION_UP) m_armAngle = INTAKE_ARM_POSITION_UP; // Hard Stop stall Safety (up)
@@ -354,11 +383,11 @@ public:
 		}
 		else {  //OPEN LOOP INTAKE
 
-				if(oi->drvStick->GetRawButton(5)){
+				if(oi->opStick->GetRawButton(1)){
 					//down
 					armMotor = -(INTAKE_ARM_OPEN_LOOP_SPEED);
 				}
-				if(oi->drvStick->GetRawButton(6)) {
+				if(oi->opStick->GetRawButton(4)) {
 					//up
 					gearIntake = 1.0;
 					armMotor = INTAKE_ARM_OPEN_LOOP_SPEED*0.75;
@@ -372,30 +401,6 @@ public:
 		static bool openLoopToggle = false;
 		static int openLoopMode = 0;
 		static bool op_s = false;
-		if(oi->drvStick->GetRawButton(8) && openLoopToggle == false)
-		{
-			if(openLoopMode == 0)
-			{
-				frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm(false));
-				op_s = false;
-			}
-			if(openLoopMode == 1)
-			{
-				intake->ConfigureOpenLoop();
-				openLoopMode = 0;
-			}
-
-			if(op_s == false)
-			{
-				openLoopMode = 1;
-				op_s = true;
-			}
-			openLoopToggle = true;
-		}
-		else
-		{
-			openLoopToggle = false;
-		}
 
 
 
@@ -432,10 +437,10 @@ public:
 
 
 		//AUTO SCORE
-		if(oi->drvStick->GetRawButton(3)) {
-			m_armAngle = INTAKE_ARM_GEAR_POSITION;
-			frc::Scheduler::GetInstance()->AddCommand(new IntakeAutoGearScore());
-		}
+//		if(oi->drvStick->GetRawButton(3)) {
+//			//m_armAngle = INTAKE_ARM_GEAR_POSITION;
+//			frc::Scheduler::GetInstance()->AddCommand(new AutoGearScoreSub());
+//		}
 
 
 		if(shooterRpm < 0) // prevents shooter from being set to a negative rpm
@@ -471,9 +476,17 @@ public:
 			m_turret_angle = turret->GetBigAngle();
 		} else {
 			float turret_joy_in = oi->opStick->GetRawAxis(4);
+			float turret_fastjoy_in;
+			if(climberMotor == 0.0) turret_fastjoy_in = oi->opStick->GetRawAxis(0);
+			else turret_fastjoy_in = 0.0;
+
 			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
-			turret_joy_in = 0;
-			angle_change = m_turret_angle + turret_joy_in * TURRET_SPEED;
+				turret_joy_in = 0;
+
+			if(abs(turret_fastjoy_in) < TURRET_JOYSTICK_DEADBAND)
+				turret_fastjoy_in = 0;
+
+			angle_change = m_turret_angle + (turret_joy_in * TURRET_SPEED) + (turret_fastjoy_in* TURRET_SPEED*3);
 			m_turret_angle = angle_change;
 			turret->SetBigAngle(angle_change);  //moved outside of routine
 			//turret->SetBigAngle(turret_joy_in*22);
@@ -490,24 +503,25 @@ public:
 			ringlightOn = false;
 			flashlightOn = true;
 		}
-		else
-		{
-			ringlightOn = true;
-
-		}
 		//manual ringlight control
-		if(oi->drvStick->GetRawButton(2)) {
+		if(oi->opStick->GetRawAxis(2) >= 0.1) {
 				ringlightOn = true;
 		}
+		else
+			ringlightOn = false;
 
 
 
 		//CLIMBER
 		if(oi->GetSw5())
 		{
-			climberMotor =	-oi->opStick->GetRawAxis(1)*12.0;
+			climberMotor =	abs(oi->opStick->GetRawAxis(1))*-12.0;
 		}
-		if(climberMotor >= 0.0) climberMotor = 0.0;
+		else
+		{
+			climberMotor = 0.0;
+		}
+
 
 		climber->Set(climberMotor);
 		conveyor->SetAgitator(agitator);
@@ -549,6 +563,7 @@ public:
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutNumber("Vision Offset", turret->GetVisionOffset());
+		frc::SmartDashboard::PutNumber("Intake Current", drivetrain->m_pdp->GetCurrent(5));
 
 
 		frc::SmartDashboard::PutNumber("SW1", oi->GetSw1());

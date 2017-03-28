@@ -1,11 +1,10 @@
 #include <Commands/Auto/IntakeAutoGearScore.h>
 #include <Commands/AutoGearScoreSub.h>
-#include "Subsystems/Intake.h"
 #include "Commands/Auto/SetIntake.h"
-#include "Commands/SetIntakeBall.h"
 #include "Commands/SetIntakeGear.h"
 #include "Commands/Auto/Drive.h"
 #include "SetDrivetrainClosedLoop.h"
+
 
 
 
@@ -17,7 +16,7 @@ AutoGearScoreSub::AutoGearScoreSub() {
 	AddSequential(new SetDrivetrainClosedLoop(true));
 	AddParallel(new IntakeAutoGearScore());
 	//AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP/2));
-	AddSequential(new Drive(-20, 25));
+	AddSequential(new Drive(-30, 150));
 	AddSequential(new SetDrivetrainClosedLoop(false));
 
 
