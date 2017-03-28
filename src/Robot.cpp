@@ -12,7 +12,6 @@
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
 #include "Commands/Auto/AutonRoutines/Autonomous.h"
-#include "commands/Auto/Center1Gear.h"
 #include "Commands/Auto/CalibrateArm.h"
 #include "Commands/Auto/AutonRoutines/Blue.h"
 #include "Commands/Auto/AutonRoutines/Red.h"
@@ -186,6 +185,9 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 
+		if(intake->isSensorPluggedIn() == 1) intake->ConfigureClosedLoop();
+		else intake->ConfigureOpenLoop();
+
 		turret->UpdateNetworkTable();
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
@@ -218,16 +220,17 @@ public:
 		m_turret_angle = 0.0;
 
 		//intake->ResetArm(0.0);
-		intake->ConfigureClosedLoop();
 
 		turret->UpdateNetworkTable();
 
 //		if (autonomousCommand != nullptr) {
 //			autonomousCommand->Cancel();
 //		}
-//		if(!intake->IsClosedLoop())
-//			frc::Scheduler::GetInstance()->AddCommand(new CalibrateArm(false));
-		//intake->ConfigureOpenLoop();
+		if(!intake->IsClosedLoop())
+		{
+			if(intake->isSensorPluggedIn() == 1) intake->ConfigureClosedLoop();
+			else intake->ConfigureOpenLoop();
+		}
 	}
 
 	void TeleopPeriodic() override {

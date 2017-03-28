@@ -118,6 +118,10 @@ bool Intake::IsBeamBroke() {
 	else
 		return 0;
 }
+bool Intake::isSensorPluggedIn()
+{
+	return m_ArmMotor->FeedbackDeviceStatus;
+}
 
 void Intake::setPID(double P, double I, double D)
 {
