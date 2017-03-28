@@ -118,9 +118,9 @@ bool Intake::IsBeamBroke() {
 	else
 		return 0;
 }
-bool Intake::isSensorPluggedIn()
+int Intake::isSensorPluggedIn()
 {
-	return m_ArmMotor->FeedbackDeviceStatus;
+	return m_ArmMotor->IsSensorPresent(CANTalon::CtreMagEncoder_Relative);
 }
 
 void Intake::setPID(double P, double I, double D)

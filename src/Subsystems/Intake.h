@@ -51,7 +51,7 @@ public:
 	float GetArmAngle();
 	bool IsBeamBroke();
 	void setPID(double P, double I, double D);
-	bool isSensorPluggedIn();
+	int isSensorPluggedIn();
 
 
 };
