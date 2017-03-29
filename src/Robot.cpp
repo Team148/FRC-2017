@@ -127,8 +127,12 @@ public:
 		drivetrain->ResetGyro();
 		drivetrain->configClosedLoop();
 		drivetrain->SetBrakeMode(true);
-		intake->ConfigureClosedLoop();
 
+		if(!intake->IsClosedLoop())
+		{
+			if(intake->isSensorPluggedIn() == 1) intake->ConfigureClosedLoop();
+			else intake->ConfigureOpenLoop();
+		}
 		switch(red)
 			{
 				case RED: // CALL RED(NEW asdf123())
@@ -194,7 +198,7 @@ public:
 //			if(intake->isSensorPluggedIn() == 1)
 //			else intake->ConfigureOpenLoop();
 //		}
-		turret->UpdateNetworkTable();
+		//turret->UpdateNetworkTable();
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
@@ -207,7 +211,7 @@ public:
 		frc::Scheduler::GetInstance()->Run();
 		turret->UpdateNetworkTable();
 		turret->m_gyro_angle = drivetrain->GetAngle();
-		turret->lockTurretAngle(true);
+
 		SmartDashUpdate();
 	}
 
@@ -358,7 +362,7 @@ public:
 					m_armAngle = INTAKE_ARM_POSITION_DOWN;
 				}
 			}
-			else
+			else if(!enableGearTolerance_up && !enableGearTolerance_down)
 			{
 				intake->setPID(INTAKE_ARM_POSITION_P,INTAKE_ARM_POSITION_I,INTAKE_ARM_POSITION_D);
 			}
@@ -391,7 +395,7 @@ public:
 						m_armAngle = INTAKE_ARM_POSITION_UP;
 					}
 			}
-			else
+			else if(!enableGearTolerance_up && !enableGearTolerance_down)
 			{
 				intake->setPID(INTAKE_ARM_POSITION_P,INTAKE_ARM_POSITION_I,INTAKE_ARM_POSITION_D);
 			}

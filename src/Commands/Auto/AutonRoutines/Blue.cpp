@@ -58,17 +58,19 @@ void Blue::Boiler_GetGear()
 //	AddSequential(new Drive(-27,15));
 //	AddSequential(new Drive(36,15));
 
-	AddSequential(new Drive(-104,30));
-	AddSequential(new ArcadeDriveTurn(53));
-	AddSequential(new Drive(-34,20));
-	AddSequential(new Drive(43,20));
+	AddSequential(new Drive(80,120));
+	AddSequential(new ArcadeDriveTurn(55));
+	AddSequential(new Drive(34,40));
+	AddParallel(new IntakeAutoGearScore());
+	AddSequential(new Drive(-33,40));
 
 
 }
 void Blue::Boiler_GetTwoGear()
 {
-	AddSequential(new turretLocking(true));
-
+	AddSequential(new Drive(100,150));
+	AddSequential(new WaitCommand(2.0));
+	AddSequential(new Drive(-100,150));
 }
 void Blue::Boiler_GetGear_ShootHopper()
 {
@@ -107,19 +109,18 @@ void Blue::Boiler_ShootHopper()
 }
 void Blue::Boiler_GetGear_Shoot()
 {
-	AddParallel(new SetShooterSpeed(6700));
-	AddParallel(new SetTurretAngle(-20));
-	AddSequential(new Drive(85,100));
-	//AddSequential(new turretLocking(true));
-	AddSequential(new ArcadeDriveTurn(55));
-	AddSequential(new WaitCommand(1.0));
+	AddParallel(new SetShooterSpeed(6500));
+	AddParallel(new SetTurretAngle(41));
+	AddSequential(new Drive(80,120));
+	AddSequential(new WaitCommand(2.0));
 	AddSequential(new FeedShooter(true));
-	AddParallel(new SetShooterSpeed(0));
 	AddSequential(new WaitCommand(2.0));
 	AddSequential(new FeedShooter(false));
-	AddSequential(new Drive(34,30));
+	AddParallel(new SetShooterSpeed(0));
+	AddSequential(new ArcadeDriveTurn(55));
+	AddSequential(new Drive(34,40));
 	AddParallel(new IntakeAutoGearScore());
-	AddSequential(new Drive(-33,30));
+	AddSequential(new Drive(-33,40));
 
 }
 //-------------------------------------
@@ -129,10 +130,9 @@ void Blue::Center_GetGear()
 {
 	 // replace with auto gear score eventually pls
 	AddParallel(new CalibrateArm(false));
-	AddSequential(new Drive(79, 20));
-	AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
-	AddSequential(new Drive(-20, 25));
+	AddSequential(new Drive(80, 20));
+	AddParallel(new IntakeAutoGearScore());
+	AddSequential(new Drive(-40,40));
 
 //	AddSequential(new Drive(-70,40));
 //	AddSequential(new Drive(70,40));
@@ -182,7 +182,7 @@ void Blue::Center_GetTwoGear()
 
  //not jank use intake to score all gears
 	//AddParallel(new CalibrateArm(false));
-	AddSequential(new Drive(88, 150));
+	AddSequential(new Drive(80, 150));
 //	AddParallel(new SetIntakeBall(-0.1));
 	AddParallel(new IntakeAutoGearScore());	//AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	//AddSequential(new Drive(-20, 40));
@@ -208,7 +208,7 @@ void Blue::Center_GetTwoGear_Noscore()
 {
  //not jank use intake to score all gears
 	AddParallel(new CalibrateArm(false));
-	AddSequential(new Drive(88, 150));
+	AddSequential(new Drive(80, 150)); //  88
 //	AddParallel(new SetIntakeBall(-0.1));
 	AddParallel(new IntakeAutoGearScore()); //AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
 	//AddSequential(new Drive(-20, 40));
@@ -251,10 +251,11 @@ void Blue::Center_GetTwoGear_Noscore_Shoot()
 //RETRIEVAL SIDE AUTONS
 void Blue::Retrieval_GetGear()
 {
-	AddSequential(new Drive(-104,30));
-	AddSequential(new ArcadeDriveTurn(-52));
-	AddSequential(new Drive(-34,20));
-	AddSequential(new Drive(43,20));
+	AddSequential(new Drive(80,120));
+		AddSequential(new ArcadeDriveTurn(-55));
+		AddSequential(new Drive(34,40));
+		AddParallel(new IntakeAutoGearScore());
+		AddSequential(new Drive(-33,40));
 }
 void Blue::Retrieval_GetTwoGear()
 {
