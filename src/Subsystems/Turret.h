@@ -50,6 +50,7 @@ public:
 	float GetVisionOffset();
 
 	float m_gyro_angle = 0.0;
+	bool locking = false;
 
 
 

@@ -137,10 +137,11 @@ bool Turret::IsClosedLoop() {
 }
 void Turret::lockTurretAngle(bool lock)
 {
+	locking = lock;
 	static float lockAngle = GetBigAngle() - m_gyro_angle;
 	if(lock)
 	{
-		SetBigAngle(lockAngle + GetBigAngle());
+		SetBigAngle((m_gyro_angle +GetBigAngle()));
 	}
 	else
 	{

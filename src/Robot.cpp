@@ -121,6 +121,14 @@ public:
 		shooting = oi->GetSw3();
 		hopper = oi->GetSw4();
 
+
+		shooter->ConfigureClosedLoop();
+		turret->ConfigClosedLoop();
+		drivetrain->ResetGyro();
+		drivetrain->configClosedLoop();
+		drivetrain->SetBrakeMode(true);
+		intake->ConfigureClosedLoop();
+
 		switch(red)
 			{
 				case RED: // CALL RED(NEW asdf123())
@@ -176,18 +184,16 @@ public:
 
 
 
-		shooter->ConfigureClosedLoop();
-		turret->ConfigClosedLoop();
-		drivetrain->ResetGyro();
-		drivetrain->configClosedLoop();
-		drivetrain->SetBrakeMode(true);
+
 		//frc::Scheduler::GetInstance()->AddCommand(new Center1Gear());
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous());
 		m_turret_angle = 0.0;
 
-		if(intake->isSensorPluggedIn() == 1) intake->ConfigureClosedLoop();
-		else intake->ConfigureOpenLoop();
-
+//		if(!intake->IsClosedLoop())
+//		{
+//			if(intake->isSensorPluggedIn() == 1)
+//			else intake->ConfigureOpenLoop();
+//		}
 		turret->UpdateNetworkTable();
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
@@ -201,6 +207,7 @@ public:
 		frc::Scheduler::GetInstance()->Run();
 		turret->UpdateNetworkTable();
 		turret->m_gyro_angle = drivetrain->GetAngle();
+		turret->lockTurretAngle(true);
 		SmartDashUpdate();
 	}
 
@@ -231,6 +238,7 @@ public:
 			if(intake->isSensorPluggedIn() == 1) intake->ConfigureClosedLoop();
 			else intake->ConfigureOpenLoop();
 		}
+		//intake->ConfigureOpenLoop();
 	}
 
 	void TeleopPeriodic() override {
@@ -307,26 +315,40 @@ public:
 		//CLOSED LOOP ARM CODE
 		//Shoulder Buttons
 		static bool goingDown = false;
-		static bool enableGearTolerance = false;
+		static bool goingUp = false;
+		static bool enableGearTolerance_down = false;
+		static bool enableGearTolerance_up = false;
 		static bool gearWhileUp = false;
 		static int wp_startTime = 0.0;
 		cur_armPosition = intake->GetArmAngle();
 
 		if(intake->IsClosedLoop()) {
+			if(oi->drvStick->GetRawButton(6)) // AUTOSCORE SETTER
+			{
+				enableGearTolerance_up = false;
+				enableGearTolerance_down = false;
+				m_armAngle = INTAKE_ARM_GEAR_POSITION;
+				gearIntake = 0.05;
+			}
 			if(oi->opStick->GetRawButton(1)){
 				//intake->SetArmAngle(0.0); //down
 				m_armAngle = INTAKE_ARM_POSITION_DOWN;
+				goingUp = false;;
 				goingDown = true;
+				enableGearTolerance_down = false;
+				enableGearTolerance_up = false;
 				gearWhileUp = false;
 			}
 			if(goingDown)
 			{
-				if(intake->GetArmAngle() <= (INTAKE_ARM_POSITION_DOWN*0.95))
+				if(intake->GetArmAngle() <= (INTAKE_ARM_POSITION_DOWN*0.95) || intake->GetArmAngle() <= INTAKE_ARM_POSITION_UP)
 				{
-					enableGearTolerance = true;
+					enableGearTolerance_down = true;
+					enableGearTolerance_up = false;
+					goingDown = false;
 				}
 			}
-			if(enableGearTolerance)
+			if(enableGearTolerance_down)
 			{
 				m_armAngle = cur_armPosition;
 				intake->setPID(0,0,0);
@@ -342,10 +364,36 @@ public:
 			}
 			if(oi->opStick->GetRawButton(4)) {
 				goingDown = false;
-				enableGearTolerance = false;
+				goingUp = true;
+				enableGearTolerance_down = false;
+				enableGearTolerance_up = false;
 				//intake->SetArmAngle(1.12); //up
 				m_armAngle = INTAKE_ARM_POSITION_UP;
 				gearWhileUp = true;
+			}
+			if(goingUp)
+			{
+
+				if(cur_armPosition >= INTAKE_ARM_POSITION_UP-0.06|| intake->GetArmAngle() <= INTAKE_ARM_POSITION_UP)
+				{
+					enableGearTolerance_up = true;
+					enableGearTolerance_down = false;
+					goingUp = false;
+				}
+			}
+			if(enableGearTolerance_up)
+			{
+				m_armAngle = cur_armPosition;
+				intake->setPID(0,0,0);
+				if(cur_armPosition <= INTAKE_ARM_POSITION_UP-0.06)
+					{
+						intake->setPID(INTAKE_ARM_POSITION_P,INTAKE_ARM_POSITION_I,INTAKE_ARM_POSITION_D);
+						m_armAngle = INTAKE_ARM_POSITION_UP;
+					}
+			}
+			else
+			{
+				intake->setPID(INTAKE_ARM_POSITION_P,INTAKE_ARM_POSITION_I,INTAKE_ARM_POSITION_D);
 			}
 			if(gearWhileUp)
 			{
@@ -392,7 +440,7 @@ public:
 				}
 				if(oi->opStick->GetRawButton(4)) {
 					//up
-					gearIntake = 1.0;
+					gearIntake = -1.0;
 					armMotor = INTAKE_ARM_OPEN_LOOP_SPEED*0.75;
 				}
 				if(!intake->IsCalibrating()){

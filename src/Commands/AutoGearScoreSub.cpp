@@ -16,7 +16,7 @@ AutoGearScoreSub::AutoGearScoreSub() {
 	AddSequential(new SetDrivetrainClosedLoop(true));
 	AddParallel(new IntakeAutoGearScore());
 	//AddSequential(new SetIntake(INTAKE_ARM_POSITION_UP/2));
-	AddSequential(new Drive(-30, 150));
+	AddSequential(new Drive(-20, 150));
 	AddSequential(new SetDrivetrainClosedLoop(false));
 
 

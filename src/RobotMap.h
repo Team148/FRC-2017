@@ -39,7 +39,7 @@ constexpr int INTAKE_GEAR_MOTOR		= 12;
 constexpr int INTAKE_ARM_MOTOR		= 13;
 constexpr int INTAKE_ARM_DOWN_LIMIT = 0;
 constexpr int INTAKE_ARM_UP_LIMIT	= 1;
-constexpr int INTAKE_BEAM_BREAK_AN_IN	= 0;
+constexpr int INTAKE_BEAM_BREAK_AN_IN	= 7;
 
 constexpr int TURRET_MOTOR 			= 6;
 constexpr int TURRET_HOME_SWITCH	= 2;
