@@ -42,6 +42,7 @@ Blue::Blue(int autonSelection) : frc::CommandGroup("Blue")
 	case CENTER_TWO_GEAR: Center_GetTwoGear(); break;
 	case CENTER_TWO_GEAR_NOSCORE: Center_GetTwoGear_Noscore(); break;
 	case CENTER_TWO_GEAR_NOSCORE_SHOOT: Center_GetTwoGear_Noscore_Shoot(); break;
+	case CENTER_GEAR_SHOOT: Center_GetGear_Shoot(); break;
 
 	case RETRIEVAL_GEAR: Retrieval_GetGear(); break;
 	case RETRIEVAL_TWOGEAR: Retrieval_GetTwoGear(); break;
@@ -132,7 +133,6 @@ void Blue::Boiler_GetGear_Shoot()
 //CENTER POSITION AUTONS
 void Blue::Center_GetGear()
 {
-	 // replace with auto gear score eventually pls
 	AddSequential(new ConfigureIntake());
 	AddSequential(new Drive(80, 75));
 	AddParallel(new IntakeAutoGearScore());
@@ -145,6 +145,18 @@ void Blue::Center_GetGear()
 
 
 
+}
+void Blue::Center_GetGear_Shoot()
+{
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
+	AddParallel(new SetTurretAngle(88));
+	AddSequential(new WaitCommand(4.0));
+	AddSequential(new FeedShooter(true));
+	AddSequential(new WaitCommand(3.0));
+	AddSequential(new FeedShooter(false));
+	AddParallel(new SetShooterSpeed(0.0));
+	AddParallel(new SetTurretAngle(0.0));
+	Center_GetGear();
 }
 void Blue::Center_GetTwoGear()
 {
@@ -240,7 +252,6 @@ void Blue::Center_GetTwoGear_Noscore()
 }
 void Blue::Center_GetTwoGear_Noscore_Shoot()
 {
-	AddSequential(new ConfigureIntake());
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
 	AddParallel(new SetTurretAngle(88));
 	AddSequential(new WaitCommand(4.0));

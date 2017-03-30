@@ -146,7 +146,8 @@ public:
 						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_HOPPER_SHOOT));
 					break;
 					case POSITION_CENTER:
-						if(gears == 1) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
+						if(gears == 1 && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR));
+						else if(gears == 1 && shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR_SHOOT));
 						else if (gears == 2 && gear_noscore == true && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE));
 						else if (gears == 2 && gear_noscore == true  && shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE_SHOOT));
 						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR));
@@ -171,7 +172,8 @@ public:
 						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_HOPPER_SHOOT));
 					break;
 					case POSITION_CENTER:
-						if(gears == 1) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
+						if(gears == 1 && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
+						else if(gears == 1 && shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR_SHOOT));
 						else if (gears == 2 && gear_noscore == true && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE));
 						else if (gears == 2 && gear_noscore == true  && shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE_SHOOT));
 						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR));
@@ -289,13 +291,34 @@ public:
 
 
 
-		if(oi->opStick->GetRawButton(2)) //GearIntake In
+		if(oi->opStick->GetRawButton(2)) //GearIntake OUT
 		{
 			gearIntake = 1.0;
 		}
-		if(oi->opStick->GetRawButton(3)) //GearIntake Out
+		static bool autoPickup = false;
+		static float st_time = 0.0;
+		static int flashCount = 0;
+		if(oi->opStick->GetRawButton(3)) //GearIntake IN
 		{
 			gearIntake = -1.0;
+			if(intake->IsBeamBroke())
+			{
+				autoPickup = true;
+
+			}
+		}
+		if(autoPickup == true)
+		{
+			if(st_time - Timer::GetFPGATimestamp() <= 0.10 && flashCount < 5)
+			{
+				ringlightOn = 1;
+			}
+			else
+			{
+				st_time = Timer::GetFPGATimestamp();
+				flashCount++;
+				ringlightOn = 0;
+			}
 		}
 
 		//AGITATOR AND SHOOTER FIRE
@@ -325,14 +348,20 @@ public:
 		static bool gearWhileUp = false;
 		static int wp_startTime = 0.0;
 		cur_armPosition = intake->GetArmAngle();
-
+static bool autoArmUp = false;
 		if(intake->IsClosedLoop()) {
 			if(oi->drvStick->GetRawButton(6)) // AUTOSCORE SETTER
 			{
+				autoArmUp = true;
 				enableGearTolerance_up = false;
 				enableGearTolerance_down = false;
 				m_armAngle = INTAKE_ARM_GEAR_POSITION;
 				gearIntake = 0.05;
+			}
+			if(autoArmUp && !oi->drvStick->GetRawButton(6))
+			{
+				m_armAngle = INTAKE_ARM_POSITION_UP;
+				autoArmUp = false;
 			}
 			if(oi->opStick->GetRawButton(1)){
 				//intake->SetArmAngle(0.0); //down
@@ -524,7 +553,7 @@ public:
 		} else {
 			float turret_joy_in;
 			float turret_fastjoy_in;
-			if(climberMotor == 0.0)
+			if(!oi->GetSw5())
 			{
 				turret_fastjoy_in = oi->opStick->GetRawAxis(0);
 				turret_joy_in = oi->opStick->GetRawAxis(4);

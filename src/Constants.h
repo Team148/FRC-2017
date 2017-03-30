@@ -76,7 +76,7 @@ constexpr float SHOOTER_P = 0.3; // 0.3
 constexpr float SHOOTER_D = 0.0;
 
 constexpr int SHOOTER_SET_POINT_A = 6400;
-constexpr int SHOOTER_SET_POINT_B = 6800;
+constexpr int SHOOTER_SET_POINT_B = 6975;
 
 //AUTON
 
@@ -94,6 +94,8 @@ constexpr int	CENTER_GEAR = 10;
 constexpr int	CENTER_TWO_GEAR = 11;
 constexpr int 	CENTER_TWO_GEAR_NOSCORE = 12;
 constexpr int 	CENTER_TWO_GEAR_NOSCORE_SHOOT = 13;
+constexpr int	CENTER_GEAR_SHOOT = 14;
+
 
 
 constexpr int	RETRIEVAL_GEAR = 20;
