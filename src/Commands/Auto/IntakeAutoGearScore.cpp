@@ -14,8 +14,8 @@ void IntakeAutoGearScore::Initialize()
 {
 	m_IsFinished = false;
 	m_startTime = Timer::GetFPGATimestamp();
-	Intake::GetInstance()->SetGear(.05);
-	Intake::GetInstance()->SetArmAngle(INTAKE_ARM_GEAR_POSITION);
+	//Intake::GetInstance()->SetGear(.05);
+	Intake::GetInstance()->SetArm(INTAKE_ARM_GEAR_POSITION);
 	//Scheduler::GetInstance()->AddCommand(new AutoGearScoreSub());
 }
 
@@ -23,7 +23,7 @@ void IntakeAutoGearScore::Initialize()
 void IntakeAutoGearScore::Execute()
 {
 	Intake::GetInstance()->SetGear(.05);
-	Intake::GetInstance()->SetArmAngle(INTAKE_ARM_GEAR_POSITION);
+	//Intake::GetInstance()->SetArm(INTAKE_ARM_GEAR_POSITION);
 
 	if(Timer::GetFPGATimestamp() - m_startTime >= m_delay)
 	{

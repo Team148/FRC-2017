@@ -337,7 +337,7 @@ public:
 			if(oi->opStick->GetRawButton(1)){
 				//intake->SetArmAngle(0.0); //down
 				m_armAngle = INTAKE_ARM_POSITION_DOWN;
-				goingUp = false;;
+				goingUp = false;
 				goingDown = true;
 				enableGearTolerance_down = false;
 				enableGearTolerance_up = false;
@@ -345,7 +345,7 @@ public:
 			}
 			if(goingDown)
 			{
-				if(intake->GetArmAngle() <= (INTAKE_ARM_POSITION_DOWN*0.95) || intake->GetArmAngle() <= INTAKE_ARM_POSITION_UP)
+				if(intake->GetArmAngle() <= (INTAKE_ARM_POSITION_DOWN*0.95))
 				{
 					enableGearTolerance_down = true;
 					enableGearTolerance_up = false;
@@ -377,8 +377,8 @@ public:
 			}
 			if(goingUp)
 			{
-
-				if(cur_armPosition >= INTAKE_ARM_POSITION_UP-0.06|| intake->GetArmAngle() <= INTAKE_ARM_POSITION_UP)
+				gearIntake = -1.0;
+				if(cur_armPosition >= INTAKE_ARM_POSITION_UP-0.06)
 				{
 					enableGearTolerance_up = true;
 					enableGearTolerance_down = false;
@@ -399,15 +399,7 @@ public:
 			{
 				intake->setPID(INTAKE_ARM_POSITION_P,INTAKE_ARM_POSITION_I,INTAKE_ARM_POSITION_D);
 			}
-			if(gearWhileUp)
-			{
-				if(cur_armPosition < INTAKE_ARM_POSITION_UP-0.01)
-				{
-					gearIntake = -1.0;
-				}
-				else
-					gearWhileUp = false;
-			}
+
 
 			//increment Arm Up/Down
 			//if(oi->drvStick->GetRawButton(1)) {
@@ -530,10 +522,18 @@ public:
 			turret->TargetBoiler(true);
 			m_turret_angle = turret->GetBigAngle();
 		} else {
-			float turret_joy_in = oi->opStick->GetRawAxis(4);
+			float turret_joy_in;
 			float turret_fastjoy_in;
-			if(climberMotor == 0.0) turret_fastjoy_in = oi->opStick->GetRawAxis(0);
-			else turret_fastjoy_in = 0.0;
+			if(climberMotor == 0.0)
+			{
+				turret_fastjoy_in = oi->opStick->GetRawAxis(0);
+				turret_joy_in = oi->opStick->GetRawAxis(4);
+			}
+			else
+			{
+				turret_fastjoy_in = 0.0;
+				turret_joy_in = 0.0;
+			}
 
 			if(abs(turret_joy_in) < TURRET_JOYSTICK_DEADBAND)
 				turret_joy_in = 0;

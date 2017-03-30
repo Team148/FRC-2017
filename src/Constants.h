@@ -57,9 +57,9 @@ constexpr float TURRET_JOYSTICK_DEADBAND = 0.1;
 
 //Intake
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = 84/18/360;
-constexpr float INTAKE_ARM_POSITION_P = 0.25;
-constexpr float INTAKE_ARM_POSITION_I = 0.0001;
-constexpr float INTAKE_ARM_POSITION_D = 5.0;
+constexpr float INTAKE_ARM_POSITION_P = 0.35;
+constexpr float INTAKE_ARM_POSITION_I = 0.000;
+constexpr float INTAKE_ARM_POSITION_D = 3.75;
 constexpr float INTAKE_ARM_POSITION_UP = 0.0;
 constexpr float INTAKE_ARM_GEAR_POSITION = -0.60;
 constexpr float INTAKE_ARM_POSITION_DOWN = -1.450; // 1.383 1.463
@@ -67,7 +67,7 @@ constexpr float INTAKE_ARM_DOWN_VOLTAGE = -12.0;
 constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.80;
 
 //Conveyer
-constexpr float CONVEYER_AGITATOR_VOLTAGE = 9.0;
+constexpr float CONVEYER_AGITATOR_VOLTAGE = 6.0;
 constexpr float CONVEYER_KICKER_VOLTAGE = -1.0;
 
 //Shooter

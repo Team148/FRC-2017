@@ -21,6 +21,8 @@
 #include "Commands/FeedShooter.h"
 #include "Subsystems/Intake.h"
 #include "Constants.h"
+#include <Commands/ConfigureIntake.h>
+
 
 #include "WPILib.h"
 
@@ -56,10 +58,12 @@ void Red::Boiler_GetGear()
 //	AddSequential(new Drive(-27,15));
 //	AddSequential(new Drive(36,15));
 
-	AddSequential(new Drive(-104,30));
-	AddSequential(new ArcadeDriveTurn(-52));
-	AddSequential(new Drive(-34,20));
-	AddSequential(new Drive(43,20));
+	AddSequential(new ConfigureIntake());
+	AddSequential(new Drive(82,120));
+	AddSequential(new ArcadeDriveTurn(-55));
+	AddSequential(new Drive(34,40));
+	AddParallel(new IntakeAutoGearScore());
+	AddSequential(new Drive(-33,40));
 
 
 }
@@ -79,36 +83,45 @@ void Red::Boiler_GetGear_ShootHopper()
 }
 void Red::Boiler_ShootHopper()
 {
-	AddParallel(new SetTurretAngle(90.0));
-	AddSequential(new Drive(-130, 150));
-	AddSequential(new ArcadeDriveTurn(90));
-	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
-	AddSequential(new Drive(-55, 150));
+
+	AddSequential(new ConfigureIntake());
+
+	AddParallel(new SetShooterSpeed(6550));
+	AddSequential(new WaitCommand(0.5));
+
+	AddParallel(new SetTurretAngle(82.0));
+	AddSequential(new Drive(-117, 150));
+	AddSequential(new ArcadeDriveTurn(80));
+	AddSequential(new Drive(-25, 150));
 	AddParallel(new FeedShooter(true));
-
-
-
 }
 void Red::Boiler_GetGear_Shoot()
 {
-	AddSequential(new Drive(104,75));
-	AddSequential(new ArcadeDriveTurn(-60));
-	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
-	AddSequential(new Drive(34,50));
-	AddParallel(new IntakeAutoGearScore());
-	AddSequential(new Drive(-43,50));
-	AddParallel(new FeedShooter(true));
+	AddSequential(new ConfigureIntake());
+
+	AddParallel(new SetShooterSpeed(6500));
+		AddParallel(new SetTurretAngle(-41));
+		AddSequential(new Drive(82,120));
+		AddSequential(new WaitCommand(2.0));
+		AddSequential(new FeedShooter(true));
+		AddSequential(new WaitCommand(2.0));
+		AddSequential(new FeedShooter(false));
+		AddParallel(new SetShooterSpeed(0));
+		AddSequential(new ArcadeDriveTurn(-55));
+		AddSequential(new Drive(34,40));
+		AddParallel(new IntakeAutoGearScore());
+		AddSequential(new Drive(-33,40));
+
 }
 //-------------------------------------
 
 //CENTER POSITION AUTONS
 void Red::Center_GetGear()
 {
-	AddParallel(new CalibrateArm(false));
-	AddSequential(new Drive(79, 20));
-	AddParallel(new SetIntakeBall(-0.1));
-	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
-	AddSequential(new Drive(-20, 25));
+	AddSequential(new ConfigureIntake());
+	AddSequential(new Drive(80, 75));
+	AddParallel(new IntakeAutoGearScore());
+	AddSequential(new Drive(-40,75));
 
 //	AddSequential(new Drive(-70,40));
 //	AddSequential(new Drive(70,40));
