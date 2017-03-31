@@ -92,7 +92,7 @@ void Red::Boiler_ShootHopper()
 	AddSequential(new WaitCommand(0.5));
 
 	AddParallel(new SetTurretAngle(82.0));
-	AddSequential(new Drive(-117, 150));
+	AddSequential(new Drive(-119, 150));  //was 117 before Houston North
 	AddSequential(new ArcadeDriveTurn(80));
 	AddSequential(new Drive(-25, 150));
 	AddParallel(new FeedShooter(true));
