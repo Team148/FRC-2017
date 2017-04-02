@@ -104,7 +104,7 @@ void Blue::Boiler_ShootHopper()
 	AddSequential(new ConfigureIntake());
 
 	AddParallel(new SetShooterSpeed(6550));
-	AddSequential(new WaitCommand(1.5));
+	AddSequential(new WaitCommand(0.9));
 
 	AddParallel(new SetTurretAngle(-84));
 	AddSequential(new Drive(-115, 150));

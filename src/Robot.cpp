@@ -67,7 +67,7 @@ public:
 	 * the robot is disabled.
 	 */
 	void DisabledInit() override {
-		m_turret_angle = 0.0;
+		//m_turret_angle = 0.0;
 		//turret->UpdateNetworkTable();
 
 	}
@@ -76,7 +76,7 @@ public:
 	void DisabledPeriodic() override {
 //		frc::Scheduler::GetInstance()->Run();
 //		frc::Scheduler::GetInstance()->RemoveAll();
-		m_turret_angle = 0.0;
+		//m_turret_angle = 0.0;
 		//turret->updatenetworktable();
 		SmartDashUpdate();
 	}
@@ -123,7 +123,10 @@ public:
 
 
 		shooter->ConfigureClosedLoop();
-		turret->ConfigClosedLoop();
+		if(!turret->IsClosedLoop())
+		{
+			turret->ConfigClosedLoop();
+		}
 		drivetrain->ResetGyro();
 		drivetrain->configClosedLoop();
 		drivetrain->SetBrakeMode(true);
@@ -227,7 +230,10 @@ public:
 		shooter->ConfigureClosedLoop();
 		drivetrain->configOpenLoop();
 		drivetrain->SetBrakeMode(false);
-		turret->ConfigClosedLoop();
+		if(!turret->IsClosedLoop())
+		{
+			turret->ConfigClosedLoop();
+		}
 		//m_turret_angle = 0.0;
 
 		//intake->ResetArm(0.0);
