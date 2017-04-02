@@ -61,7 +61,7 @@ constexpr float INTAKE_ARM_POSITION_P = 0.35;
 constexpr float INTAKE_ARM_POSITION_I = 0.000;
 constexpr float INTAKE_ARM_POSITION_D = 3.75;
 constexpr float INTAKE_ARM_POSITION_UP = 0.0;
-constexpr float INTAKE_ARM_GEAR_POSITION = -0.70; //was 0.6 before houston north
+constexpr float INTAKE_ARM_GEAR_POSITION = -0.9; //was 0.6 before houston north
 constexpr float INTAKE_ARM_POSITION_DOWN = -1.450; // 1.383 1.463
 constexpr float INTAKE_ARM_DOWN_VOLTAGE = -12.0;
 constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.80;
@@ -75,7 +75,7 @@ constexpr float SHOOTER_F = 0.06; // 0.0575
 constexpr float SHOOTER_P = 0.3; // 0.3
 constexpr float SHOOTER_D = 0.0;
 
-constexpr int SHOOTER_SET_POINT_A = 6400;
+constexpr int SHOOTER_SET_POINT_A = 6550;
 constexpr int SHOOTER_SET_POINT_B = 6975;
 
 //AUTON

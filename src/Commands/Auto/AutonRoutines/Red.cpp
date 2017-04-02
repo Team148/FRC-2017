@@ -89,10 +89,10 @@ void Red::Boiler_ShootHopper()
 	AddSequential(new ConfigureIntake());
 
 	AddParallel(new SetShooterSpeed(6550));
-	AddSequential(new WaitCommand(0.5));
+	AddSequential(new WaitCommand(1.5));
 
-	AddParallel(new SetTurretAngle(82.0));
-	AddSequential(new Drive(-118, 150));  //was 117 before Houston North
+	AddParallel(new SetTurretAngle(84));
+	AddSequential(new Drive(-120, 150));
 	AddSequential(new ArcadeDriveTurn(80));
 	AddSequential(new Drive(-25, 150));
 	AddParallel(new FeedShooter(true));
@@ -149,11 +149,9 @@ void Red::Center_GetGear_Shoot()
 void Red::Center_GetTwoGear()
 {
 	 //not jank use intake to score all gears
-		AddParallel(new CalibrateArm(false));
+		AddSequential(new ConfigureIntake());
 		AddSequential(new Drive(88, 150));
-	//	AddParallel(new SetIntakeBall(-0.1));
-		AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
-		//AddSequential(new Drive(-20, 40));
+		AddParallel(new IntakeAutoGearScore());
 		AddSequential(new Drive(-70, 150));
 
 		AddParallel(new SetIntake(INTAKE_ARM_POSITION_DOWN));
@@ -165,8 +163,7 @@ void Red::Center_GetTwoGear()
 		AddSequential(new ArcadeDriveTurn(100));
 
 		AddSequential(new Drive(77, 150));
-	//	AddParallel(new SetIntakeBall(-0.1));
-		AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
+		AddParallel(new IntakeAutoGearScore());
 		AddSequential(new Drive(-70, 150));
 }
 

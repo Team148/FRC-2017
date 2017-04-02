@@ -104,10 +104,10 @@ void Blue::Boiler_ShootHopper()
 	AddSequential(new ConfigureIntake());
 
 	AddParallel(new SetShooterSpeed(6550));
-	AddSequential(new WaitCommand(0.5));
+	AddSequential(new WaitCommand(1.5));
 
-	AddParallel(new SetTurretAngle(-82.0));
-	AddSequential(new Drive(-117, 150));
+	AddParallel(new SetTurretAngle(-84));
+	AddSequential(new Drive(-115, 150));
 	AddSequential(new ArcadeDriveTurn(-80));
 	AddSequential(new Drive(-25, 150));
 	AddParallel(new FeedShooter(true));
@@ -161,62 +161,23 @@ void Blue::Center_GetGear_Shoot()
 void Blue::Center_GetTwoGear()
 {
 
-// center cheater on shooter
-//	AddSequential(new Drive(-75, 200));
-//	AddParallel(new CalibrateArm(true));
-//	AddSequential(new ArcadeDriveTurn(20));
-//	AddParallel(new SetIntakeGear(1.0));
-//	AddSequential(new Drive(70, 200));
-//	AddParallel(new StopGearRoll_IntakeUp);
-//	AddSequential(new ArcadeDriveTurn(190));
-//	AddSequential(new Drive(50, 300));
-//	AddSequential(new ArcadeDriveTurn(-35));
-//	AddSequential(new Drive(24, 300));
-//	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
-//	AddSequential(new Drive(-70, 300));
+	//not jank use intake to score all gears
+		AddSequential(new ConfigureIntake());
+		AddSequential(new Drive(88, 150));
+		AddParallel(new IntakeAutoGearScore());
+		AddSequential(new Drive(-70, 150));
 
+		AddParallel(new SetIntake(INTAKE_ARM_POSITION_DOWN));
+		AddSequential(new ArcadeDriveTurn(100));
+		AddParallel(new SetIntakeGear(1.0));
+		AddSequential(new Drive(25, 150));
+		AddParallel(new StopGearRoll_IntakeUp());
+		AddSequential(new Drive(-22.5, 150));
+		AddSequential(new ArcadeDriveTurn(-100));
 
-
-//	// jank come in using cheater
-//	AddSequential(new Drive(-75, 300));
-//	AddSequential(new ArcadeDriveTurn(30));
-//	AddParallel(new CalibrateArm(false));
-//	//AddSequential(new Drive(-20, 300));
-//
-//	AddParallel(new SetIntake(0.0));
-//	AddSequential(new ArcadeDriveTurn(-40));
-//	AddParallel(new SetIntakeGear(1.0));
-//
-//	AddSequential(new Drive(75, 300));
-//	AddParallel(new StopGearRoll_IntakeUp());
-//	AddSequential(new ArcadeDriveTurn(170));
-//	AddSequential(new Drive(75, 300));
-//	AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
-//	AddSequential(new Drive(-70, 300));
-
-
-
- //not jank use intake to score all gears
-	//AddParallel(new CalibrateArm(false));
-	AddSequential(new Drive(80, 150));
-//	AddParallel(new SetIntakeBall(-0.1));
-	AddParallel(new IntakeAutoGearScore());	//AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
-	//AddSequential(new Drive(-20, 40));
-	AddSequential(new Drive(-70, 150));
-
-	AddParallel(new SetIntake(INTAKE_ARM_POSITION_DOWN));
-	AddSequential(new ArcadeDriveTurn(100));
-	AddParallel(new SetIntakeGear(1.0));
-	AddSequential(new Drive(25, 150));
-	AddParallel(new StopGearRoll_IntakeUp());
-	AddSequential(new Drive(-22.5, 150));
-	AddSequential(new ArcadeDriveTurn(-100));
-
-	AddSequential(new Drive(77, 150));
-	AddParallel(new IntakeAutoGearScore()); //AddSequential(new SetIntake(INTAKE_ARM_GEAR_POSITION));
-	AddSequential(new Drive(-70, 150));
-
-
+		AddSequential(new Drive(77, 150));
+		AddParallel(new IntakeAutoGearScore());
+		AddSequential(new Drive(-70, 150));
 
 
 }

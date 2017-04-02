@@ -77,7 +77,7 @@ public:
 //		frc::Scheduler::GetInstance()->Run();
 //		frc::Scheduler::GetInstance()->RemoveAll();
 		m_turret_angle = 0.0;
-		turret->UpdateNetworkTable();
+		//turret->updatenetworktable();
 		SmartDashUpdate();
 	}
 
@@ -211,9 +211,7 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
-		turret->UpdateNetworkTable();
-		turret->m_gyro_angle = drivetrain->GetAngle();
-
+		//turret->UpdateNetworkTable();
 		SmartDashUpdate();
 	}
 
@@ -230,11 +228,11 @@ public:
 		drivetrain->configOpenLoop();
 		drivetrain->SetBrakeMode(false);
 		turret->ConfigClosedLoop();
-		m_turret_angle = 0.0;
+		//m_turret_angle = 0.0;
 
 		//intake->ResetArm(0.0);
 
-		turret->UpdateNetworkTable();
+		//turret->updatenetworktable();
 
 //		if (autonomousCommand != nullptr) {
 //			autonomousCommand->Cancel();
@@ -528,7 +526,6 @@ static bool autoArmUp = false;
 
 
 
-		shooter->SetFlashlightOn(flashlightOn);
 
 		//END MANUAL FLASHLIGHT CONTROL
 
@@ -542,7 +539,7 @@ static bool autoArmUp = false;
 			angle_change = 0.0;
 		}
 
-		turret->UpdateNetworkTable();
+		//turret->updatenetworktable();
 		isAiming = false;
 		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
 			flashlightOn = false;
@@ -583,17 +580,16 @@ static bool autoArmUp = false;
 		frc::SmartDashboard::PutNumber("Turret Angle", _angle);
 
 		//Manual Flashlight control
-		if(oi->drvStick->GetRawButton(1)) {
-			ringlightOn = false;
-			flashlightOn = true;
-		}
+
 		//manual ringlight control
 		if(oi->opStick->GetRawAxis(2) >= 0.1) {
-				ringlightOn = true;
+				flashlightOn = true;
 		}
-		else
-			ringlightOn = false;
 
+		if(oi->opStick->GetRawAxis(3) >= 0.1)
+		{
+			ringlightOn = true;
+		}
 
 
 		//CLIMBER
@@ -607,12 +603,14 @@ static bool autoArmUp = false;
 		}
 
 
+
 		climber->Set(climberMotor);
 		conveyor->SetAgitator(agitator);
 		conveyor->SetKicker(kicker);
 		//END AGITATOR AND FIRE
 		intake->SetBall(ballIntake);
 		shooter->SetRingLightOn(ringlightOn);
+		shooter->SetFlashlightOn(flashlightOn);
 		intake->SetGear(gearIntake);
 
 
@@ -637,8 +635,8 @@ static bool autoArmUp = false;
 
 	void SmartDashUpdate() {
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
-		frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
-		frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm(false));
+		//frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
+		//frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm(false));
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());

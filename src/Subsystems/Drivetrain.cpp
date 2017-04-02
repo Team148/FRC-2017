@@ -95,8 +95,6 @@ double Drivetrain::GetAngle() {
 }
 int Drivetrain::GetEncoderVelocity() {
 
-	std::cout << "Left enc: "<< m_leftMotor1->GetEncVel() << std::endl;
-	std::cout << "Right enc: " << m_rightMotor1->GetEncVel() << std::endl;
 	return (m_leftMotor1->GetEncVel() + m_rightMotor1->GetEncVel())/2;
 
 
