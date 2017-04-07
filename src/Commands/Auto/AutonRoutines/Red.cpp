@@ -61,7 +61,7 @@ void Red::Boiler_GetGear()
 //	AddSequential(new Drive(36,15));
 
 	AddSequential(new ConfigureIntake());
-	AddSequential(new Drive(85,120));
+	AddSequential(new Drive(86,120));
 	AddSequential(new ArcadeDriveTurn(-55));
 	AddSequential(new Drive(34,40));
 	AddParallel(new IntakeAutoGearScore());
@@ -88,10 +88,10 @@ void Red::Boiler_ShootHopper()
 
 	AddSequential(new ConfigureIntake());
 
-	AddParallel(new SetShooterSpeed(6575));
-	AddSequential(new WaitCommand(0.9));
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+	//AddSequential(new WaitCommand(0.25));
 
-	AddParallel(new SetTurretAngle(85));
+	AddParallel(new SetTurretAngle(83));
 	AddSequential(new Drive(-120, 150));
 	AddSequential(new ArcadeDriveTurn(80));
 	AddSequential(new Drive(-25, 150));
@@ -101,7 +101,7 @@ void Red::Boiler_GetGear_Shoot()
 {
 	AddSequential(new ConfigureIntake());
 
-	AddParallel(new SetShooterSpeed(6500));
+	AddParallel(new SetShooterSpeed(3760)); // 3900
 	AddSequential(new WaitCommand(0.5));
 
 		AddParallel(new SetTurretAngle(-42));
@@ -205,7 +205,7 @@ void Red::Center_GetTwoGear_Noscore_Shoot()
 void Red::Retrieval_GetGear()
 {
 	AddSequential(new ConfigureIntake());
-	AddSequential(new Drive(83,120));
+	AddSequential(new Drive(86,120));
 	AddSequential(new ArcadeDriveTurn(55));
 	AddSequential(new Drive(34,40));
 	AddParallel(new IntakeAutoGearScore());

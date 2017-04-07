@@ -26,6 +26,7 @@ public:
 	void ConfigureClosedLoop();
 	void ConfigureOpenLoop();
 	void SetOpenLoop(float value);
+	void SetVoltageRamp(float value);
 	void SetRPM(int rpm);
 	int GetRPM();
 	float GetCurrent();

@@ -11,10 +11,8 @@ ArcadeDriveTurn::ArcadeDriveTurn(float angle) {
 void ArcadeDriveTurn::Initialize() {
 	m_isFinished=0;
 	tolerance_delay=0;
-	SetTimeout(5);
-
 	m_integral_err=0;
-	SetTimeout(2.25);
+	SetTimeout(1.5);
 	//Drivetrain::GetInstance()->ResetGyro();
 	m_init_angle = 0;
 	m_final_angle = 0;

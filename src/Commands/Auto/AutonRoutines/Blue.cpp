@@ -60,7 +60,7 @@ void Blue::Boiler_GetGear()
 //	AddSequential(new Drive(36,15));
 
 	AddSequential(new ConfigureIntake());
-	AddSequential(new Drive(82,120));
+	AddSequential(new Drive(86,120));
 	AddSequential(new ArcadeDriveTurn(55));
 	AddSequential(new Drive(34,40));
 	AddParallel(new IntakeAutoGearScore());
@@ -103,18 +103,18 @@ void Blue::Boiler_ShootHopper()
 {
 	AddSequential(new ConfigureIntake());
 
-	AddParallel(new SetShooterSpeed(6550));
-	AddSequential(new WaitCommand(0.9));
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+	//AddSequential(new WaitCommand(0.25));
 
-	AddParallel(new SetTurretAngle(-84));
-	AddSequential(new Drive(-115, 150));
+	AddParallel(new SetTurretAngle(-83));
+	AddSequential(new Drive(-120, 150));
 	AddSequential(new ArcadeDriveTurn(-80));
 	AddSequential(new Drive(-25, 150));
 	AddParallel(new FeedShooter(true));
 }
 void Blue::Boiler_GetGear_Shoot()
 {
-	AddParallel(new SetShooterSpeed(6500));
+	AddParallel(new SetShooterSpeed(3760)); //3900
 	AddParallel(new SetTurretAngle(41));
 	AddSequential(new Drive(82,120));
 	AddSequential(new WaitCommand(2.0));
@@ -229,7 +229,7 @@ void Blue::Center_GetTwoGear_Noscore_Shoot()
 void Blue::Retrieval_GetGear()
 {
 	AddSequential(new ConfigureIntake());
-	AddSequential(new Drive(83,120));
+	AddSequential(new Drive(86,120));
 	AddSequential(new ArcadeDriveTurn(-55));
 	AddSequential(new Drive(34,40));
 	AddParallel(new IntakeAutoGearScore());

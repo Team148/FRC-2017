@@ -13,6 +13,7 @@ public:
 	void Interrupted();
 private:
 	int m_rpm = 0;
+	float m_startTime = 0.0;
 	bool m_IsFinished = false;
 };
 

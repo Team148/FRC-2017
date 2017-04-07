@@ -44,12 +44,12 @@ void Shooter::InitDefaultCommand() {
 
 void Shooter::ConfigureClosedLoop() {
 	m_Motor1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
-	m_Motor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_Motor1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_Motor1->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	m_Motor2->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	m_Motor1->SetSensorDirection(true);
 	m_Motor1->SetClosedLoopOutputDirection(false);
-	m_Motor1->ConfigEncoderCodesPerRev(256);
+	//m_Motor1->ConfigEncoderCodesPerRev(256); // only for greyhill
 	m_Motor1->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_50Ms);
 	m_Motor1->SetVelocityMeasurementWindow(32);
 	m_Motor1->SelectProfileSlot(0);
@@ -76,6 +76,10 @@ void Shooter::ConfigureOpenLoop() {
 
 void Shooter::SetOpenLoop(float value) {
 	m_Motor1->Set(value);
+}
+void Shooter::SetVoltageRamp(float value)
+{
+	m_Motor1->SetVoltageRampRate(value);
 }
 
 void Shooter::SetRPM(int rpm) {

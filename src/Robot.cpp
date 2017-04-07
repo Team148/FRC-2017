@@ -265,8 +265,8 @@ public:
 		static bool armBtnSafe = false;
 		static bool flashlightOn = false;
 		static bool ringlightOn = false;
-		static float temp_angle = 0.0;
 		static float cur_armPosition = 0.0;
+		static bool shooterReady = false;
 //		float current_angle = 0.0;
 
 
@@ -350,7 +350,6 @@ public:
 		static bool enableGearTolerance_down = false;
 		static bool enableGearTolerance_up = false;
 		static bool gearWhileUp = false;
-		static int wp_startTime = 0.0;
 		cur_armPosition = intake->GetArmAngle();
 static bool autoArmUp = false;
 		if(intake->IsClosedLoop()) {
@@ -478,9 +477,7 @@ static bool autoArmUp = false;
 		}
 		//END INTAKE ARM
 
-		static bool openLoopToggle = false;
-		static int openLoopMode = 0;
-		static bool op_s = false;
+
 
 
 
@@ -510,11 +507,12 @@ static bool autoArmUp = false;
 		{
 			shooterRpm = SHOOTER_SET_POINT_B;
 		}
-		if(oi->opStick->GetRawButton(7))	//Turret off
+		if(oi->opStick->GetRawButton(7))	//shooter off
 		{
 			shooterRpm = 0;
 		}
-
+		if(shooter->GetRPM() + 100  >= shooterRpm) shooterReady = true;
+		else shooterReady = false;
 
 		//AUTO SCORE
 //		if(oi->drvStick->GetRawButton(3)) {
@@ -541,8 +539,18 @@ static bool autoArmUp = false;
 
 		if(oi->opStick->GetRawButton(8)) //Home Turret
 		{
-			m_turret_angle = 0.0;
-			angle_change = 0.0;
+			if(oi->GetSw1())
+			{
+				m_turret_angle = SHOOTING_POSITION_RED;
+				angle_change = SHOOTING_POSITION_RED;
+			}
+			if(!oi->GetSw1())
+			{
+				m_turret_angle = SHOOTING_POSITION_BLUE;
+				angle_change = SHOOTING_POSITION_BLUE;
+			}
+//			m_turret_angle = 0.0;
+//			angle_change = 0.0;
 		}
 
 		//turret->updatenetworktable();
@@ -624,6 +632,7 @@ static bool autoArmUp = false;
 
 
 		SmartDashUpdate();
+		SmartDashboard::PutBoolean("SHOOTER_READY", shooterReady);
 	}
 
 	void TestPeriodic() override {

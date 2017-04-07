@@ -71,12 +71,15 @@ constexpr float CONVEYER_AGITATOR_VOLTAGE = 6.0;
 constexpr float CONVEYER_KICKER_VOLTAGE = -1.0;
 
 //Shooter
-constexpr float SHOOTER_F = 0.06; // 0.0575
-constexpr float SHOOTER_P = 0.3; // 0.3
-constexpr float SHOOTER_D = 0.0;
+constexpr float SHOOTER_F = 0.0255; // 0.0575
+constexpr float SHOOTER_P = 0.05; // 0.3
+constexpr float SHOOTER_D = 0.25;
 
-constexpr int SHOOTER_SET_POINT_A = 6550;
-constexpr int SHOOTER_SET_POINT_B = 6975;
+constexpr int SHOOTER_SET_POINT_A = 3820;
+constexpr int SHOOTER_SET_POINT_B = 4035; // 4185
+
+constexpr float SHOOTING_POSITION_BLUE = 7.0;
+constexpr float SHOOTING_POSITION_RED = -7.0;
 
 //AUTON
 
