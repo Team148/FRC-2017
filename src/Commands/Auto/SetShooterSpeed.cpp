@@ -1,16 +1,20 @@
 #include "SetShooterSpeed.h"
 #include "Subsystems/Shooter.h"
 
-SetShooterSpeed::SetShooterSpeed(int rpm) {
+SetShooterSpeed::SetShooterSpeed(int rpm, bool useRamp) {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 	Requires(Shooter::GetInstance());
 	m_rpm = rpm;
+	m_useRamp = useRamp;
 }
 
 // Called just before this Command runs the first time
 void SetShooterSpeed::Initialize() {
-	Shooter::GetInstance()->SetVoltageRamp(12.0);
+	if(m_useRamp)
+	{
+		Shooter::GetInstance()->SetVoltageRamp(12.0);
+	}
 	Shooter::GetInstance()->SetRPM(m_rpm);
 	m_startTime = Timer::GetFPGATimestamp();
 
@@ -19,7 +23,14 @@ void SetShooterSpeed::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void SetShooterSpeed::Execute()
 {
-	if(Timer::GetFPGATimestamp() - m_startTime >= 1.0)
+	if(m_useRamp)
+	{
+		if(Timer::GetFPGATimestamp() - m_startTime >= 1.0)
+		{
+			m_IsFinished = true;
+		}
+	}
+	else
 	{
 		m_IsFinished = true;
 	}

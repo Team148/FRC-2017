@@ -511,8 +511,28 @@ static bool autoArmUp = false;
 		{
 			shooterRpm = 0;
 		}
-		if(shooter->GetRPM() + 100  >= shooterRpm) shooterReady = true;
+		if(shooter->GetRPM() + 125  >= shooterRpm)
+		{
+			shooterReady = true;
+		}
 		else shooterReady = false;
+//		if(shooterReady == true && shooter->GetRPM() >= 2500)
+//		{
+//			if(st_time - Timer::GetFPGATimestamp() <= 0.10 && flashCount < 3)
+//			{
+//				ringlightOn = 1;
+//			}
+//			else
+//			{
+//				st_time = Timer::GetFPGATimestamp();
+//				flashCount++;
+//				ringlightOn = 0;
+//			}
+//		}
+//		else
+//		{
+//			flashCount = 0;
+//		}
 
 		//AUTO SCORE
 //		if(oi->drvStick->GetRawButton(3)) {

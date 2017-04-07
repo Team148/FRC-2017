@@ -20,6 +20,7 @@
 #include <Commands/AutoGearScoreSub.h>
 #include <Commands/turretLocking.h>
 #include <Commands/ConfigureIntake.h>
+#include <Commands/SetFlashlight.h>
 
 #include "Commands/FeedShooter.h"
 #include "Constants.h"
@@ -107,8 +108,9 @@ void Blue::Boiler_ShootHopper()
 	//AddSequential(new WaitCommand(0.25));
 
 	AddParallel(new SetTurretAngle(-83));
-	AddSequential(new Drive(-120, 150));
+	AddSequential(new Drive(-113, 150));
 	AddSequential(new ArcadeDriveTurn(-80));
+	AddSequential(new SetFlashlight(true));
 	AddSequential(new Drive(-25, 150));
 	AddParallel(new FeedShooter(true));
 }
@@ -149,10 +151,10 @@ void Blue::Center_GetGear()
 void Blue::Center_GetGear_Shoot()
 {
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
-	AddParallel(new SetTurretAngle(88));
+	AddParallel(new SetTurretAngle(86.5));
 	AddSequential(new WaitCommand(4.0));
 	AddSequential(new FeedShooter(true));
-	AddSequential(new WaitCommand(3.0));
+	AddSequential(new WaitCommand(1.5));
 	AddSequential(new FeedShooter(false));
 	AddParallel(new SetShooterSpeed(0.0));
 	AddParallel(new SetTurretAngle(0.0));
@@ -214,10 +216,10 @@ void Blue::Center_GetTwoGear_Noscore()
 void Blue::Center_GetTwoGear_Noscore_Shoot()
 {
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
-	AddParallel(new SetTurretAngle(88));
+	AddParallel(new SetTurretAngle(86.5));
 	AddSequential(new WaitCommand(4.0));
 	AddSequential(new FeedShooter(true));
-	AddSequential(new WaitCommand(3.0));
+	AddSequential(new WaitCommand(1.5));
 	AddSequential(new FeedShooter(false));
 	AddParallel(new SetShooterSpeed(0.0));
 	AddParallel(new SetTurretAngle(0.0));
