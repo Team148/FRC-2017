@@ -89,7 +89,7 @@ void Red::Boiler_ShootHopper()
 
 	AddSequential(new ConfigureIntake());
 
-	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A, true));
+	AddParallel(new SetShooterSpeed(3780, true));
 	//AddSequential(new WaitCommand(0.25));
 
 	AddParallel(new SetTurretAngle(83));
