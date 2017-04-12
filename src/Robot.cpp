@@ -53,6 +53,9 @@ public:
 		shooter = Shooter::GetInstance();
 		turret = Turret::GetInstance();
 		log = new Logger();
+		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
+		camera.SetResolution(320, 240);
+		camera.SetFPS(24);
 		
 		//AUTON Modes
 //		auton_chooser.AddDefault("Testing Auton", new Autonomous());
