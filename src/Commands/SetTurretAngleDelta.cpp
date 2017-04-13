@@ -1,18 +1,18 @@
-#include "SetTurretAngle.h"
+#include "SetTurretAngleDelta.h"
 #include "Subsystems/Turret.h"
 #include "math.h"
 
-SetTurretAngle::SetTurretAngle(double angle, bool delay) {
+SetTurretAngleDelta::SetTurretAngleDelta(double angle_delta, bool delay) {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 	Requires(Turret::GetInstance());
-	m_input_angle = angle;
 	m_init_angle = Turret::GetInstance()->GetBigAngle();
+	m_target_angle = angle_delta + m_init_angle;
 	m_delay = delay;
 }
 
 // Called just before this Command runs the first time
-void SetTurretAngle::Initialize() {
+void SetTurretAngleDelta::Initialize() {
 	m_isFinished = false;
 
 	Turret::GetInstance()->ConfigClosedLoop();
@@ -20,10 +20,10 @@ void SetTurretAngle::Initialize() {
 }
 
 // Called repeatedly when this Command is scheduled to run
-void SetTurretAngle::Execute() {
+void SetTurretAngleDelta::Execute() {
 	float cur_angle = Turret::GetInstance()->GetBigAngle();
-	Turret::GetInstance()->SetBigAngle(m_input_angle);
-	m_angle_error = cur_angle - m_input_angle;	//calculates angle error
+	Turret::GetInstance()->SetBigAngle(m_target_angle);
+	m_angle_error = cur_angle - m_target_angle;
 	if(abs(m_angle_error) <= 0.3)
 	{
 		tolerance_delay++;
@@ -37,17 +37,17 @@ void SetTurretAngle::Execute() {
 }
 
 // Make this return true when this Command no longer needs to run execute()
-bool SetTurretAngle::IsFinished() {
+bool SetTurretAngleDelta::IsFinished() {
 	return m_isFinished;
 }
 
 // Called once after isFinished returns true
-void SetTurretAngle::End() {
+void SetTurretAngleDelta::End() {
 
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
-void SetTurretAngle::Interrupted() {
+void SetTurretAngleDelta::Interrupted() {
 
 }
