@@ -11,21 +11,25 @@
  * Will calculate distance to goal and angle offset
  * Need to call update every time new target information is acquired to return proper Yaw/Distance
  */
-PinholeCamera::PinholeCamera(int pixel_width, int pixel_height, float FOV_width,
-		float FOV_height, int angle_offset, float target_height) {
+PinholeCamera::PinholeCamera(float pixel_width, float pixel_height, float FOV_width,
+		float FOV_height, float angle_offset, float target_height) {
 	// TODO Auto-generated constructor stub
 	m_pixel_width = pixel_width;
 	m_pixel_height = pixel_height;
-	m_FOV_width = (FOV_width*2*M_PI)/360;		//converts to radians
-	m_FOV_height = (FOV_height*2*M_PI)/360;		//converts to radians
-	m_angle_offset = angle_offset;
+	m_FOV_width = (FOV_width*2*M_PI)/360.0;		//converts to radians
+	m_FOV_height = (FOV_height*2*M_PI)/360.0;		//converts to radians
+	m_angle_offset = (2*M_PI*angle_offset)/360.0;
 	m_target_height = target_height;			//in inches
 
-	m_target_horizontal_pixel = pixel_height/2;
-	m_target_vertical_pixel = pixel_width/2;
+	m_target_horizontal_pixel = pixel_height/2.0;
+	m_target_vertical_pixel = pixel_width/2.0;
 
 	//averages focal lengths
 	m_focal_length = (((float)m_pixel_width/(2*tan(m_FOV_width/2))) + ((float)m_pixel_height/(2*tan(m_FOV_width/2)))) / 2.0;
+}
+
+float PinholeCamera::GetFocalLength(){
+	return m_focal_length;
 }
 
 /***
@@ -41,7 +45,7 @@ void PinholeCamera::Update(int target_horizontal_pixel, int target_vertical_pixe
  * Returns Radians
  */
 float PinholeCamera::GetPitchAngle() {
-	return (float)m_angle_offset + atan(((float)m_target_vertical_pixel - ((float)m_pixel_height/2))/m_focal_length);
+	return m_angle_offset + atan((m_target_vertical_pixel - (m_pixel_height/2))/m_focal_length);
 }
 
 /***
@@ -55,7 +59,7 @@ float PinholeCamera::GetPitchAngleDegrees() {
  * Returns Yaw Angle (left/right) in Radians
  */
 float PinholeCamera::GetYawAngle() {
-	return atan(((float)m_target_horizontal_pixel - ((float)m_pixel_width/2))/m_focal_length);
+	return atan((m_target_horizontal_pixel - (m_pixel_width/2))/m_focal_length);
 }
 
 /***
@@ -69,5 +73,5 @@ float PinholeCamera::GetYawAngleDegrees() {
  * Returns Distance to Target in Inches
  */
 float PinholeCamera::GetDistance() {
-	return (float)m_target_height*tan(GetPitchAngle());
+	return m_target_height/tan(GetPitchAngle());
 }

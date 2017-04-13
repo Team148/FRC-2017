@@ -13,20 +13,22 @@
 
 class PinholeCamera {
 public:
-	PinholeCamera(int pixel_width, int pixel_height, float FOV_width, float FOV_height, int angle_offset, float target_height = 68);
+	PinholeCamera(float pixel_width, float pixel_height, float FOV_width,
+			float FOV_height, float angle_offset, float target_height = 68);
 	void Update(int target_horizontal_pixel, int target_vertical_pixel);
 	float GetPitchAngle();
 	float GetPitchAngleDegrees();
 	float GetYawAngle();
 	float GetYawAngleDegrees();
 	float GetDistance();
+	float GetFocalLength();
 
 private:
-	int m_pixel_width;
-	int m_pixel_height;
-	int m_target_horizontal_pixel;
-	int m_target_vertical_pixel;
-	int m_angle_offset;
+	float m_pixel_width;
+	float m_pixel_height;
+	float m_target_horizontal_pixel;
+	float m_target_vertical_pixel;
+	float m_angle_offset;
 	float m_target_height;
 //	float m_diagonal_FOV;
 	float m_FOV_width;
