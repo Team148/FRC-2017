@@ -43,7 +43,8 @@ Turret::Turret() : Subsystem("Turret") {
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
 
 	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
-	m_pc = new PinholeCamera(640, 480, 52.15, 37.75, 53.875, 68);	//FoV determined via experiment
+	m_pc = new PinholeCamera(640, 480, 51.05, 37.9, 0, 64.5);	//FoV determined via experiment
+	m_pc->SetNeutralAxisOffset(-34.5);
 
 //	(float pixel_width, float pixel_height, float FOV_width,
 	//		float FOV_height, float angle_offset, float target_height)

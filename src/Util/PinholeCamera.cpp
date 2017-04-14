@@ -28,7 +28,7 @@ PinholeCamera::PinholeCamera(float pixel_width, float pixel_height, float FOV_wi
 	m_target_vertical_pixel = pixel_height/2.0;
 
 	//averages focal lengths
-	m_focal_length = (((float)m_pixel_width/(2*tan(m_FOV_width/2))) + ((float)m_pixel_height/(2*tan(m_FOV_width/2)))) / 2.0;
+	m_focal_length = ((m_pixel_width/(2*tan(m_FOV_width/2))) + (m_pixel_height/(2*tan(m_FOV_width/2)))) / 2.0;
 }
 
 void PinholeCamera::SetNeutralAxisOffset(float angle){
