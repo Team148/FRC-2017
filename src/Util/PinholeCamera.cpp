@@ -70,7 +70,7 @@ float PinholeCamera::GetPitchAngleDegrees() {
  * Returns Yaw Angle (left/right) in Radians
  */
 float PinholeCamera::GetYawAngle() {
-	return atan((m_target_horizontal_pixel - m_neutral_horizontal_pixel)/m_focal_length);
+	return 	m_yaw_angle_offset + atan((m_target_horizontal_pixel - m_neutral_horizontal_pixel)/m_focal_length);
 }
 
 /***
