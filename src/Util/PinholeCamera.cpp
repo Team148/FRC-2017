@@ -12,20 +12,31 @@
  * Need to call update every time new target information is acquired to return proper Yaw/Distance
  */
 PinholeCamera::PinholeCamera(float pixel_width, float pixel_height, float FOV_width,
-		float FOV_height, float angle_offset, float target_height) {
+		float FOV_height, float yaw_angle_offset, float target_height) {
 	// TODO Auto-generated constructor stub
 	m_pixel_width = pixel_width;
 	m_pixel_height = pixel_height;
 	m_FOV_width = (FOV_width*2*M_PI)/360.0;		//converts to radians
 	m_FOV_height = (FOV_height*2*M_PI)/360.0;		//converts to radians
-	m_angle_offset = (2*M_PI*angle_offset)/360.0;
+	m_yaw_angle_offset = (2*M_PI*yaw_angle_offset)/360.0;
 	m_target_height = target_height;			//in inches
 
-	m_target_horizontal_pixel = pixel_height/2.0;
-	m_target_vertical_pixel = pixel_width/2.0;
+	m_neutral_horizontal_pixel = m_pixel_width/2.0 - 0.5;
+	m_neutral_vertical_pixel = m_pixel_height/2.0 - 0.5;
+
+	m_target_horizontal_pixel = pixel_width/2.0;
+	m_target_vertical_pixel = pixel_height/2.0;
 
 	//averages focal lengths
 	m_focal_length = (((float)m_pixel_width/(2*tan(m_FOV_width/2))) + ((float)m_pixel_height/(2*tan(m_FOV_width/2)))) / 2.0;
+}
+
+void PinholeCamera::SetNeutralAxisOffset(float angle){
+	m_neutral_vertical_pixel = m_neutral_vertical_pixel + m_focal_length*tan(2*M_PI*angle/360);
+}
+
+float PinholeCamera::GetNeutralAxisOffset() {
+	return m_neutral_vertical_pixel;
 }
 
 float PinholeCamera::GetFocalLength(){
@@ -37,7 +48,7 @@ float PinholeCamera::GetFocalLength(){
  */
 void PinholeCamera::Update(int target_horizontal_pixel, int target_vertical_pixel) {
 	m_target_horizontal_pixel = target_horizontal_pixel;
-	m_target_vertical_pixel = target_vertical_pixel;
+	m_target_vertical_pixel = m_pixel_height-target_vertical_pixel;
 }
 
 /***
@@ -45,7 +56,7 @@ void PinholeCamera::Update(int target_horizontal_pixel, int target_vertical_pixe
  * Returns Radians
  */
 float PinholeCamera::GetPitchAngle() {
-	return m_angle_offset + atan((m_target_vertical_pixel - (m_pixel_height/2))/m_focal_length);
+	return atan((m_target_vertical_pixel - m_neutral_vertical_pixel)/m_focal_length);
 }
 
 /***
@@ -59,7 +70,7 @@ float PinholeCamera::GetPitchAngleDegrees() {
  * Returns Yaw Angle (left/right) in Radians
  */
 float PinholeCamera::GetYawAngle() {
-	return atan((m_target_horizontal_pixel - (m_pixel_width/2))/m_focal_length);
+	return atan((m_target_horizontal_pixel - m_neutral_horizontal_pixel)/m_focal_length);
 }
 
 /***

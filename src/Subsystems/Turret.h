@@ -8,6 +8,7 @@
 #include "CanTalon.h"
 #include "Constants.h"
 #include "WPIlib.h"
+#include <Util/PinholeCamera.h>
 
 
 
@@ -24,6 +25,7 @@ private:
 	bool m_isClosedLoop = false;
 	std::shared_ptr<NetworkTable> m_network_table;
 	bool isAutoAiming = false;
+	PinholeCamera* m_pc;
 
 
 public:
