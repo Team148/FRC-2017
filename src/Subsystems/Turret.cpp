@@ -27,9 +27,10 @@ bool SortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs)	
 
 static bool applyOffset = true;
 static float m_vision_angle_offset = 0.0;
+static float m_vision_distance_inches = 0.0;
 static float m_turret_angle = 0.0;
 
-constexpr double view_angle_fact = 0.08276;
+
 
 Turret::Turret() : Subsystem("Turret") {
 	std::cout << "info: creating Turret" << std::endl;
@@ -156,8 +157,15 @@ void Turret::TargetBoiler(bool isAiming) {
 }
 void Turret::UpdateNetworkTable() {
 	static int target = 0;
-	int pix_offset = 0;
+	int pix_offset = 0, xRes = 640, yRes = 320;
 	double targeted = 0.0, targeted2 = 0.0;
+	double normalizedWidth, targetWidth;
+
+	constexpr double View_Angle = 41.5, Half_View_Angle = View_Angle/2.0; // 44
+	constexpr double M_Pi = 3.1415926535898;
+	constexpr double ToRadians = M_Pi/180.0;
+
+	constexpr double view_angle_fact = 0.08276; //~ = View_Angle/xRes
 
 	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>());
 	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>());
@@ -196,9 +204,14 @@ void Turret::UpdateNetworkTable() {
 			//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
 			//CenterX-Width/2, CenterX+Width/2) where these are target coordinates.
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
-			//and direction of the turret.  Max delta is 160.  1/160 is 0.00625
+			//and direction of the turret.  Max delta is 320.
 
-			pix_offset = (320.0 - RcRs[0].CenterX);
+			pix_offset = (xRes - RcRs[0].CenterX);
+
+			normalizedWidth = float(RcRs[0].Width)/float(xRes);
+			targetWidth = 15.0;  //upper targets are 15"wide by 4" tall
+
+			m_vision_distance_inches = targetWidth / (normalizedWidth * tan((90 - View_Angle) * ToRadians));
 
 			static float startTime = 0.0;
 			if(isAutoAiming)
@@ -234,11 +247,13 @@ void Turret::UpdateNetworkTable() {
 			else targeted = 0.0;
 			frc::SmartDashboard::PutNumber("Target detected", targeted2);
 			frc::SmartDashboard::PutNumber("Locked On", targeted);
+			frc::SmartDashboard::PutNumber("NormalizedWidth", normalizedWidth);
 		}
 		//target = target + 1;
 
 		//Publish the sorted 1st two results
 		frc::SmartDashboard::PutNumber("angleOff", m_vision_angle_offset);
+		frc::SmartDashboard::PutNumber("targetDist_Inches", m_vision_distance_inches);
 		frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
 		frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
 		frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
