@@ -163,6 +163,7 @@ void Turret::TargetBoiler(bool isAiming) {
 void Turret::UpdateNetworkTable() {
 	static int target = 0;
 	int pix_offset = 0, xRes = 640, yRes = 320;
+	int xMid = xRes/2;
 	double targeted = 0.0, targeted2 = 0.0;
 	double normalizedWidth, targetWidth;
 
@@ -213,7 +214,7 @@ void Turret::UpdateNetworkTable() {
 
 			m_pc->Update((float)RcRs[0].CenterX, (float)RcRs[0].CenterY);
 
-			pix_offset = (xRes - RcRs[0].CenterX);
+			pix_offset = (xMid - RcRs[0].CenterX);
 
 			normalizedWidth = float(RcRs[0].Width)/float(xRes);
 			targetWidth = 15.0;  //upper targets are 15"wide by 4" tall
