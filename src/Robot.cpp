@@ -54,8 +54,8 @@ public:
 		turret = Turret::GetInstance();
 		log = new Logger();
 		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
-		camera.SetResolution(320, 240);
-		camera.SetFPS(24);
+		camera.SetResolution(320, 180);
+		camera.SetFPS(20);
 		//AUTON Modes
 //		auton_chooser.AddDefault("Testing Auton", new Autonomous());
 //		auton_chooser.AddObject("Center 1 Gear", new Center1Gear());
