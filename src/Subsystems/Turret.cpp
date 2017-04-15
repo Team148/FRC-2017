@@ -43,6 +43,11 @@ Turret::Turret() : Subsystem("Turret") {
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
 
 	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
+	m_pc = new PinholeCamera(640, 480, 51.05, 37.9, 0, 64.5);	//FoV determined via experiment
+	m_pc->SetNeutralAxisOffset(-36.0);
+
+//	(float pixel_width, float pixel_height, float FOV_width,
+	//		float FOV_height, float angle_offset, float target_height)
 }
 
 Turret* Turret::GetInstance() {
@@ -158,6 +163,7 @@ void Turret::TargetBoiler(bool isAiming) {
 void Turret::UpdateNetworkTable() {
 	static int target = 0;
 	int pix_offset = 0, xRes = 640, yRes = 320;
+	int xMid = xRes/2;
 	double targeted = 0.0, targeted2 = 0.0;
 	double normalizedWidth, targetWidth;
 
@@ -169,7 +175,7 @@ void Turret::UpdateNetworkTable() {
 
 	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>());
 	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>());
-	//std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>());
+	std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>());
 	//std::vector<double> arr4 = m_network_table->GetNumberArray("height", llvm::ArrayRef<double>());
 	std::vector<double> arr5 = m_network_table->GetNumberArray("width", llvm::ArrayRef<double>());
 
@@ -179,7 +185,7 @@ void Turret::UpdateNetworkTable() {
 
 	int s1 = arr1.size();
 	int s2 = arr2.size();
-	//int s3 = arr3.size();
+	int s3 = arr3.size();
 	//int s4 = arr4.size();
 	int s5 = arr5.size();
 
@@ -189,7 +195,7 @@ void Turret::UpdateNetworkTable() {
 		{
 			RcRs[i].Area = arr1[i];
 			RcRs[i].CenterX = arr2[i];
-			//RcRs[i].CenterY = arr3[i];
+			RcRs[i].CenterY = arr3[i];
 			//RcRs[i].Height = arr4[i];
 			RcRs[i].Width = arr5[i];
 		}
@@ -206,7 +212,9 @@ void Turret::UpdateNetworkTable() {
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 320.
 
-			pix_offset = (xRes - RcRs[0].CenterX);
+			m_pc->Update((float)RcRs[0].CenterX, (float)RcRs[0].CenterY);
+
+			pix_offset = (xMid - RcRs[0].CenterX);
 
 			normalizedWidth = float(RcRs[0].Width)/float(xRes);
 			targetWidth = 15.0;  //upper targets are 15"wide by 4" tall
@@ -248,6 +256,11 @@ void Turret::UpdateNetworkTable() {
 			frc::SmartDashboard::PutNumber("Target detected", targeted2);
 			frc::SmartDashboard::PutNumber("Locked On", targeted);
 			frc::SmartDashboard::PutNumber("NormalizedWidth", normalizedWidth);
+			frc::SmartDashboard::PutNumber("Calc_Yaw", m_pc->GetYawAngleDegrees());
+			frc::SmartDashboard::PutNumber("Calc_Dist", m_pc->GetDistance());
+			frc::SmartDashboard::PutNumber("Calc_Pitch", m_pc->GetPitchAngleDegrees());
+			frc::SmartDashboard::PutNumber("CenterX", RcRs[0].CenterX);
+			frc::SmartDashboard::PutNumber("CenterY", RcRs[0].CenterY);
 		}
 		//target = target + 1;
 
