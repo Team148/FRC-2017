@@ -61,8 +61,8 @@ void Shooter::ConfigureClosedLoop() {
 
 	m_Motor1->DisableNominalClosedLoopVoltage();
 	m_Motor2->DisableNominalClosedLoopVoltage();
-	m_Motor1->SetNominalClosedLoopVoltage(12.0f);
-	m_Motor2->SetNominalClosedLoopVoltage(12.0f);
+	m_Motor1->SetNominalClosedLoopVoltage(10.0f);
+	m_Motor2->SetNominalClosedLoopVoltage(10.0f);
 
 	m_isClosedLoop = true;
 }
