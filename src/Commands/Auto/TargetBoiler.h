@@ -14,6 +14,7 @@ public:
 
 private:
 	bool m_enable;
+	int m_expiration = 0;
 };
 
 #endif  // TargetBoiler_H

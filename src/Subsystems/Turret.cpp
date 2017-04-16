@@ -25,7 +25,6 @@ bool SortByArea(const RemoteContourReport &lhs, const RemoteContourReport &rhs)	
 	return lhs.Area > rhs.Area;
 };
 
-static bool applyOffset = true;
 static float m_vision_angle_offset = 0.0;
 static float m_vision_distance_inches = 0.0;
 static float m_turret_angle = 0.0;
@@ -43,8 +42,8 @@ Turret::Turret() : Subsystem("Turret") {
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
 
 	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
-	m_pc = new PinholeCamera(640, 480, 51.05, 37.9, 0, 64.5);	//FoV determined via experiment
-	m_pc->SetNeutralAxisOffset(-36.0);
+	//m_pc = new PinholeCamera(640, 480, 51.05, 37.9, 0, 64.5);	//FoV determined via experiment
+	//m_pc->SetNeutralAxisOffset(-36.0);
 
 //	(float pixel_width, float pixel_height, float FOV_width,
 	//		float FOV_height, float angle_offset, float target_height)
@@ -155,17 +154,19 @@ void Turret::lockTurretAngle(bool lock)
 	}
 }
 
-void Turret::TargetBoiler(bool isAiming) {
+void Turret::TargetBoiler(bool aiming) {
 
-	isAutoAiming = true;
+	isAutoAiming = aiming;
 	SetBigAngle(GetVisionOffset());
 }
+
 void Turret::UpdateNetworkTable() {
 	static int target = 0;
 	int pix_offset = 0, xRes = 640, yRes = 320;
 	int xMid = xRes/2;
 	double targeted = 0.0, targeted2 = 0.0;
 	double normalizedWidth, targetWidth;
+	double arearatio, widthratio, heightratio;
 
 	constexpr double View_Angle = 41.5, Half_View_Angle = View_Angle/2.0; // 44
 	constexpr double M_Pi = 3.1415926535898;
@@ -173,20 +174,20 @@ void Turret::UpdateNetworkTable() {
 
 	constexpr double view_angle_fact = 0.08276; //~ = View_Angle/xRes
 
-	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>());
-	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>());
-	std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>());
-	//std::vector<double> arr4 = m_network_table->GetNumberArray("height", llvm::ArrayRef<double>());
-	std::vector<double> arr5 = m_network_table->GetNumberArray("width", llvm::ArrayRef<double>());
+	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>(0.001));
+	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>(0.001));
+	std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>(0.001));
+	std::vector<double> arr4 = m_network_table->GetNumberArray("height", llvm::ArrayRef<double>(0.001));
+	std::vector<double> arr5 = m_network_table->GetNumberArray("width", llvm::ArrayRef<double>(0.001));
 
-	const unsigned numberOfParticles = 1000;
+	const unsigned numberOfParticles = 500;
 
 	std::vector<RemoteContourReport> RcRs(numberOfParticles);
 
 	int s1 = arr1.size();
 	int s2 = arr2.size();
 	int s3 = arr3.size();
-	//int s4 = arr4.size();
+	int s4 = arr4.size();
 	int s5 = arr5.size();
 
 	if ((arr1.size() > 0) && (s1==s2) && s1==s5) {
@@ -196,23 +197,29 @@ void Turret::UpdateNetworkTable() {
 			RcRs[i].Area = arr1[i];
 			RcRs[i].CenterX = arr2[i];
 			RcRs[i].CenterY = arr3[i];
-			//RcRs[i].Height = arr4[i];
+			RcRs[i].Height = arr4[i];
 			RcRs[i].Width = arr5[i];
 		}
 
 		std::sort(RcRs.begin(), RcRs.end(), SortByArea); //Sort the result by Area of target
-
+		if((RcRs[1].Area>0.0) && (RcRs[1].Height>0.0) && (RcRs[1].Width>0.0)){
+		arearatio = RcRs[0].Area/RcRs[1].Area;
+		widthratio = RcRs[0].Width/RcRs[1].Width;
+		heightratio = RcRs[0].Height/RcRs[1].Height;
+		}
 		//if (target == 0) target = 0;
 		target = 0;
-		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10) && (target == 0) ) {
+		//added 7 to array.width[0] to compensate for look angle roll off of width
+		//if((RcRs[0].Area > 64) && (abs((RcRs[0].Width) - RcRs[1].Width) < 10) && (target == 0) ) {
+			if((RcRs[0].Area > 64) && ((widthratio>0.7) && (widthratio<1.3)) && ((heightratio>1.2) && (heightratio<2.0)) ) {
 			//Here if we have a valid target
 			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
 			//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
 			//CenterX-Width/2, CenterX+Width/2) where these are target coordinates.
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 320.
-
-			m_pc->Update((float)RcRs[0].CenterX, (float)RcRs[0].CenterY);
+			m_target_valid = true;
+			//m_pc->Update((float)RcRs[0].CenterX, (float)RcRs[0].CenterY);
 
 			pix_offset = (xMid - RcRs[0].CenterX);
 
@@ -256,16 +263,18 @@ void Turret::UpdateNetworkTable() {
 			frc::SmartDashboard::PutNumber("Target detected", targeted2);
 			frc::SmartDashboard::PutNumber("Locked On", targeted);
 			frc::SmartDashboard::PutNumber("NormalizedWidth", normalizedWidth);
-			frc::SmartDashboard::PutNumber("Calc_Yaw", m_pc->GetYawAngleDegrees());
-			frc::SmartDashboard::PutNumber("Calc_Dist", m_pc->GetDistance());
-			frc::SmartDashboard::PutNumber("Calc_Pitch", m_pc->GetPitchAngleDegrees());
+			//frc::SmartDashboard::PutNumber("Calc_Yaw", m_pc->GetYawAngleDegrees());
+			//frc::SmartDashboard::PutNumber("Calc_Dist", m_pc->GetDistance());
+			//frc::SmartDashboard::PutNumber("Calc_Pitch", m_pc->GetPitchAngleDegrees());
 			frc::SmartDashboard::PutNumber("CenterX", RcRs[0].CenterX);
 			frc::SmartDashboard::PutNumber("CenterY", RcRs[0].CenterY);
 		}
+		else
+			m_target_valid=false;
 		//target = target + 1;
 
 		//Publish the sorted 1st two results
-		frc::SmartDashboard::PutNumber("angleOff", m_vision_angle_offset);
+		frc::SmartDashboard::PutNumber("VisionTurretPosition", m_vision_angle_offset);
 		frc::SmartDashboard::PutNumber("targetDist_Inches", m_vision_distance_inches);
 		frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
 		frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
@@ -273,17 +282,21 @@ void Turret::UpdateNetworkTable() {
 		frc::SmartDashboard::PutNumber("ArrayX2: ", RcRs[1].CenterX);
 		//frc::SmartDashboard::PutNumber("ArrayY1: ", RcRs[0].CenterY);
 		//frc::SmartDashboard::PutNumber("ArrayY2: ", RcRs[1].CenterY);
-		//frc::SmartDashboard::PutNumber("ArrayHeight1: ", RcRs[0].Height);
-		//frc::SmartDashboard::PutNumber("ArrayHeight2: ", RcRs[1].Height);
+		frc::SmartDashboard::PutNumber("ArrayHeight1: ", RcRs[0].Height);
+		frc::SmartDashboard::PutNumber("ArrayHeight2: ", RcRs[1].Height);
 		frc::SmartDashboard::PutNumber("ArrayWidth1: ", RcRs[0].Width);
 		frc::SmartDashboard::PutNumber("ArrayWidt2: ", RcRs[1].Width);
-
+		frc::SmartDashboard::PutNumber("AreaRatio: ", arearatio);
+		frc::SmartDashboard::PutNumber("WidthRatio: ", widthratio);
+		frc::SmartDashboard::PutNumber("HeightRatio: ", heightratio);
 	}
 
 }
 
 
-
+bool Turret::IsTargetValid() {
+	return m_target_valid;
+}
 
 float Turret::GetVisionOffset() {
 	return -m_vision_angle_offset;

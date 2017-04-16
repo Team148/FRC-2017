@@ -16,6 +16,8 @@
 #include "Commands/Auto/AutonRoutines/Blue.h"
 #include "Commands/Auto/AutonRoutines/Red.h"
 #include "Commands/Auto/SetBallGearUntilBeam.h"
+#include "Commands/Auto/TargetBoiler.h"
+#include "Commands/Auto/SetRingLight.h"
 //#include "Vision/VisionAPI.h"
 //#include <CameraServer.h>
 //#include <Vision/USBCamera.h>
@@ -108,7 +110,7 @@ public:
 		//if (autonomousCommand.get() != nullptr) {
 		//	autonomousCommand->Start();
 		frc::Scheduler::GetInstance()->RemoveAll();
-		log->Start();
+		//log->Start();
 		static int red = 0;
 		static bool shooting = false;
 		static bool hopper = false;
@@ -207,7 +209,7 @@ public:
 //		}
 		turret->UpdateNetworkTable();
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
-		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
+		frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
@@ -215,8 +217,8 @@ public:
 	}
 
 	void AutonomousPeriodic() override {
-		frc::Scheduler::GetInstance()->Run();
 		turret->UpdateNetworkTable();
+		frc::Scheduler::GetInstance()->Run();
 		SmartDashUpdate();
 	}
 
@@ -576,12 +578,14 @@ static bool autoArmUp = false;
 		}
 
 		turret->UpdateNetworkTable();
-		isAiming = false;
+		//isAiming = false;
 		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
 			flashlightOn = false;
 			ringlightOn = true;
-			isAiming = true;
-			turret->TargetBoiler(true);
+			//isAiming = true;
+			if(turret->IsTargetValid())
+				turret->TargetBoiler(true);
+
 			m_turret_angle = turret->GetBigAngle();
 		} else {
 			float turret_joy_in;
@@ -607,8 +611,8 @@ static bool autoArmUp = false;
 			m_turret_angle = angle_change;
 			turret->SetBigAngle(angle_change);  //moved outside of routine
 			//turret->SetBigAngle(turret_joy_in*22);
-			isAiming = false;
-			//turret->TargetBoiler(false);
+			//isAiming = false;
+			//turret->TargetBoiler();
 
 		}
 
@@ -665,7 +669,7 @@ static bool autoArmUp = false;
 		//Add all subsystems to log here.
 		//drivetrain->Log();
 
-		log->WriteBuffertoFile();
+		//log->WriteBuffertoFile();
 	}
 
 
@@ -673,7 +677,10 @@ static bool autoArmUp = false;
 	void SmartDashUpdate() {
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
 		//frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
-		//frc::SmartDashboard::PutData("Calibrate Arm", new CalibrateArm(false));
+		frc::SmartDashboard::PutData("Target Boiler ON", new TargetBoiler(true));
+		frc::SmartDashboard::PutData("Target Boiler OFF", new TargetBoiler(false));
+		frc::SmartDashboard::PutData("RingLight ON", new SetRingLight(true));
+		frc::SmartDashboard::PutData("RingLight OFF", new SetRingLight(false));
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
 		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());

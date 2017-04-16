@@ -25,7 +25,9 @@ private:
 	bool m_isClosedLoop = false;
 	std::shared_ptr<NetworkTable> m_network_table;
 	bool isAutoAiming = false;
-	PinholeCamera* m_pc;
+	//PinholeCamera* m_pc;
+	bool applyOffset = false;
+	bool m_target_valid = false;
 
 
 public:
@@ -42,13 +44,14 @@ public:
 	void SetBigAngle(float angle);
 	float GetBigAngle();
 	void Reset();
+	bool IsTargetValid();
 	bool IsHomed();
 
 
 	void lockTurretAngle(bool lock);
 	void UpdateNetworkTable();
 	bool IsOnTarget();
-	void TargetBoiler(bool isAiming = 0);
+	void TargetBoiler(bool aiming);
 	float GetVisionOffset();
 
 	float m_gyro_angle = 0.0;

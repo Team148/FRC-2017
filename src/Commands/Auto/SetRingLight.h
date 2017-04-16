@@ -13,6 +13,7 @@ public:
 	void Interrupted();
 private:
 	bool m_on;
+	bool m_isFinished=false;
 };
 
 #endif  // SetRingLight_H

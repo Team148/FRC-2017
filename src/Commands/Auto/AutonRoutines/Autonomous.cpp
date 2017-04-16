@@ -8,6 +8,11 @@
 #include "Commands/Auto/ArcadeDriveTurn.h"
 #include "Commands/Auto/AutonRoutines/Red.h"
 #include "Commands/Auto/AutonRoutines/Blue.h"
+#include "Commands/SetTurretAngle.h"
+#include "Commands/Auto/SetRingLight.h"
+#include "Commands/Auto/TargetBoiler.h"
+#include "Commands/Auto/SetShooterSpeed.h"
+#include "Commands/FeedShooter.h"
 #include "Constants.h"
 
 
@@ -16,11 +21,15 @@ Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bo
 //	AddSequential(new Drive(100,150));
 //	AddSequential(new WaitCommand(5.0));
 //	AddSequential(new Drive(-100,150));
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+	AddSequential(new WaitCommand(5.0));
+	AddSequential(new SetRingLight(true));
+	AddSequential(new SetTurretAngle(83));
+	AddParallel(new TargetBoiler(true));
+	AddSequential(new WaitCommand(2.0));
+	AddSequential(new FeedShooter(true));
 
-	AddSequential(new ArcadeDriveTurn(90));
-	AddSequential(new ArcadeDriveTurn(-90));
-	AddSequential(new ArcadeDriveTurn(45));
-	AddSequential(new ArcadeDriveTurn(-45));
+
 //
 
 
