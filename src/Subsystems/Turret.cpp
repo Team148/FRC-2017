@@ -138,9 +138,11 @@ bool Turret::IsHomed() {
 	return !m_HomeSwitch->Get();
 }
 
+
 bool Turret::IsClosedLoop() {
 	return m_isClosedLoop;
 }
+
 void Turret::lockTurretAngle(bool lock)
 {
 	locking = lock;
@@ -160,6 +162,7 @@ void Turret::TargetBoiler(bool isAiming) {
 	isAutoAiming = true;
 	SetBigAngle(GetVisionOffset());
 }
+
 void Turret::UpdateNetworkTable() {
 	static int target = 0;
 	int pix_offset = 0, xRes = 640, yRes = 320;
@@ -282,7 +285,58 @@ void Turret::UpdateNetworkTable() {
 
 }
 
+void Turret::UpdateVisionTarget() {
 
+	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>());
+	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>());
+	std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>());
+	//std::vector<double> arr4 = m_network_table->GetNumberArray("height", llvm::ArrayRef<double>());
+	std::vector<double> arr5 = m_network_table->GetNumberArray("width", llvm::ArrayRef<double>());
+
+	const unsigned numberOfParticles = 1000;
+
+	std::vector<RemoteContourReport> RcRs(numberOfParticles);
+
+	int s1 = arr1.size();
+	int s2 = arr2.size();
+	int s3 = arr3.size();
+	int s5 = arr5.size();
+
+	if ((arr1.size() > 0) && (s1==s2) && s1==s5) {
+
+		for(unsigned int i = 0; i < arr1.size(); i++)
+		{
+			RcRs[i].Area = arr1[i];
+			RcRs[i].CenterX = arr2[i];
+			RcRs[i].CenterY = arr3[i];
+			//RcRs[i].Height = arr4[i];
+			RcRs[i].Width = arr5[i];
+		}
+
+		std::sort(RcRs.begin(), RcRs.end(), SortByArea); //Sort the result by Area of target
+
+		if((RcRs[0].Area > 64) && (abs(RcRs[0].Width - RcRs[1].Width) < 10)) {		//Check for Valid Target
+
+			m_pc->Update((float)RcRs[0].CenterX, (float)RcRs[0].CenterY);
+
+			frc::SmartDashboard::PutNumber("Calc_Yaw", m_pc->GetYawAngleDegrees());
+			frc::SmartDashboard::PutNumber("Calc_Dist", m_pc->GetDistance());
+			frc::SmartDashboard::PutNumber("Calc_Pitch", m_pc->GetPitchAngleDegrees());
+			frc::SmartDashboard::PutNumber("CenterX", RcRs[0].CenterX);
+			frc::SmartDashboard::PutNumber("CenterY", RcRs[0].CenterY);
+		}
+
+	}
+
+}
+
+float Turret::GetYawOffset() {
+	return m_pc->GetYawAngleDegrees();
+}
+
+float Turret::GetDistance() {
+	return m_pc->GetDistance();
+}
 
 
 float Turret::GetVisionOffset() {

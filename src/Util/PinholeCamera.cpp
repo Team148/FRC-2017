@@ -21,8 +21,8 @@ PinholeCamera::PinholeCamera(float pixel_width, float pixel_height, float FOV_wi
 	m_yaw_angle_offset = (2*M_PI*yaw_angle_offset)/360.0;
 	m_target_height = target_height;			//in inches
 
-	m_neutral_horizontal_pixel = m_pixel_width/2.0 - 0.5;
-	m_neutral_vertical_pixel = m_pixel_height/2.0 - 0.5;
+	m_neutral_horizontal_pixel = (m_pixel_width/2.0) - 0.5;
+	m_neutral_vertical_pixel = (m_pixel_height/2.0) - 0.5;
 
 	m_target_horizontal_pixel = pixel_width/2.0;
 	m_target_vertical_pixel = pixel_height/2.0;
@@ -56,6 +56,8 @@ void PinholeCamera::Update(int target_horizontal_pixel, int target_vertical_pixe
  * Returns Radians
  */
 float PinholeCamera::GetPitchAngle() {
+	if(m_focal_length == 0)	//protection against div by 0
+		return 0;
 	return atan((m_target_vertical_pixel - m_neutral_vertical_pixel)/m_focal_length);
 }
 
@@ -70,6 +72,8 @@ float PinholeCamera::GetPitchAngleDegrees() {
  * Returns Yaw Angle (left/right) in Radians
  */
 float PinholeCamera::GetYawAngle() {
+	if(m_focal_length == 0)	//protection against div by 0
+		return 0;
 	return 	m_yaw_angle_offset + atan((m_target_horizontal_pixel - m_neutral_horizontal_pixel)/m_focal_length);
 }
 
@@ -84,5 +88,7 @@ float PinholeCamera::GetYawAngleDegrees() {
  * Returns Distance to Target in Inches
  */
 float PinholeCamera::GetDistance() {
+	if(tan(GetPitchAngle()) == 0)	//protection against div by 0
+		return 0;
 	return m_target_height/tan(GetPitchAngle());
 }

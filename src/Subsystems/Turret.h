@@ -51,6 +51,10 @@ public:
 	void TargetBoiler(bool isAiming = 0);
 	float GetVisionOffset();
 
+	void UpdateVisionTarget();
+	float GetYawOffset();
+	float GetDistance();
+
 	float m_gyro_angle = 0.0;
 	bool locking = false;
 
