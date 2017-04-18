@@ -216,3 +216,18 @@ float Drivetrain::RotationtoInch(float val) {
 float Drivetrain::InchtoRotation(float val) {
 	return val/(M_PI*DRIVETRAIN_WHEEL_DIAMETER);
 }
+
+double Drivetrain::GetRobotCurrent(double val) {
+	val = m_pdp->GetTotalCurrent();
+	return val;
+}
+
+double Drivetrain::GetRobotPower(double val) {
+	val = m_pdp->GetTotalPower();
+	return val;
+}
+
+double Drivetrain::GetRobotEnergy(double val) {
+	val = m_pdp->GetTotalEnergy();
+	return val;
+}

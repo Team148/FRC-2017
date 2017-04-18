@@ -55,6 +55,9 @@ public:
 	float RotationtoInch(float val);
 	float InchtoRotation(float val);
 	void ZeroSensors();
+	double GetRobotCurrent(double val);
+	double GetRobotPower(double val);
+	double GetRobotEnergy(double val);
 };
 
 #endif  // Drivetrain_H
