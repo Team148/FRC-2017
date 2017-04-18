@@ -178,7 +178,7 @@ void Turret::UpdateNetworkTable() {
 	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>(0.001));
 	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>(0.001));
 	std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>(0.001));
-	std::vector<double> arr4 = m_network_table->GetNumberArray("hei                                                ght", llvm::ArrayRef<double>(0.001));
+	std::vector<double> arr4 = m_network_table->GetNumberArray("height", llvm::ArrayRef<double>(0.001));
 	std::vector<double> arr5 = m_network_table->GetNumberArray("width", llvm::ArrayRef<double>(0.001));
 
 	const unsigned numberOfParticles = 500;
@@ -224,13 +224,13 @@ void Turret::UpdateNetworkTable() {
 			//and direction of the turret.  Max delta is 320.
 			m_target_valid = true;
 
-			constexpr float m_FOV_height = (View_Angle_Height*2*M_PI)/360.0;		//converts to radians
+			//constexpr float m_FOV_height = (View_Angle_Height*2*M_PI)/360.0;		//converts to radians
 			constexpr float m_target_height = 64.5;			//in inches
 
 
 			float m_neutral_vertical_pixel = -230.9;
 
-			float m_target_vertical_pixel = yRes/2.0;
+			//float m_target_vertical_pixel = yRes/2.0;
 
 			constexpr float m_focal_length = 684.6;
 
@@ -241,8 +241,8 @@ void Turret::UpdateNetworkTable() {
 
 			pix_offset = (xMid - RcRs[0].CenterX);
 
-			normalizedWidth = float(RcRs[0].Width)/float(xRes);
-			targetWidth = 15.0;  //upper targets are 15"wide by 4" tall
+			//normalizedWidth = float(RcRs[0].Width)/float(xRes);
+			//targetWidth = 15.0;  //upper targets are 15"wide by 4" tall
 
 		//m_vision_distance_inches = targetWidth / (normalizedWidth * tan((90 - View_Angle) * ToRadians));
 
@@ -280,13 +280,13 @@ void Turret::UpdateNetworkTable() {
 			else targeted = 0.0;
 			frc::SmartDashboard::PutNumber("Target detected", targeted2);
 			frc::SmartDashboard::PutNumber("Locked On", targeted);
-			frc::SmartDashboard::PutNumber("NormalizedWidth", normalizedWidth);
+			//frc::SmartDashboard::PutNumber("NormalizedWidth", normalizedWidth);
 
 			//frc::SmartDashboard::PutNumber("Calc_Yaw", m_pc->GetYawAngleDegrees());
 			//frc::SmartDashboard::PutNumber("Calc_Dist", m_pc->GetDistance());
 			//frc::SmartDashboard::PutNumber("Calc_Pitch", m_pc->GetPitchAngleDegrees());
 			frc::SmartDashboard::PutNumber("CenterX", RcRs[0].CenterX);
-			frc::SmartDashboard::PutNumber("CenterY", RcRs[0].CenterY);
+			//frc::SmartDashboard::PutNumber("CenterY", RcRs[0].CenterY);
 		}
 		else
 			m_target_valid=false;
@@ -296,7 +296,7 @@ void Turret::UpdateNetworkTable() {
 		frc::SmartDashboard::PutNumber("VisionTurretPosition", m_vision_angle_offset);
 		//frc::SmartDashboard::PutNumber("targetDist_Inches", m_vision_distance_inches);
 		frc::SmartDashboard::PutNumber("m_distance", m_distance);
-		frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
+		/*frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
 		frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
 		frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
 		frc::SmartDashboard::PutNumber("ArrayX2: ", RcRs[1].CenterX);
@@ -309,6 +309,7 @@ void Turret::UpdateNetworkTable() {
 		frc::SmartDashboard::PutNumber("AreaRatio: ", arearatio);
 		frc::SmartDashboard::PutNumber("WidthRatio: ", widthratio);
 		frc::SmartDashboard::PutNumber("HeightRatio: ", heightratio);
+		*/
 		frc::SmartDashboard::PutNumber("VectorSize", RcRs.size());
 		frc::SmartDashboard::PutNumber("VectorCapacity", RcRs.capacity());
 

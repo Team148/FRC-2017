@@ -677,21 +677,22 @@ static bool autoArmUp = false;
 	void SmartDashUpdate() {
 		frc::SmartDashboard::PutNumber("IntakeArm Angle (degrees)", intake->GetArmAngle()*INTAKE_ARM_ROTATIONS_PER_DEGREE);
 		//frc::SmartDashboard::PutBoolean("Intake Limit Switch", intake->IsIntakeDown());
-		frc::SmartDashboard::PutData("Target Boiler ON", new TargetBoiler(true));
+		/*frc::SmartDashboard::PutData("Target Boiler ON", new TargetBoiler(true));
 		frc::SmartDashboard::PutData("Target Boiler OFF", new TargetBoiler(false));
 		frc::SmartDashboard::PutData("RingLight ON", new SetRingLight(true));
 		frc::SmartDashboard::PutData("RingLight OFF", new SetRingLight(false));
 		frc::SmartDashboard::PutBoolean("Intake Closed Loop", intake->IsClosedLoop());
-		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
 		frc::SmartDashboard::PutNumber("Shooter Current", shooter->GetCurrent());
 		frc::SmartDashboard::PutNumber("Shooter Voltage", shooter->GetVoltage());
-		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutBoolean("Beam Break", intake->IsBeamBroke());
 		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
 		frc::SmartDashboard::PutNumber("Vision Offset", turret->GetVisionOffset());
 		frc::SmartDashboard::PutNumber("Intake Current", drivetrain->m_pdp->GetCurrent(5));
+		*/
 
-
+		frc::SmartDashboard::PutNumber("ShooterRPM", shooter->GetRPM());
+		frc::SmartDashboard::PutNumber("Gyro Angle", drivetrain->GetAngle());
+/*
 		frc::SmartDashboard::PutNumber("SW1", oi->GetSw1());
 		frc::SmartDashboard::PutNumber("SW2", oi->GetSw2());
 		frc::SmartDashboard::PutNumber("SW3", oi->GetSw3());
@@ -699,7 +700,7 @@ static bool autoArmUp = false;
 		frc::SmartDashboard::PutNumber("SW5", oi->GetSw5());
 		frc::SmartDashboard::PutNumber("SW_A", oi->GetSelectorA());
 		frc::SmartDashboard::PutNumber("SW_B", oi->GetSelectorB());
-
+*/
 
 
 	}
