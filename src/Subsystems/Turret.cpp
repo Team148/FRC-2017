@@ -162,13 +162,14 @@ void Turret::TargetBoiler(bool aiming) {
 
 void Turret::UpdateNetworkTable() {
 	static int target = 0;
-	int pix_offset = 0, xRes = 640, yRes = 320;
-	int xMid = xRes/2;
+	int pix_offset = 0, xRes = 640, yRes = 480;
+	int xMid = xRes/2, yMid = yRes/2;
 	double targeted = 0.0, targeted2 = 0.0;
 	double normalizedWidth, targetWidth;
 	double arearatio, widthratio, heightratio;
+	static float m_distance = 0;
 
-	constexpr double View_Angle = 41.5, Half_View_Angle = View_Angle/2.0; // 44
+	constexpr double View_Angle = 41.5, Half_View_Angle = View_Angle/2.0, View_Angle_Height = 37.9; // 44
 	constexpr double M_Pi = 3.1415926535898;
 	constexpr double ToRadians = M_Pi/180.0;
 
@@ -190,7 +191,7 @@ void Turret::UpdateNetworkTable() {
 	int s4 = arr4.size();
 	int s5 = arr5.size();
 
-	if ((arr1.size() > 0) && (s1==s2) && s1==s5) {
+	if ((s1 > 0) && (s1==s2) && s1==s3 && s1==s4 && s1==s5) {
 
 		for(unsigned int i = 0; i < arr1.size(); i++)
 		{
@@ -201,7 +202,11 @@ void Turret::UpdateNetworkTable() {
 			RcRs[i].Width = arr5[i];
 		}
 
+
+
 		std::sort(RcRs.begin(), RcRs.end(), SortByArea); //Sort the result by Area of target
+
+
 		if((RcRs[1].Area>0.0) && (RcRs[1].Height>0.0) && (RcRs[1].Width>0.0)){
 		arearatio = RcRs[0].Area/RcRs[1].Area;
 		widthratio = RcRs[0].Width/RcRs[1].Width;
@@ -209,24 +214,37 @@ void Turret::UpdateNetworkTable() {
 		}
 		//if (target == 0) target = 0;
 		target = 0;
-		//added 7 to array.width[0] to compensate for look angle roll off of width
-		//if((RcRs[0].Area > 64) && (abs((RcRs[0].Width) - RcRs[1].Width) < 10) && (target == 0) ) {
-			if((RcRs[0].Area > 64) && ((widthratio>0.7) && (widthratio<1.3)) && ((heightratio>1.2) && (heightratio<2.0)) ) {
+
+		if((RcRs[0].Area > 64) && ((widthratio>0.7) && (widthratio<1.3)) && ((heightratio>1.2) && (heightratio<2.0)) ) {
 			//Here if we have a valid target
-			//Our GRIP processing resizes the Image to 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
+			//Our GRIP processing Image is 640W(x) x 480H(y).  So center of FOV is (x,y) = (160,120).
 			//Our target bounding boxes are (Top, Bottom, Left, Right) = (CenterY+Height/2, CenterY-Height/2,...
 			//CenterX-Width/2, CenterX+Width/2) where these are target coordinates.
 			//We can try just taking the FOV centerX - target CenterX and use that offset to control speed
 			//and direction of the turret.  Max delta is 320.
 			m_target_valid = true;
-			//m_pc->Update((float)RcRs[0].CenterX, (float)RcRs[0].CenterY);
+
+			constexpr float m_FOV_height = (View_Angle_Height*2*M_PI)/360.0;		//converts to radians
+			constexpr float m_target_height = 64.5;			//in inches
+
+
+			float m_neutral_vertical_pixel = -230.9;
+
+			float m_target_vertical_pixel = yRes/2.0;
+
+			constexpr float m_focal_length = 684.6;
+
+
+			float m_pitch_angle = atan((yRes - RcRs[0].CenterY - m_neutral_vertical_pixel)/m_focal_length);
+			m_distance = m_target_height/tan(m_pitch_angle);
+
 
 			pix_offset = (xMid - RcRs[0].CenterX);
 
 			normalizedWidth = float(RcRs[0].Width)/float(xRes);
 			targetWidth = 15.0;  //upper targets are 15"wide by 4" tall
 
-			m_vision_distance_inches = targetWidth / (normalizedWidth * tan((90 - View_Angle) * ToRadians));
+		//m_vision_distance_inches = targetWidth / (normalizedWidth * tan((90 - View_Angle) * ToRadians));
 
 			static float startTime = 0.0;
 			if(isAutoAiming)
@@ -263,6 +281,7 @@ void Turret::UpdateNetworkTable() {
 			frc::SmartDashboard::PutNumber("Target detected", targeted2);
 			frc::SmartDashboard::PutNumber("Locked On", targeted);
 			frc::SmartDashboard::PutNumber("NormalizedWidth", normalizedWidth);
+
 			//frc::SmartDashboard::PutNumber("Calc_Yaw", m_pc->GetYawAngleDegrees());
 			//frc::SmartDashboard::PutNumber("Calc_Dist", m_pc->GetDistance());
 			//frc::SmartDashboard::PutNumber("Calc_Pitch", m_pc->GetPitchAngleDegrees());
@@ -275,7 +294,8 @@ void Turret::UpdateNetworkTable() {
 
 		//Publish the sorted 1st two results
 		frc::SmartDashboard::PutNumber("VisionTurretPosition", m_vision_angle_offset);
-		frc::SmartDashboard::PutNumber("targetDist_Inches", m_vision_distance_inches);
+		//frc::SmartDashboard::PutNumber("targetDist_Inches", m_vision_distance_inches);
+		frc::SmartDashboard::PutNumber("m_distance", m_distance);
 		frc::SmartDashboard::PutNumber("ArrayArea1: ", RcRs[0].Area);
 		frc::SmartDashboard::PutNumber("ArrayArea2: ", RcRs[1].Area);
 		frc::SmartDashboard::PutNumber("ArrayX1: ", RcRs[0].CenterX);
@@ -289,6 +309,9 @@ void Turret::UpdateNetworkTable() {
 		frc::SmartDashboard::PutNumber("AreaRatio: ", arearatio);
 		frc::SmartDashboard::PutNumber("WidthRatio: ", widthratio);
 		frc::SmartDashboard::PutNumber("HeightRatio: ", heightratio);
+		frc::SmartDashboard::PutNumber("VectorSize", RcRs.size());
+		frc::SmartDashboard::PutNumber("VectorCapacity", RcRs.capacity());
+
 	}
 
 }
