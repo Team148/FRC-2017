@@ -178,7 +178,7 @@ void Turret::UpdateNetworkTable() {
 	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>(0.001));
 	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>(0.001));
 	std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>(0.001));
-	std::vector<double> arr4 = m_network_table->GetNumberArray("height", llvm::ArrayRef<double>(0.001));
+	std::vector<double> arr4 = m_network_table->GetNumberArray("hei                                                ght", llvm::ArrayRef<double>(0.001));
 	std::vector<double> arr5 = m_network_table->GetNumberArray("width", llvm::ArrayRef<double>(0.001));
 
 	const unsigned numberOfParticles = 500;
