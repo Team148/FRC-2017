@@ -1,11 +1,13 @@
 #include "TargetBoiler.h"
 #include "Subsystems/Turret.h"
+#include "Subsystems/Shooter.h"
 
 TargetBoiler::TargetBoiler(bool enable) {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 //	m_enable = enable;
 	Requires(Turret::GetInstance());
+	Requires(Shooter::GetInstance());
 	m_enable = enable;
 }
 
@@ -16,7 +18,10 @@ void TargetBoiler::Initialize() {
 
 void TargetBoiler::Execute() {
 	if (Turret::GetInstance()->IsTargetValid())
+	{
 		Turret::GetInstance()->TargetBoiler(m_enable);
+		Shooter::GetInstance()->SetRPM(Turret::GetInstance()->GetVisionShooterRPM());
+	}
 	else
 		m_expiration++;
 }

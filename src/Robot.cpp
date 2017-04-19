@@ -587,6 +587,8 @@ static bool autoArmUp = false;
 				turret->TargetBoiler(true);
 
 			m_turret_angle = turret->GetBigAngle();
+			shooterRpm = turret->GetVisionShooterRPM();
+
 		} else {
 			float turret_joy_in;
 			float turret_fastjoy_in;

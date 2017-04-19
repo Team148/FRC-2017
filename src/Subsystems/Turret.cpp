@@ -40,6 +40,7 @@ Turret::Turret() : Subsystem("Turret") {
 	m_Motor->ConfigPeakOutputVoltage(6.0,-6.0);
 
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
+	m_ShooterRPM = 0;
 
 	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
 	//m_pc = new PinholeCamera(640, 480, 51.05, 37.9, 0, 64.5);	//FoV determined via experiment
@@ -241,6 +242,17 @@ void Turret::UpdateNetworkTable() {
 
 			pix_offset = (xMid - RcRs[0].CenterX);
 
+			constexpr int distance_interp[] =  {
+			2510,2519,2528,2537,2546,2555,2564,2573,2583,2592,2601,2610,2619,2628,2637,2646,
+			2655,2664,2674,2683,2692,2701,2710,2721,2734,2746,2759,2772,2785,2798,2810,2823,
+			2836,2849,2861,2874,2887,2900,2913,2925,2938};
+			if(m_distance <= 70)
+			    m_ShooterRPM = 2500;
+			if(m_distance >= 110)
+				m_ShooterRPM = 2950;
+			if(m_distance >70 && m_distance <110)
+				m_ShooterRPM = distance_interp[(int)m_distance-70] + SHOOTER_PRACTICE_FUDGE_FACTOR;
+
 			//normalizedWidth = float(RcRs[0].Width)/float(xRes);
 			//targetWidth = 15.0;  //upper targets are 15"wide by 4" tall
 
@@ -326,4 +338,7 @@ float Turret::GetVisionOffset() {
 	return -m_vision_angle_offset;
 }
 
+int Turret::GetVisionShooterRPM(){
+	return m_ShooterRPM;
+}
 

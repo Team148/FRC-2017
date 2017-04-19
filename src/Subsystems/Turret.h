@@ -28,6 +28,7 @@ private:
 	//PinholeCamera* m_pc;
 	bool applyOffset = false;
 	bool m_target_valid = false;
+	int m_ShooterRPM;
 
 
 public:
@@ -56,6 +57,8 @@ public:
 
 	float m_gyro_angle = 0.0;
 	bool locking = false;
+
+	int GetVisionShooterRPM();
 
 
 
