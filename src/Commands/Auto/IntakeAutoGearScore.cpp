@@ -22,7 +22,7 @@ void IntakeAutoGearScore::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void IntakeAutoGearScore::Execute()
 {
-	Intake::GetInstance()->SetGear(.075);
+	Intake::GetInstance()->SetGear(.30);
 	//Intake::GetInstance()->SetArm(INTAKE_ARM_GEAR_POSITION);
 
 	if(Timer::GetFPGATimestamp() - m_startTime >= m_delay)

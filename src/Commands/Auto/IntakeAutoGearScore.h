@@ -13,8 +13,8 @@ public:
 	void Interrupted();
 private:
 	bool m_IsFinished = false;
-	int m_startTime = 0.0;
-	int m_delay = 0.5;
+	double m_startTime = 0.0;
+	double m_delay = 0.5;
 };
 
 #endif  // IntakeAutoGearScore_H

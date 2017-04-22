@@ -114,7 +114,7 @@ void Red::Boiler_ShootHopper()
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
 	AddParallel(new SetTurretAngle(90));
-	AddSequential(new Drive(-76, 150));
+	AddSequential(new Drive(-73, 150));
 	AddSequential(new ArcadeDriveTurn(85));
 	AddSequential(new Drive(-45, 150));
 	AddSequential(new SetRingLight(true));

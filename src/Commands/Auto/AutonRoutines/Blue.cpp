@@ -97,13 +97,13 @@ void Blue::Boiler_GetGear_ShootHopper()
 	AddSequential(new ConfigureIntake());
 
 		AddParallel(new SetTurretAngle(-90));
-		AddSequential(new Drive(125,150));
-		AddParallel(new ArcadeDriveTurn(20));
-		AddParallel(new IntakeAutoGearScore());
+		AddSequential(new Drive(122,150));
+		AddSequential(new ArcadeDriveTurn(20));
+		AddSequential(new IntakeAutoGearScore());
 		AddSequential(new Drive(-35,150));
+		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
 		AddSequential(new ArcadeDriveTurn(30));
-		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 		AddSequential(new Drive(-85,150));
 
 		AddSequential(new SetRingLight(true));
@@ -132,7 +132,7 @@ void Blue::Boiler_ShootHopper()
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
 	AddParallel(new SetTurretAngle(-90));
-	AddSequential(new Drive(-76, 150));
+	AddSequential(new Drive(-73, 150));
 	AddSequential(new ArcadeDriveTurn(-85));
 	AddSequential(new Drive(-45, 150));
 	AddSequential(new SetRingLight(true));

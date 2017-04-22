@@ -368,7 +368,7 @@ static bool autoArmUp = false;
 				enableGearTolerance_up = false;
 				enableGearTolerance_down = false;
 				m_armAngle = INTAKE_ARM_GEAR_POSITION;
-				gearIntake = 0.05;
+				gearIntake = 0.30;
 			}
 			if(autoArmUp && !oi->drvStick->GetRawButton(6))
 			{
