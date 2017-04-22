@@ -23,6 +23,8 @@
 #include "Constants.h"
 #include <Commands/ConfigureIntake.h>
 #include <Commands/SetFlashlight.h>
+#include <Commands/Auto/SetRingLight.h>
+#include <Commands/Auto/TargetBoiler.h>
 
 
 #include "WPILib.h"
@@ -76,27 +78,48 @@ void Red::Boiler_GetTwoGear()
 }
 void Red::Boiler_GetGear_ShootHopper()
 {
-	AddSequential(new Drive(69,-25));
-	AddSequential(new ArcadeDriveTurn(45));
-	AddSequential(new Drive(36,-25));
-	AddSequential(new Drive(36,25));
-	AddSequential(new ArcadeDriveTurn(45));
-	AddSequential(new Drive(69,25));
+	AddSequential(new ConfigureIntake());
+
+	AddParallel(new SetTurretAngle(90));
+	AddSequential(new Drive(125,150));
+	AddParallel(new IntakeAutoGearScore());
+	AddSequential(new Drive(-35,150));
+
+	AddSequential(new ArcadeDriveTurn(-50));
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
+	AddSequential(new Drive(-85,150));
+
+	AddSequential(new SetRingLight(true));
+	AddParallel(new TargetBoiler(true));
+	AddSequential(new WaitCommand(0.5));
+	AddParallel(new FeedShooter(true));
 
 }
 void Red::Boiler_ShootHopper()
 {
 
+//	AddSequential(new ConfigureIntake());
+//
+//	AddParallel(new SetShooterSpeed(3780, true));
+//	//AddSequential(new WaitCommand(0.25));
+//
+//	AddParallel(new SetTurretAngle(83));
+//	AddSequential(new Drive(-113, 150));
+//	AddSequential(new ArcadeDriveTurn(80));
+//	AddSequential(new SetFlashlight(true));
+//	AddSequential(new Drive(-25, 150));
+//	AddParallel(new FeedShooter(true));
+
 	AddSequential(new ConfigureIntake());
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
-	AddParallel(new SetShooterSpeed(3780, true));
-	//AddSequential(new WaitCommand(0.25));
-
-	AddParallel(new SetTurretAngle(83));
-	AddSequential(new Drive(-113, 150));
-	AddSequential(new ArcadeDriveTurn(80));
-	AddSequential(new SetFlashlight(true));
-	AddSequential(new Drive(-25, 150));
+	AddParallel(new SetTurretAngle(90));
+	AddSequential(new Drive(-76, 150));
+	AddSequential(new ArcadeDriveTurn(85));
+	AddSequential(new Drive(-45, 150));
+	AddSequential(new SetRingLight(true));
+	AddParallel(new TargetBoiler(true));
+	AddSequential(new WaitCommand(0.5));
 	AddParallel(new FeedShooter(true));
 }
 void Red::Boiler_GetGear_Shoot()
