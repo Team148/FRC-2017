@@ -13,6 +13,7 @@ private:
 	CANTalon* m_Motor2;
 	Solenoid* m_flashlight;
 	Solenoid* m_ringlight;
+	Solenoid* m_gearlight;
 
 
 	Shooter();
@@ -35,6 +36,8 @@ public:
 
 	void SetFlashlightOn(bool on);
 	void SetRingLightOn(bool on);
+	void SetGearLight(bool on);
+
 };
 
 #endif  // Shooter_H

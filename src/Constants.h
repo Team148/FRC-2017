@@ -8,7 +8,7 @@
 #define CONSTANTS_H
 
 //Drivetrain constants.
-constexpr double DRIVETRAIN_F = .95;
+constexpr double DRIVETRAIN_F = .95;//.95;
 constexpr double DRIVETRAIN_P = 1.5; // 1.5
 constexpr double DRIVETRAIN_I = 0.001; // 0.005
 //constexpr double DRIVETRAIN_I_ZONE_L = 128.0;

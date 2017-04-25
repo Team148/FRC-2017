@@ -21,6 +21,8 @@
 #include <Commands/turretLocking.h>
 #include <Commands/ConfigureIntake.h>
 #include <Commands/SetFlashlight.h>
+#include <Commands/Auto/SetRingLight.h>
+#include <Commands/Auto/TargetBoiler.h>
 
 #include "Commands/FeedShooter.h"
 #include "Constants.h"
@@ -77,41 +79,65 @@ void Blue::Boiler_GetTwoGear()
 }
 void Blue::Boiler_GetGear_ShootHopper()
 {
-	AddSequential(new Drive(-85,30));
-	AddSequential(new ArcadeDriveTurn(48));
-	AddSequential(new Drive(-34,20));
-	AddParallel(new CalibrateArm(false));
-	AddSequential(new Drive(43,20));
+//	AddSequential(new Drive(-85,30));
+//	AddSequential(new ArcadeDriveTurn(48));
+//	AddSequential(new Drive(-34,20));
+//	AddParallel(new CalibrateArm(false));
+//	AddSequential(new Drive(43,20));
+//
+//	AddParallel(new SetIntake(0.0));
+//	AddSequential(new ArcadeDriveTurn(72));
+//	AddSequential(new Drive(60,30));
+//	AddSequential(new ArcadeDriveTurn(-35));
+//	AddParallel(new SetTurretAngle(90.0));
+//	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+//	AddParallel(new SetAgitator(true, 10.0));
+//	AddParallel(new SetKicker(true, 10.0));
+//	AddSequential(new Drive(15,30));
+	AddSequential(new ConfigureIntake());
 
-	AddParallel(new SetIntake(0.0));
-	AddSequential(new ArcadeDriveTurn(72));
-	AddSequential(new Drive(60,30));
-	AddSequential(new ArcadeDriveTurn(-35));
-	AddParallel(new SetTurretAngle(90.0));
-	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
-	AddParallel(new SetAgitator(true, 10.0));
-	AddParallel(new SetKicker(true, 10.0));
-	AddSequential(new Drive(15,30));
+		AddParallel(new SetTurretAngle(-90));
+		AddSequential(new Drive(122,150));
+		AddSequential(new ArcadeDriveTurn(20));
+		AddSequential(new IntakeAutoGearScore());
+		AddSequential(new Drive(-35,150));
+		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
+		AddSequential(new ArcadeDriveTurn(30));
+		AddSequential(new Drive(-85,150));
 
-//	AddSequential(new ArcadeDriveTurn(90));
-//	AddSequential(new ArcadeDriveTurn(-90));
-//	AddSequential(new ArcadeDriveTurn(45));
-//	AddSequential(new ArcadeDriveTurn(-45));
+		AddSequential(new SetRingLight(true));
+		AddParallel(new TargetBoiler(true));
+		AddSequential(new WaitCommand(0.5));
+		AddParallel(new FeedShooter(true));
+
 
 }
 void Blue::Boiler_ShootHopper()
 {
+//	AddSequential(new ConfigureIntake());
+//
+//	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
+//	//AddSequential(new WaitCommand(0.25));
+//
+//	AddParallel(new SetTurretAngle(-83));
+//	AddSequential(new Drive(-113, 150));
+//	AddSequential(new ArcadeDriveTurn(-80));
+//	AddSequential(new SetFlashlight(true));
+//	AddSequential(new Drive(-25, 150));
+//	AddParallel(new FeedShooter(true));
+
+
 	AddSequential(new ConfigureIntake());
+	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
-	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
-	//AddSequential(new WaitCommand(0.25));
-
-	AddParallel(new SetTurretAngle(-83));
-	AddSequential(new Drive(-113, 150));
-	AddSequential(new ArcadeDriveTurn(-80));
-	AddSequential(new SetFlashlight(true));
-	AddSequential(new Drive(-25, 150));
+	AddParallel(new SetTurretAngle(-90));
+	AddSequential(new Drive(-73, 150));
+	AddSequential(new ArcadeDriveTurn(-85));
+	AddSequential(new Drive(-45, 150));
+	AddSequential(new SetRingLight(true));
+	AddParallel(new TargetBoiler(true));
+	AddSequential(new WaitCommand(0.5));
 	AddParallel(new FeedShooter(true));
 }
 void Blue::Boiler_GetGear_Shoot()

@@ -14,14 +14,43 @@
 #include "Commands/Auto/SetShooterSpeed.h"
 #include "Commands/FeedShooter.h"
 #include "Commands/ConfigureIntake.h"
+#include "Commands/Auto/IntakeAutoGearScore.h"
 #include "Constants.h"
 
 
 Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bool getHopper)
 {
-//	AddSequential(new Drive(100,150));
-//	AddSequential(new WaitCommand(5.0));
-//	AddSequential(new Drive(-100,150));
+//	AddSequential(new ConfigureIntake());
+//
+//	AddParallel(new SetTurretAngle(90));
+//	AddSequential(new Drive(125,150));
+//	AddParallel(new IntakeAutoGearScore());
+//	AddSequential(new Drive(-35,150));
+//
+//	AddSequential(new ArcadeDriveTurn(-50));
+//	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
+//	AddSequential(new Drive(-85,150));
+//
+//	AddSequential(new SetRingLight(true));
+//	AddParallel(new TargetBoiler(true));
+//	AddSequential(new WaitCommand(0.5));
+//	AddParallel(new FeedShooter(true));
+//	AddSequential(new ConfigureIntake());
+//	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
+//
+//	AddParallel(new SetTurretAngle(90));
+//	AddSequential(new Drive(-76, 150));
+//	AddSequential(new ArcadeDriveTurn(85));
+//	AddSequential(new Drive(-45, 150));
+//	AddSequential(new SetRingLight(true));
+//	AddParallel(new TargetBoiler(true));
+//	AddSequential(new WaitCommand(0.5));
+//	AddParallel(new FeedShooter(true));
+
+
+
+
+
 //	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A));
 //	AddSequential(new WaitCommand(5.0));
 //	AddSequential(new SetRingLight(true));
@@ -31,17 +60,6 @@ Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bo
 //	AddSequential(new FeedShooter(true));
 
 
-		AddSequential(new ConfigureIntake());
-		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
-
-		AddParallel(new SetTurretAngle(-90));
-		AddSequential(new Drive(-76, 150));
-		AddSequential(new ArcadeDriveTurn(-85));
-		AddSequential(new Drive(-45, 150));
-		AddSequential(new SetRingLight(true));
-		AddParallel(new TargetBoiler(true));
-		AddSequential(new WaitCommand(0.5));
-		AddParallel(new FeedShooter(true));
 
 
 

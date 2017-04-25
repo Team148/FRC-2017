@@ -13,7 +13,7 @@ SetShooterSpeed::SetShooterSpeed(int rpm, bool useRamp) {
 void SetShooterSpeed::Initialize() {
 	if(m_useRamp)
 	{
-		Shooter::GetInstance()->SetVoltageRamp(12.0);
+		Shooter::GetInstance()->SetVoltageRamp(10.0);
 	}
 	Shooter::GetInstance()->SetRPM(m_rpm);
 	m_startTime = Timer::GetFPGATimestamp();
@@ -25,7 +25,7 @@ void SetShooterSpeed::Execute()
 {
 	if(m_useRamp)
 	{
-		if(Timer::GetFPGATimestamp() - m_startTime >= 1.0)
+		if(Timer::GetFPGATimestamp() - m_startTime >= 1.5)
 		{
 			m_IsFinished = true;
 		}

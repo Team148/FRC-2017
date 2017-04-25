@@ -56,7 +56,7 @@ public:
 		turret = Turret::GetInstance();
 		log = new Logger();
 		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
-		camera.SetResolution(320, 180);
+		camera.SetResolution(320, 240);
 		camera.SetFPS(20);
 		//AUTON Modes
 //		auton_chooser.AddDefault("Testing Auton", new Autonomous());
@@ -209,7 +209,7 @@ public:
 //		}
 		turret->UpdateNetworkTable();
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
-		frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
+		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
 
@@ -269,8 +269,12 @@ public:
 		static bool armBtnSafe = false;
 		static bool flashlightOn = false;
 		static bool ringlightOn = false;
+		static bool gearLightOn = false;
 		static float cur_armPosition = 0.0;
 		static bool shooterReady = false;
+		static int rpmModifier = 0;
+		static bool btnPressed = false;
+		static bool btnPressed_B = false;
 //		float current_angle = 0.0;
 
 
@@ -285,6 +289,7 @@ public:
 		climberMotor = 0.0;
 		flashlightOn = false;
 		ringlightOn = false;
+		gearLightOn = false;
 
 
 
@@ -363,7 +368,7 @@ static bool autoArmUp = false;
 				enableGearTolerance_up = false;
 				enableGearTolerance_down = false;
 				m_armAngle = INTAKE_ARM_GEAR_POSITION;
-				gearIntake = 0.05;
+				gearIntake = 0.30;
 			}
 			if(autoArmUp && !oi->drvStick->GetRawButton(6))
 			{
@@ -493,14 +498,26 @@ static bool autoArmUp = false;
 
 
 		//CLOSED LOOP SHOOTER
-		if(oi->opStick->GetPOV() == 180) //RPM adjust up
+
+
+		if(oi->opStick->GetPOV() == 180 && btnPressed == false) //RPM adjust up
 		{
-			shooterRpm -= 10;
+			rpmModifier -= 10;
+			btnPressed = true;
+		}
+		else
+		{
+			btnPressed = false;
 		}
 
-		if(oi->opStick->GetPOV() == 0) //RPM adjust down
+		if(oi->opStick->GetPOV() == 0 && btnPressed_B == false) //RPM adjust down
 		{
-			shooterRpm += 10;
+			rpmModifier += 10;
+			btnPressed = true;
+		}
+		else
+		{
+			btnPressed_B = false;
 		}
 
 		if(oi->opStick->GetPOV() == 270)
@@ -547,7 +564,7 @@ static bool autoArmUp = false;
 
 		if(shooterRpm < 0) // prevents shooter from being set to a negative rpm
 			shooterRpm = 0;
-		shooter->SetRPM(shooterRpm);
+		shooter->SetRPM(shooterRpm+rpmModifier);
 		frc::SmartDashboard::PutNumber("commandedRPM", shooterRpm);
 		//END CLOSEDLOOP SHOOTER
 
@@ -581,6 +598,7 @@ static bool autoArmUp = false;
 		//isAiming = false;
 		if(oi->opStick->GetRawButton(10)) {	//USE Gyro then VISION to steer turret
 			flashlightOn = false;
+			gearLightOn = false;
 			ringlightOn = true;
 			//isAiming = true;
 			if(turret->IsTargetValid())
@@ -592,6 +610,7 @@ static bool autoArmUp = false;
 		} else {
 			float turret_joy_in;
 			float turret_fastjoy_in;
+			turret->TargetBoiler(false);
 			if(!oi->GetSw5())
 			{
 				turret_fastjoy_in = oi->opStick->GetRawAxis(0);
@@ -609,7 +628,7 @@ static bool autoArmUp = false;
 			if(abs(turret_fastjoy_in) < TURRET_JOYSTICK_DEADBAND)
 				turret_fastjoy_in = 0;
 
-			angle_change = m_turret_angle + (turret_joy_in * TURRET_SPEED) + (turret_fastjoy_in* TURRET_SPEED*3);
+			angle_change = m_turret_angle + (turret_joy_in * TURRET_SPEED) + (turret_fastjoy_in* TURRET_SPEED*6);
 			m_turret_angle = angle_change;
 			turret->SetBigAngle(angle_change);  //moved outside of routine
 			//turret->SetBigAngle(turret_joy_in*22);
@@ -630,7 +649,7 @@ static bool autoArmUp = false;
 
 		if(oi->opStick->GetRawAxis(3) >= 0.1)
 		{
-			ringlightOn = true;
+			gearLightOn = true;
 		}
 
 
@@ -653,6 +672,7 @@ static bool autoArmUp = false;
 		intake->SetBall(ballIntake);
 		shooter->SetRingLightOn(ringlightOn);
 		shooter->SetFlashlightOn(flashlightOn);
+		shooter->SetGearLight(gearLightOn);
 		intake->SetGear(gearIntake);
 
 

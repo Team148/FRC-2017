@@ -155,11 +155,7 @@ void Turret::lockTurretAngle(bool lock)
 	}
 }
 
-void Turret::TargetBoiler(bool aiming) {
 
-	isAutoAiming = aiming;
-	SetBigAngle(GetVisionOffset());
-}
 
 void Turret::UpdateNetworkTable() {
 	static int target = 0;
@@ -242,16 +238,19 @@ void Turret::UpdateNetworkTable() {
 
 			pix_offset = (xMid - RcRs[0].CenterX);
 
-			constexpr int distance_interp[] =  {
-			2510,2519,2528,2537,2546,2555,2564,2573,2583,2592,2601,2610,2619,2628,2637,2646,
-			2655,2664,2674,2683,2692,2701,2710,2721,2734,2746,2759,2772,2785,2798,2810,2823,
-			2836,2849,2861,2874,2887,2900,2913,2925,2938};
+			constexpr int distance_interp[] =  {2510,2519,2528,2537,2546,2555,2564,2573,2583,
+			2592,2601,2615,2629,2642,2656,2669,2683,2696,2710,2711,2712,2713,2714,2721,2734,
+			2746,2759,2772,2785,2798,2810,2823,2835,2846,2857,2868,2879,2890,2901,2912,2923,
+			2934,2945,2956,2967,2978,2989,3000,3011,3022,3033,3045,3055,3065,3075,3085,3095,
+			3105,3115,3125,3135,3149,3164,3178,3193,3207,3222,3236,3251,3266,3280,3295,3309,
+			3324,3338,3353,3367,3382,3397,3411,3426,3440,3455,3469,3484,3498,3513,3528,3542,
+			3557,3571};
 			if(m_distance <= 70)
 			    m_ShooterRPM = 2500;
-			if(m_distance >= 110)
-				m_ShooterRPM = 2950;
-			if(m_distance >70 && m_distance <110)
-				m_ShooterRPM = distance_interp[(int)m_distance-70] + SHOOTER_PRACTICE_FUDGE_FACTOR;
+			if(m_distance > 160)
+			    m_ShooterRPM = 3575;
+			if(m_distance >70 && m_distance <=160)
+			    m_ShooterRPM = distance_interp[(int)m_distance-70] + SHOOTER_PRACTICE_FUDGE_FACTOR;
 
 			//normalizedWidth = float(RcRs[0].Width)/float(xRes);
 			//targetWidth = 15.0;  //upper targets are 15"wide by 4" tall
@@ -282,7 +281,9 @@ void Turret::UpdateNetworkTable() {
 			else
 			{
 				applyOffset = true;
+				pix_offset = 0.0;
 				m_vision_angle_offset = ((pix_offset * view_angle_fact) - GetBigAngle());
+
 			}
 
 			targeted2 = pix_offset * view_angle_fact;  //camera offset from its center in deg
@@ -300,8 +301,11 @@ void Turret::UpdateNetworkTable() {
 			frc::SmartDashboard::PutNumber("CenterX", RcRs[0].CenterX);
 			//frc::SmartDashboard::PutNumber("CenterY", RcRs[0].CenterY);
 		}
-		else
+		else{
 			m_target_valid=false;
+			m_vision_angle_offset = -GetBigAngle();
+		}
+
 		//target = target + 1;
 
 		//Publish the sorted 1st two results
@@ -329,6 +333,18 @@ void Turret::UpdateNetworkTable() {
 
 }
 
+void Turret::TargetBoiler(bool aiming) {
+
+	isAutoAiming = aiming;
+	if(aiming)
+	{
+		SetBigAngle(GetVisionOffset());
+	}
+	else
+	{
+///		m_vision_angle_offset = GetBigAngle();
+	}
+}
 
 bool Turret::IsTargetValid() {
 	return m_target_valid;

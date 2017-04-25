@@ -25,6 +25,7 @@ Shooter::Shooter() : Subsystem("Shooter") {
 
 	m_flashlight = new frc::Solenoid(FLASHLIGHT_SOLENOID);
 	m_ringlight = new frc::Solenoid(VISION_LIGHT_SOLENOID);
+	m_gearlight = new frc::Solenoid(GEAR_LIGHT_SOLENOID);
 }
 
 Shooter* Shooter::GetInstance() {
@@ -100,13 +101,41 @@ float Shooter::GetVoltage() {
 void Shooter::SetFlashlightOn(bool on)
 {
 	if(on)
+	{
 		SetRingLightOn(0);
-	m_flashlight->Set(on);
+		SetGearLight(0);
+		m_flashlight->Set(on);
+	}
+	else
+	{
+		m_flashlight->Set(false);
+	}
 }
 
 void Shooter::SetRingLightOn(bool on)
 {
 	if(on)
+	{
 		SetFlashlightOn(0);
-	m_ringlight->Set(on);
+		SetGearLight(0);
+		m_ringlight->Set(true);
+	}
+	else
+	{
+		m_ringlight->Set(false);
+	}
+}
+void Shooter::SetGearLight(bool on)
+{
+	if(on)
+	{
+		SetFlashlightOn(0);
+		SetRingLightOn(0);
+		m_gearlight->Set(true);
+	}
+	else
+	{
+		m_gearlight->Set(false);
+
+	}
 }
