@@ -19,6 +19,10 @@ constexpr float DRIVETRAIN_WHEEL_DIAMETER = 4.0;
 constexpr float DRIVETRAIN_BASE_DIAMETER = 39; 		//distance(in) from wheel to wheel
 constexpr float DRIVETRAIN_GEAR_REDUCTION = 66/12;
 
+constexpr float DRIVETRAIN_MAX_ACCEL = 100; 		//Inches per sec^2
+constexpr float DRIVETRAIN_MAX_DECEL = 90;		//Inches per sec^2
+constexpr float DRIVETRAIN_MAX_VEL = 150; //Inches per sec
+
 //Auto/Drive
 constexpr float DRIVE_GYRO_P = 15.0; //
 constexpr float DRIVE_VELOCITY_P = .0;

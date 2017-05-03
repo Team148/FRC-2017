@@ -116,8 +116,8 @@ void Drivetrain::configClosedLoop() {
 	m_rightMotor1->SetAllowableClosedLoopErr(0);
 	m_rightMotor1->Set(0.0);
 
-	m_leftMotor1->DisableNominalClosedLoopVoltage();
-	m_rightMotor1->DisableNominalClosedLoopVoltage();
+//	m_leftMotor1->DisableNominalClosedLoopVoltage();
+//	m_rightMotor1->DisableNominalClosedLoopVoltage();
 	m_leftMotor1->SetNominalClosedLoopVoltage(10.0f);
 	m_rightMotor1->SetNominalClosedLoopVoltage(10.0f);
 	//Setup Ramp Rate
