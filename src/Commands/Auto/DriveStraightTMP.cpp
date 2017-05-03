@@ -60,7 +60,7 @@ void DriveStraightTMP::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool DriveStraightTMP::IsFinished() {
-	return false;
+	return m_isFinished || IsTimedOut();
 }
 
 // Called once after isFinished returns true
