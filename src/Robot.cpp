@@ -681,7 +681,6 @@ static bool autoArmUp = false;
 
 		SmartDashUpdate();
 		SmartDashboard::PutBoolean("SHOOTER_READY", shooterReady);
-		SmartDashboard::PutNumber("KATIE RPM MODIFIER", rpmModifier);
 	}
 
 	void TestPeriodic() override {
