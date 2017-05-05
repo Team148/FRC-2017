@@ -103,7 +103,7 @@ void Blue::Boiler_GetGear_ShootHopper()
 		AddSequential(new Drive(-35,150));
 		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
-		AddSequential(new ArcadeDriveTurn(30));
+		AddSequential(new ArcadeDriveTurn(32));
 		AddSequential(new Drive(-85,150));
 
 		AddSequential(new SetRingLight(true));
@@ -132,9 +132,9 @@ void Blue::Boiler_ShootHopper()
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
 	AddParallel(new SetTurretAngle(-90));
-	AddSequential(new Drive(-73, 150));
-	AddSequential(new ArcadeDriveTurn(-85));
-	AddSequential(new Drive(-45, 150));
+	AddSequential(new Drive(-80, 150));
+	AddSequential(new ArcadeDriveTurn(-86));
+	AddSequential(new Drive(-47, 150));
 	AddSequential(new SetRingLight(true));
 	AddParallel(new TargetBoiler(true));
 	AddSequential(new WaitCommand(0.5));
@@ -142,6 +142,8 @@ void Blue::Boiler_ShootHopper()
 }
 void Blue::Boiler_GetGear_Shoot()
 {
+	AddSequential(new ConfigureIntake());
+
 	AddParallel(new SetShooterSpeed(3760)); //3900
 	AddParallel(new SetTurretAngle(41));
 	AddSequential(new Drive(82,120));
@@ -176,6 +178,8 @@ void Blue::Center_GetGear()
 }
 void Blue::Center_GetGear_Shoot()
 {
+	AddSequential(new ConfigureIntake());
+
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
 	AddParallel(new SetTurretAngle(86.5));
 	AddSequential(new WaitCommand(4.0));
@@ -241,6 +245,8 @@ void Blue::Center_GetTwoGear_Noscore()
 }
 void Blue::Center_GetTwoGear_Noscore_Shoot()
 {
+	AddSequential(new ConfigureIntake());
+
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
 	AddParallel(new SetTurretAngle(86.5));
 	AddSequential(new WaitCommand(4.0));
