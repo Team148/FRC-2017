@@ -23,6 +23,11 @@ constexpr float DRIVETRAIN_MAX_ACCEL = 100; 		//Inches per sec^2
 constexpr float DRIVETRAIN_MAX_DECEL = 90;		//Inches per sec^2
 constexpr float DRIVETRAIN_MAX_VEL = 150; //Inches per sec
 
+//Auto/DriveStraightTMP
+constexpr double kDriveHeadingVelocityKp = 4.0;
+constexpr double kDriveHeadingVelocityKi = 0.0;
+constexpr double kDriveHeadingVelocityKd = 50.0;
+
 //Auto/Drive
 constexpr float DRIVE_GYRO_P = 15.0; //
 constexpr float DRIVE_VELOCITY_P = .0;

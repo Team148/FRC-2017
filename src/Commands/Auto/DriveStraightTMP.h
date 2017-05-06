@@ -6,6 +6,8 @@
 #include "./Constants.h"
 #include "WPILib.h"
 #include <math.h>
+#include <iostream>
+#include "Util/SynchronousPID.h"
 
 class DriveStraightTMP : public CommandBase {
 public:
@@ -16,6 +18,8 @@ public:
 	bool IsFinished();
 	void End();
 	void Interrupted();
+
+	void CurrentState();
 private:
 	bool m_isFinished = false;
 	double m_startTime = 0.0;
@@ -25,8 +29,10 @@ private:
 	//double m_currentTime = 0.0;
 	double m_endVelocity;
 	double m_positionTolerance;
+	double m_initAngle;
 
 	TrapezoidalProfile *m_profile;
+	SynchronousPID *m_PID;
 };
 
 #endif  // DriveStraightTMP_H

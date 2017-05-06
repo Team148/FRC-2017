@@ -7,6 +7,7 @@ DriveStraightTMP::DriveStraightTMP(double distance, double velocity, double endV
 	m_endPosition = distance + m_startPosition;
 	m_startTime = Timer::GetFPGATimestamp();
 	m_endVelocity = endVelocity;
+	m_initAngle = Drivetrain::GetInstance()->GetAngle();
 
 	if(velocity > DRIVETRAIN_MAX_VEL)
 		velocity = DRIVETRAIN_MAX_VEL;
@@ -20,6 +21,7 @@ DriveStraightTMP::DriveStraightTMP(double distance, double velocity, double endV
 	m_positionTolerance = positionTolerance;
 
 	m_profile = new TrapezoidalProfile(velocity, (double)DRIVETRAIN_MAX_ACCEL, (double)DRIVETRAIN_MAX_DECEL);
+	m_PID = new SynchronousPID(kDriveHeadingVelocityKp,kDriveHeadingVelocityKi,kDriveHeadingVelocityKd);
 }
 
 // Called just before this Command runs the first time
@@ -49,12 +51,14 @@ void DriveStraightTMP::Execute() {
 	double leftVel = curVel;
 	double rightVel = curVel;
 
+	double angle_error = Drivetrain::GetInstance()->GetAngle() - m_initAngle;
+
 	Drivetrain::GetInstance()->SetLeft((float)Drivetrain::GetInstance()->IPStoRPM(leftVel));
 	Drivetrain::GetInstance()->SetRight((float)Drivetrain::GetInstance()->IPStoRPM(rightVel));
 
 	m_lastTime = currentTime;
 
-	if((abs(curVel - m_endVelocity) < 0.5) && (abs(distance < m_positionTolerance)))
+	if((abs(curVel - m_endVelocity) < 0.5) && (abs(distance) < m_positionTolerance))
 		m_isFinished = true;
 }
 
@@ -67,6 +71,8 @@ bool DriveStraightTMP::IsFinished() {
 void DriveStraightTMP::End() {
 	Drivetrain::GetInstance()->SetLeft(0);
 	Drivetrain::GetInstance()->SetRight(0);
+	std::cout << "Ended with ";
+	CurrentState();
 }
 
 // Called when another command which requires one or more of the same
@@ -75,3 +81,9 @@ void DriveStraightTMP::Interrupted() {
 	End();
 
 }
+
+void DriveStraightTMP::CurrentState(){
+	std::cout 	<< "D:" << m_endPosition - ((double)Drivetrain::GetInstance()->GetLeftDistance() + (double)Drivetrain::GetInstance()->GetRightDistance()) / 2.0
+				<< "V:" << ((Drivetrain::GetInstance()->GetLeftVelocity() + Drivetrain::GetInstance()->GetRightVelocity()) / 2.0) << std::endl;
+}
+
