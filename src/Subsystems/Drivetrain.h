@@ -42,8 +42,10 @@ public:
 	int GetEncoderVelocity();
 	double GetLeftVelocity();
 	double GetRightVelocity();
+	double GetVelocityIPS();
 	int GetLeftDistance();
 	int GetRightDistance();
+	int GetPositionInch();
 	double GetLeftThrottle();
 	double GetRightThrottle();
 

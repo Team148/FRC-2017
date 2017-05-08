@@ -192,6 +192,10 @@ double Drivetrain::GetLeftVelocity() {
 	return m_leftMotor1->GetSpeed();
 }
 
+double Drivetrain::GetVelocityIPS() {
+	return (double)RPMtoIPS((float)(GetRightVelocity()+GetLeftVelocity())/2.0);
+}
+
 int Drivetrain::GetLeftDistance() {
 	return m_leftMotor1->GetEncPosition();
 }
@@ -199,6 +203,10 @@ int Drivetrain::GetLeftDistance() {
 
 int Drivetrain::GetRightDistance() {
 	return m_rightMotor1->GetEncPosition();
+}
+
+int Drivetrain::GetPositionInch()	{
+	return (int)RotationtoInch((float)(GetLeftDistance()+GetRightDistance())/2.0);
 }
 
 double Drivetrain::GetLeftThrottle() {

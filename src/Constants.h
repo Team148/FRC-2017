@@ -7,6 +7,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+
 //Drivetrain constants.
 constexpr double DRIVETRAIN_F = .95;//.95;
 constexpr double DRIVETRAIN_P = 1.5; // 1.5
@@ -97,6 +98,9 @@ constexpr int SHOOTER_PRACTICE_FUDGE_FACTOR = 0;//-10;
 	//	auto naming standards
 	//  POSITION_ACTION_ACTION_ACTION...
 	//	POSITION_POSITION_ACTION_ACTION...
+
+constexpr double FAST_SCHEDULER_PERIOD = 1.0/100.0; //100Hz 10ms Loop
+
 constexpr int	BOILER_GEAR = 0;
 constexpr int	BOILER_GEAR_HOPPER_SHOOT = 1;
 constexpr int	BOILER_HOPPER_SHOOT = 2;
