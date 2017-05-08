@@ -81,7 +81,7 @@ constexpr int SHOOTER_SET_POINT_B = 3320; // 4185
 constexpr float SHOOTING_POSITION_BLUE = 7.0;
 constexpr float SHOOTING_POSITION_RED = -7.0;
 
-constexpr int SHOOTER_PRACTICE_FUDGE_FACTOR = 0;//-10;
+constexpr int SHOOTER_PRACTICE_FUDGE_FACTOR = 10;//-10;
 
 //AUTON
 

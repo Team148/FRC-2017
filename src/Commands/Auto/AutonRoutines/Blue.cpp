@@ -103,7 +103,7 @@ void Blue::Boiler_GetGear_ShootHopper()
 		AddSequential(new Drive(-35,150));
 		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
-		AddSequential(new ArcadeDriveTurn(30));
+		AddSequential(new ArcadeDriveTurn(32));
 		AddSequential(new Drive(-85,150));
 
 		AddSequential(new SetRingLight(true));

@@ -80,20 +80,20 @@ void Red::Boiler_GetGear_ShootHopper()
 {
 	AddSequential(new ConfigureIntake());
 
-	AddParallel(new SetTurretAngle(90));
-	AddSequential(new Drive(125,150));
-	AddParallel(new IntakeAutoGearScore());
-	AddSequential(new Drive(-35,150));
+		AddParallel(new SetTurretAngle(90));
+		AddSequential(new Drive(122,150));
+		AddSequential(new ArcadeDriveTurn(-20));
+		AddSequential(new IntakeAutoGearScore());
+		AddSequential(new Drive(-35,150));
+		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
-	AddSequential(new ArcadeDriveTurn(-50));
-	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
-	AddSequential(new Drive(-85,150));
+		AddSequential(new ArcadeDriveTurn(-32));
+		AddSequential(new Drive(-85,150));
 
-	AddSequential(new SetRingLight(true));
-	AddParallel(new TargetBoiler(true));
-	AddSequential(new WaitCommand(0.5));
-	AddParallel(new FeedShooter(true));
-
+		AddSequential(new SetRingLight(true));
+		AddParallel(new TargetBoiler(true));
+		AddSequential(new WaitCommand(0.5));
+		AddParallel(new FeedShooter(true));
 }
 void Red::Boiler_ShootHopper()
 {
@@ -114,9 +114,9 @@ void Red::Boiler_ShootHopper()
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
 	AddParallel(new SetTurretAngle(90));
-	AddSequential(new Drive(-73, 150));
-	AddSequential(new ArcadeDriveTurn(85));
-	AddSequential(new Drive(-45, 150));
+	AddSequential(new Drive(-76, 150));
+	AddSequential(new ArcadeDriveTurn(89));
+	AddSequential(new Drive(-47, 150));
 	AddSequential(new SetRingLight(true));
 	AddParallel(new TargetBoiler(true));
 	AddSequential(new WaitCommand(0.5));
@@ -160,6 +160,8 @@ void Red::Center_GetGear()
 }
 void Red::Center_GetGear_Shoot()
 {
+	AddSequential(new ConfigureIntake());
+
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
 	AddParallel(new SetTurretAngle(-86.5));
 	AddSequential(new WaitCommand(4.0));
@@ -214,6 +216,8 @@ void Red::Center_GetTwoGear_Noscore()
 }
 void Red::Center_GetTwoGear_Noscore_Shoot()
 {
+	AddSequential(new ConfigureIntake());
+
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_B));
 	AddParallel(new SetTurretAngle(-86.5));
 	AddSequential(new WaitCommand(4.0));
