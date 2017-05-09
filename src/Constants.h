@@ -114,6 +114,8 @@ constexpr int	POSITION_BOILER = 1;
 constexpr int	POSITION_CENTER = 2;
 constexpr int	POSITION_RETRIEVAL = 3;
 
+constexpr double FAST_SCHEDULER_PERIOD = 1.0/50.0; //50Hz 20ms Loop
+
 
 
 #endif /* CONSTANTS_H */

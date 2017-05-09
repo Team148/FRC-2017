@@ -8,6 +8,7 @@
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include "Util/logger.h"
+#include "Util/FastScheduler.h"
 
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
@@ -73,6 +74,7 @@ public:
 	void DisabledInit() override {
 		//m_turret_angle = 0.0;
 		turret->UpdateNetworkTable();
+		FastScheduler::GetInstance()->Stop();
 
 	}
 
@@ -83,6 +85,7 @@ public:
 		//m_turret_angle = 0.0;
 		turret->UpdateNetworkTable();
 		SmartDashUpdate();
+		FastScheduler::GetInstance()->Stop();
 	}
 
 	/**
@@ -212,13 +215,13 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
-
+		FastScheduler::GetInstance()->Start();
 
 	}
 
 	void AutonomousPeriodic() override {
 		turret->UpdateNetworkTable();
-		frc::Scheduler::GetInstance()->Run();
+	//	frc::Scheduler::GetInstance()->Run();
 		SmartDashUpdate();
 	}
 
@@ -227,6 +230,7 @@ public:
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		FastScheduler::GetInstance()->Stop();
 		frc::Scheduler::GetInstance()->RemoveAll();
 		std::cout << "starting TeleopInit" << std::endl;
 
