@@ -45,7 +45,7 @@ public:
 	double GetVelocityIPS();
 	int GetLeftDistance();
 	int GetRightDistance();
-	int GetPositionInch();
+	double GetPositionInch();
 	double GetLeftThrottle();
 	double GetRightThrottle();
 

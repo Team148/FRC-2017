@@ -29,6 +29,8 @@ private:
 	bool applyOffset = false;
 	bool m_target_valid = false;
 	int m_ShooterRPM;
+	int m_FrameRate;
+	bool m_heartBeat = false;
 
 
 public:

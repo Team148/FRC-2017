@@ -21,7 +21,7 @@ constexpr float DRIVETRAIN_BASE_DIAMETER = 39; 		//distance(in) from wheel to wh
 constexpr float DRIVETRAIN_GEAR_REDUCTION = 66/12;
 
 constexpr float DRIVETRAIN_MAX_ACCEL = 100; 		//Inches per sec^2
-constexpr float DRIVETRAIN_MAX_DECEL = 90;		//Inches per sec^2
+constexpr float DRIVETRAIN_MAX_DECEL = 150;		//Inches per sec^2
 constexpr float DRIVETRAIN_MAX_VEL = 150; //Inches per sec
 
 //Auto/DriveStraightTMP
@@ -99,7 +99,7 @@ constexpr int SHOOTER_PRACTICE_FUDGE_FACTOR = 0;//-10;
 	//  POSITION_ACTION_ACTION_ACTION...
 	//	POSITION_POSITION_ACTION_ACTION...
 
-constexpr double FAST_SCHEDULER_PERIOD = 1.0/100.0; //100Hz 10ms Loop
+constexpr double FAST_SCHEDULER_PERIOD = 1.0/50.0; //50Hz 20ms Loop
 
 constexpr int	BOILER_GEAR = 0;
 constexpr int	BOILER_GEAR_HOPPER_SHOOT = 1;
@@ -126,6 +126,15 @@ constexpr int	BLUE = 0;
 constexpr int	POSITION_BOILER = 1;
 constexpr int	POSITION_CENTER = 2;
 constexpr int	POSITION_RETRIEVAL = 3;
+
+//VISION
+
+constexpr double H_VIEW_ANGLE = 51.05;	//degrees
+constexpr double V_VIEW_ANGLE = 37.9;	//degrees
+constexpr double TARGET_HEIGHT = 64.5;	//inches
+constexpr int H_CAMERA_RES = 640;		//pixels
+constexpr int V_CAMERA_RES = 480; 		//pixels
+constexpr double V_CAMERA_OFFSET = -36.0; //degrees
 
 
 

@@ -5,10 +5,16 @@ DriveStraightTMP::DriveStraightTMP(double distance, double velocity, double endV
 	//m_startPosition = ((double)Drivetrain::GetInstance()->GetLeftDistance() + (double)Drivetrain::GetInstance()->GetRightDistance()) / 2.0;
 	m_startPosition = Drivetrain::GetInstance()->GetPositionInch();
 
+	std::cout << "Start Position: " << m_startPosition << std::endl;
+
 	m_endPosition = distance + m_startPosition;
+
+
 	m_startTime = Timer::GetFPGATimestamp();
 	m_endVelocity = endVelocity;
 	m_initAngle = Drivetrain::GetInstance()->GetAngle();
+
+	std::cout << "End Position: " << m_endPosition << std::endl;
 
 	if(velocity > DRIVETRAIN_MAX_VEL)
 		velocity = DRIVETRAIN_MAX_VEL;
@@ -24,6 +30,7 @@ DriveStraightTMP::DriveStraightTMP(double distance, double velocity, double endV
 	m_profile = new TrapezoidalProfile(velocity, (double)DRIVETRAIN_MAX_ACCEL, (double)DRIVETRAIN_MAX_DECEL);
 	m_PID = new SynchronousPID(kDriveHeadingVelocityKp,kDriveHeadingVelocityKi,kDriveHeadingVelocityKd);
 	m_PID->SetSetPoint(m_initAngle);
+//	std::cout << "DriveTMP Constructed" << std::endl;
 }
 
 // Called just before this Command runs the first time
@@ -60,6 +67,9 @@ void DriveStraightTMP::Execute() {
 	Drivetrain::GetInstance()->SetLeft((float)Drivetrain::GetInstance()->IPStoRPM(leftVel));
 	Drivetrain::GetInstance()->SetRight((float)Drivetrain::GetInstance()->IPStoRPM(rightVel));
 
+	std::cout << "Drive Velocity: " << curVel << std::endl;
+	std::cout << "Distance: " << distance << std::endl;
+	frc::SmartDashboard::PutNumber("ProfileVelError", curVel-Drivetrain::GetInstance()->GetVelocityIPS());
 	m_lastTime = currentTime;
 
 	if((abs(curVel - m_endVelocity) < 0.5) && (abs(distance) < m_positionTolerance))
@@ -75,7 +85,7 @@ bool DriveStraightTMP::IsFinished() {
 void DriveStraightTMP::End() {
 	Drivetrain::GetInstance()->SetLeft(0);
 	Drivetrain::GetInstance()->SetRight(0);
-	std::cout << "Ended with ";
+	std::cout << "Ended";
 	CurrentState();
 }
 

@@ -23,6 +23,7 @@
 //#include "Timer.h"
 #include <Commands/Scheduler.h>
 #include "../Constants.h"
+#include "WPILib.h"
 
 class FastScheduler {
 public:
@@ -34,6 +35,7 @@ public:
 private:
 	FastScheduler(double period);
 	static FastScheduler *m_instance;
+	double m_lastTime = 0;
 
 protected:
 	double m_period;

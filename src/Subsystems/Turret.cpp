@@ -306,6 +306,8 @@ void Turret::UpdateNetworkTable() {
 			m_vision_angle_offset = -GetBigAngle();
 		}
 
+
+
 		//target = target + 1;
 
 		//Publish the sorted 1st two results
@@ -330,6 +332,15 @@ void Turret::UpdateNetworkTable() {
 		frc::SmartDashboard::PutNumber("VectorCapacity", RcRs.capacity());
 
 	}
+
+	int frameRate = (int)NetworkTable::GetTable("GRIP")->GetNumber("FrameRate", 0);
+	if(!(m_FrameRate == frameRate))
+		m_heartBeat = !m_heartBeat;
+	m_FrameRate = frameRate;
+	frc::SmartDashboard::PutBoolean("KangarooHB", m_heartBeat);
+
+	//std::cout << "HB: " << m_heartBeat << std::endl;
+
 
 }
 

@@ -8,6 +8,8 @@
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include "Util/logger.h"
+#include "Util/FastScheduler.h"
+#include "Commands/Auto/DriveStraightTMP.h"
 
 #include "CommandBase.h"
 #include "Commands/Auto/Drive.h"
@@ -73,6 +75,7 @@ public:
 	void DisabledInit() override {
 		//m_turret_angle = 0.0;
 		turret->UpdateNetworkTable();
+		FastScheduler::GetInstance()->Stop();
 
 	}
 
@@ -140,60 +143,63 @@ public:
 			if(intake->isSensorPluggedIn() == 1) intake->ConfigureClosedLoop();
 			else intake->ConfigureOpenLoop();
 		}
-		switch(red)
-			{
-				case RED: // CALL RED(NEW asdf123())
-					switch(position)
-					{
-					case POSITION_BOILER:
-						if(gears == 1 && shooting == 0 && hopper == 0) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR));
-						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_TWO_GEAR));
-						else if(gears == 1 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR_HOPPER_SHOOT));
-						else if(gears == 1 && shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR_SHOOT));
-						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_HOPPER_SHOOT));
-					break;
-					case POSITION_CENTER:
-						if(gears == 1 && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR));
-						else if(gears == 1 && shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR_SHOOT));
-						else if (gears == 2 && gear_noscore == true && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE));
-						else if (gears == 2 && gear_noscore == true  && shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE_SHOOT));
-						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR));
-					break;
-					case POSITION_RETRIEVAL:
-						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_GEAR));
-						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_TWOGEAR));
-						else if(gears == 1 && shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_GEAR_SHOOT));
 
-					break;
-					}
-				break;
-
-				case BLUE: // CALL BLUE(NEW asdf123())
-					switch(position)
-					{
-					case POSITION_BOILER:
-						if(gears == 1 && shooting == 0 && hopper == 0) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR));
-						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_TWO_GEAR));
-						else if(gears == 1 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
-						else if(gears == 1 && shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_SHOOT));
-						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_HOPPER_SHOOT));
-					break;
-					case POSITION_CENTER:
-						if(gears == 1 && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
-						else if(gears == 1 && shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR_SHOOT));
-						else if (gears == 2 && gear_noscore == true && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE));
-						else if (gears == 2 && gear_noscore == true  && shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE_SHOOT));
-						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR));
-					break;
-					case POSITION_RETRIEVAL:
-						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_GEAR));
-						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_TWOGEAR));
-						else if(gears == 1 && shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_GEAR_SHOOT));
-
-					break;
-					}
-				break;
-			}
+	//	frc::Scheduler::GetInstance()->AddCommand(new DriveStraightTMP(120, 150, 2, 10));
+		//DriveStraightTMP(double distance, double velocity, double endVelocity, double positionTolerance, double timeOut)
+//		switch(red)
+//			{
+//				case RED: // CALL RED(NEW asdf123())
+//					switch(position)
+//					{
+//					case POSITION_BOILER:
+//						if(gears == 1 && shooting == 0 && hopper == 0) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR));
+//						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_TWO_GEAR));
+//						else if(gears == 1 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR_HOPPER_SHOOT));
+//						else if(gears == 1 && shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_GEAR_SHOOT));
+//						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(BOILER_HOPPER_SHOOT));
+//					break;
+//					case POSITION_CENTER:
+//						if(gears == 1 && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR));
+//						else if(gears == 1 && shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_GEAR_SHOOT));
+//						else if (gears == 2 && gear_noscore == true && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE));
+//						else if (gears == 2 && gear_noscore == true  && shooting) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR_NOSCORE_SHOOT));
+//						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Red(CENTER_TWO_GEAR));
+//					break;
+//					case POSITION_RETRIEVAL:
+//						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_GEAR));
+//						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_TWOGEAR));
+//						else if(gears == 1 && shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Red(RETRIEVAL_GEAR_SHOOT));
+//
+//					break;
+//					}
+//				break;
+//
+//				case BLUE: // CALL BLUE(NEW asdf123())
+//					switch(position)
+//					{
+//					case POSITION_BOILER:
+//						if(gears == 1 && shooting == 0 && hopper == 0) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR));
+//						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_TWO_GEAR));
+//						else if(gears == 1 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
+//						else if(gears == 1 && shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_SHOOT));
+//						else if(gears == 0 && shooting && hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_HOPPER_SHOOT));
+//					break;
+//					case POSITION_CENTER:
+//						if(gears == 1 && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR));
+//						else if(gears == 1 && shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_GEAR_SHOOT));
+//						else if (gears == 2 && gear_noscore == true && !shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE));
+//						else if (gears == 2 && gear_noscore == true  && shooting) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR_NOSCORE_SHOOT));
+//						else if(gears == 2 && gear_noscore == false) frc::Scheduler::GetInstance()->AddCommand(new Blue(CENTER_TWO_GEAR));
+//					break;
+//					case POSITION_RETRIEVAL:
+//						if(gears == 1 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_GEAR));
+//						else if(gears == 2 && !shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_TWOGEAR));
+//						else if(gears == 1 && shooting && !hopper) frc::Scheduler::GetInstance()->AddCommand(new Blue(RETRIEVAL_GEAR_SHOOT));
+//
+//					break;
+//					}
+//				break;
+//			}
 
 
 
@@ -209,16 +215,16 @@ public:
 //		}
 		turret->UpdateNetworkTable();
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(3));
-		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
+		frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
-
+		FastScheduler::GetInstance()->Start();
 
 	}
 
 	void AutonomousPeriodic() override {
 		turret->UpdateNetworkTable();
-		frc::Scheduler::GetInstance()->Run();
+	//	frc::Scheduler::GetInstance()->Run();
 		SmartDashUpdate();
 	}
 

@@ -179,6 +179,8 @@ void Drive::Execute() {
 	int act_ldist = Drivetrain::GetInstance()->RotationtoInch(Drivetrain::GetInstance()->GetLeftDistance());
 	int act_rdist = Drivetrain::GetInstance()->RotationtoInch(Drivetrain::GetInstance()->GetRightDistance());
 
+	frc::SmartDashboard::PutNumber("ProfileVelError", cur_vel-Drivetrain::GetInstance()->GetVelocityIPS());
+
 	//convert IPS to RPM and account
 	cur_vel = Drivetrain::GetInstance()->IPStoRPM(cur_vel);
 

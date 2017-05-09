@@ -16,6 +16,7 @@
 #include "Commands/ConfigureIntake.h"
 #include "Commands/Auto/IntakeAutoGearScore.h"
 #include "Constants.h"
+#include "Commands/Auto/DriveStraightTMP.h"
 
 
 Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bool getHopper)
@@ -23,7 +24,8 @@ Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bo
 //	AddSequential(new ConfigureIntake());
 //
 //	AddParallel(new SetTurretAngle(90));
-//	AddSequential(new Drive(125,150));
+//	AddSequential(new Drive(125,100));
+	AddSequential(new DriveStraightTMP(125, 150, 2, 10));
 //	AddParallel(new IntakeAutoGearScore());
 //	AddSequential(new Drive(-35,150));
 //
