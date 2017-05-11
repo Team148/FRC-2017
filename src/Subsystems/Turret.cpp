@@ -40,7 +40,7 @@ Turret::Turret() : Subsystem("Turret") {
 	m_Motor->ConfigPeakOutputVoltage(6.0,-6.0);
 
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
-	m_hbSignal = new frc::DigitalInput(HEARTBEAT_SIGNAL);
+	m_hbSignal = new frc::DigitalOutput(HEARTBEAT_SIGNAL);
 	m_ShooterRPM = 0;
 
 	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
@@ -173,6 +173,9 @@ void Turret::UpdateNetworkTable() {
 
 	constexpr double view_angle_fact = 0.08276; //~ = View_Angle/xRes
 
+	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
+
+
 	std::vector<double> arr1 = m_network_table->GetNumberArray("area", llvm::ArrayRef<double>(0.001));
 	std::vector<double> arr2 = m_network_table->GetNumberArray("centerX", llvm::ArrayRef<double>(0.001));
 	std::vector<double> arr3 = m_network_table->GetNumberArray("centerY", llvm::ArrayRef<double>(0.001));
@@ -181,7 +184,6 @@ void Turret::UpdateNetworkTable() {
 
 	const unsigned numberOfParticles = 500;
 
-	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
 	std::vector<RemoteContourReport> RcRs(numberOfParticles);
 
 	int s1 = arr1.size();
