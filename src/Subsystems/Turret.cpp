@@ -181,6 +181,7 @@ void Turret::UpdateNetworkTable() {
 
 	const unsigned numberOfParticles = 500;
 
+	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
 	std::vector<RemoteContourReport> RcRs(numberOfParticles);
 
 	int s1 = arr1.size();
