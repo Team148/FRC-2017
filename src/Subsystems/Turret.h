@@ -19,6 +19,7 @@ private:
 
 	//1 switch for "home" positions.
 	DigitalInput* m_HomeSwitch;
+	DigitalOutput* m_hbSignal;
 
 	static Turret* m_instance;
 	Turret();
@@ -29,6 +30,8 @@ private:
 	bool applyOffset = false;
 	bool m_target_valid = false;
 	int m_ShooterRPM;
+	int m_FrameRate;
+	bool m_heartBeat = false;
 
 
 public:

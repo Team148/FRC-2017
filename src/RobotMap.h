@@ -18,6 +18,7 @@
 // constexpr int RANGE_FINDER_PORT = 1;
 // constexpr int RANGE_FINDER_MODULE = 1;
 
+
 //CAN TALON IDs
 constexpr int DRIVE_LEFTMOTOR_1 	= 8;
 constexpr int DRIVE_LEFTMOTOR_2 	= 9;
@@ -44,6 +45,8 @@ constexpr int INTAKE_BEAM_BREAK_AN_IN	= 7;
 
 constexpr int TURRET_MOTOR 			= 6;
 constexpr int TURRET_HOME_SWITCH	= 2;
+
+constexpr int HEARTBEAT_SIGNAL		= 3;
 
 constexpr int CLIMBER_MOTOR 		= 15;
 constexpr int CLIMBER_MOTOR_2		= 7;

@@ -40,6 +40,7 @@ Turret::Turret() : Subsystem("Turret") {
 	m_Motor->ConfigPeakOutputVoltage(6.0,-6.0);
 
 	m_HomeSwitch = new frc::DigitalInput(TURRET_HOME_SWITCH);
+	m_hbSignal = new frc::DigitalInput(HEARTBEAT_SIGNAL);
 	m_ShooterRPM = 0;
 
 	m_network_table = NetworkTable::GetTable("GRIP/myContoursReport");
@@ -331,6 +332,12 @@ void Turret::UpdateNetworkTable() {
 
 	}
 
+	int frameRate = (int)NetworkTable::GetTable("GRIP")->GetNumber("FrameRate", 0);
+		if(!(m_FrameRate == frameRate))
+			m_heartBeat = !m_heartBeat;
+		m_FrameRate = frameRate;
+		m_hbSignal->Set(m_heartBeat);
+		frc::SmartDashboard::PutBoolean("KangarooHB", m_heartBeat);
 }
 
 void Turret::TargetBoiler(bool aiming) {
