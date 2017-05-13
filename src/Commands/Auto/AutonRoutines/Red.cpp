@@ -40,6 +40,7 @@ Red::Red(int autonSelection) : frc::CommandGroup("Red")
 	case BOILER_HOPPER_SHOOT: Boiler_ShootHopper(); break;
 	case BOILER_TWO_GEAR: Boiler_GetTwoGear(); break;
 	case BOILER_GEAR_SHOOT:Boiler_GetGear_Shoot(); break;
+	case BOILER_HOPPER_FAR_SHOOT: Boiler_ShootFarHopper(); break;
 
 	case CENTER_GEAR: Center_GetGear(); break;
 	case CENTER_TWO_GEAR: Center_GetTwoGear(); break;
@@ -114,33 +115,62 @@ void Red::Boiler_ShootHopper()
 	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
 
 	AddParallel(new SetTurretAngle(90));
-	AddSequential(new Drive(-76, 150));
-	AddSequential(new ArcadeDriveTurn(89));
+
+	AddSequential(new Drive(-91, 150));		//*** THESE BOYS
+	AddSequential(new ArcadeDriveTurn(70)); //*** THESE BOYS
+
 	AddSequential(new Drive(-47, 150));
 	AddSequential(new SetRingLight(true));
 	AddParallel(new TargetBoiler(true));
 	AddSequential(new WaitCommand(0.5));
 	AddParallel(new FeedShooter(true));
 }
+void Red::Boiler_ShootFarHopper()
+{
+
+}
+
 void Red::Boiler_GetGear_Shoot()
 {
+//	AddSequential(new ConfigureIntake());
+//
+//	AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A)); // 3900
+//	AddSequential(new WaitCommand(0.5));
+//
+//		AddParallel(new SetTurretAngle(-42));
+//		AddSequential(new Drive(85,120));
+//		AddSequential(new WaitCommand(2.0));
+//		AddSequential(new FeedShooter(true));
+//		AddSequential(new WaitCommand(2.0));
+//		AddSequential(new FeedShooter(false));
+//		AddParallel(new SetShooterSpeed(0));
+//		AddSequential(new ArcadeDriveTurn(-55));
+//		AddSequential(new Drive(34,40));
+//		AddParallel(new IntakeAutoGearScore());
+//		AddSequential(new Drive(-33,40));
+
 	AddSequential(new ConfigureIntake());
 
-	AddParallel(new SetShooterSpeed(3760)); // 3900
-	AddSequential(new WaitCommand(0.5));
-
-		AddParallel(new SetTurretAngle(-42));
-		AddSequential(new Drive(85,120));
-		AddSequential(new WaitCommand(2.0));
+		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A)); // 3900
+		AddParallel(new SetTurretAngle(-90));
+		AddSequential(new WaitCommand(1.0));
+		AddSequential(new SetRingLight(true));
+		AddParallel(new TargetBoiler(true));
+		AddSequential(new WaitCommand(3.0));
 		AddSequential(new FeedShooter(true));
 		AddSequential(new WaitCommand(2.0));
 		AddSequential(new FeedShooter(false));
-		AddParallel(new SetShooterSpeed(0));
-		AddSequential(new ArcadeDriveTurn(-55));
-		AddSequential(new Drive(34,40));
-		AddParallel(new IntakeAutoGearScore());
-		AddSequential(new Drive(-33,40));
+		AddSequential(new SetRingLight(false));
+		AddParallel(new TargetBoiler(false));
+		AddParallel(new SetShooterSpeed(0)); // 3900
 
+
+
+		AddSequential(new Drive(96,130));
+		AddSequential(new ArcadeDriveTurn(-50));
+		AddSequential(new Drive(34,80));
+		AddParallel(new IntakeAutoGearScore());
+		AddSequential(new Drive(-33,80));
 }
 //-------------------------------------
 

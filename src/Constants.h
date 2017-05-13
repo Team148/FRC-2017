@@ -93,6 +93,7 @@ constexpr int	BOILER_GEAR_HOPPER_SHOOT = 1;
 constexpr int	BOILER_HOPPER_SHOOT = 2;
 constexpr int	BOILER_TWO_GEAR = 3;
 constexpr int	BOILER_GEAR_SHOOT = 4;
+constexpr int 	BOILER_HOPPER_FAR_SHOOT = 5;
 
 
 constexpr int	CENTER_GEAR = 10;

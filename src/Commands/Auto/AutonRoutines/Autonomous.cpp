@@ -20,6 +20,20 @@
 
 Autonomous::Autonomous(bool red, int position, int getGears, bool isShooting, bool getHopper)
 {
+
+		AddParallel(new SetShooterSpeed(SHOOTER_SET_POINT_A), true);
+		AddSequential(new WaitCommand(4.0));
+
+		AddSequential(new ArcadeDriveTurn(-85));
+		AddSequential(new WaitCommand(1.0));
+
+		AddSequential(new ArcadeDriveTurn(85));
+		AddSequential(new WaitCommand(1.0));
+
+		AddSequential(new ArcadeDriveTurn(-85));
+		AddSequential(new WaitCommand(1.0));
+
+
 //	AddSequential(new ConfigureIntake());
 //
 //	AddParallel(new SetTurretAngle(90));
