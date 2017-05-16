@@ -46,6 +46,9 @@ void Drive::Initialize() {
 	while(!m_distance.empty())
 		m_distance.pop();
 
+	m_vectorVelocity.clear();
+	m_vectorDistance.clear();
+
 	//to begin, calculate the time we would need to accelerate to the theoretical max speed.
 	float decel_time = sqrt((2*m_travelDistance)/((pow(m_maxDecelRate,2)/m_maxAccelRate) + m_maxDecelRate));
 	float accel_time = (m_maxDecelRate/m_maxAccelRate)*decel_time;
@@ -97,6 +100,8 @@ void Drive::Initialize() {
 
 	    m_velocity.push(v);
 	    m_distance.push(d);
+	    m_vectorVelocity.push_back(v);
+	    m_vectorDistance.push_back(d);
 	    //Log
 	    log->AddtoBuffer("Vel", v);
 	    log->AddtoBuffer("Dist", d);
@@ -117,6 +122,8 @@ void Drive::Initialize() {
 
 			m_velocity.push(v);
 			m_distance.push(d);
+		    m_vectorVelocity.push_back(v);
+		    m_vectorDistance.push_back(d);
 			//LOG
 			log->AddtoBuffer("Vel",v);
 			log->AddtoBuffer("Dist", d);
@@ -137,6 +144,8 @@ void Drive::Initialize() {
 
 	    m_velocity.push(v);
 	    m_distance.push(d);
+	    m_vectorVelocity.push_back(v);
+	    m_vectorDistance.push_back(d);
 
 	    //LOG
 	    log->AddtoBuffer("Vel",v);
@@ -144,12 +153,16 @@ void Drive::Initialize() {
 	 }
 	 //push last point
 	 m_velocity.push(0);
+	 m_vectorVelocity.push_back(0);
 
-	 if(m_isReverse)
+	 if(m_isReverse){
 		m_distance.push(-m_travelDistance);
-	else
+	    m_vectorDistance.push_back(-m_travelDistance);
+	 }
+	else {
 		m_distance.push(m_travelDistance);
-
+		m_vectorDistance.push_back(m_travelDistance);
+	}
 	 log->AddtoBuffer("Vel",0);
 	 log->AddtoBuffer("Dist", m_travelDistance);
 
@@ -157,18 +170,31 @@ void Drive::Initialize() {
 	 //log->CloseFile();
 
 	cout<<"info: generated profile with"<< accel_segments+hold_segments+decel_segments << " Points. time: " << end_time <<"sec"<< endl;
+	m_startTime = Timer::GetFPGATimestamp();
 }
 
 
 // Called repeatedly when this Command is scheduled to run
 void Drive::Execute() {
 
-	float cur_vel = m_velocity.front();
-	float cur_dist = m_distance.front();
+//	float cur_vel = m_velocity.front();
+//	float cur_dist = m_distance.front();
+//
+//	//after setting, remove from queue
+//	m_velocity.pop();
+//	m_distance.pop();
 
-	//after setting, remove from queue
-	m_velocity.pop();
-	m_distance.pop();
+	double cur_time = Timer::GetFPGATimestamp();
+	int cur_index = (int)((cur_time - m_startTime) / m_dt);
+
+	if(cur_index > m_vectorVelocity.size()) {
+		m_isFinished = true;
+		return;
+	}
+	float cur_vel = m_vectorVelocity[cur_index];
+	float cur_dist = m_vectorDistance[cur_index];
+
+
 
 
 	//find actual velocity(rpm)

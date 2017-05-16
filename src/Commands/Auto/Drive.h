@@ -3,6 +3,7 @@
 
 #include "../../CommandBase.h"
 #include <queue>
+#include <vector>
 #include "math.h"
 #include "util/Logger.h"
 
@@ -25,6 +26,7 @@ private:
 	float m_initangle = 0;
 	bool m_isReverse = false;
 
+
 	//drivetrain constraints
 	float m_maxAccelRate = 100; 		//Inches per sec^2
 	float m_maxDecelRate= 90;		//Inches per sec^2
@@ -32,6 +34,9 @@ private:
 	float m_dt = 0.02;				//time step set to 20ms(50Hz).
 	queue <float> m_velocity;
 	queue <float> m_distance;
+	vector <float> m_vectorVelocity;
+	vector <float> m_vectorDistance;
+	double m_startTime = 0;
 };
 
 #endif  // Drive_H
