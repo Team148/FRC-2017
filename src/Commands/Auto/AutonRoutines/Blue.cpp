@@ -171,7 +171,7 @@ void Blue::Boiler_GetGear_Shoot()
 		AddParallel(new IntakeAutoGearScore());
 		AddSequential(new Drive(-33,80));
 }
-}
+
 //-------------------------------------
 
 //CENTER POSITION AUTONS

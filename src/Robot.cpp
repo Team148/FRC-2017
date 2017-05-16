@@ -215,13 +215,13 @@ public:
 		//frc::Scheduler::GetInstance()->AddCommand(new Autonomous(red, position, gears, shooting, hopper));
 		//frc::Scheduler::GetInstance()->AddCommand(new Blue(BOILER_GEAR_HOPPER_SHOOT));
 		//frc::Scheduler::GetInstance()->AddCommand(new SetBallGearUntilBeam());
-		FastScheduler::GetInstance()->Start();
+		//FastScheduler::GetInstance()->Start();
 
 	}
 
 	void AutonomousPeriodic() override {
 		turret->UpdateNetworkTable();
-	//	frc::Scheduler::GetInstance()->Run();
+		frc::Scheduler::GetInstance()->Run();
 		SmartDashUpdate();
 	}
 
