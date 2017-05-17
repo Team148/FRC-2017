@@ -12,7 +12,7 @@ void ArcadeDriveTurn::Initialize() {
 	m_isFinished=0;
 	tolerance_delay=0;
 	m_integral_err=0;
-	SetTimeout(1.5);
+	SetTimeout(1.75);
 	//Drivetrain::GetInstance()->ResetGyro();
 	m_init_angle = 0;
 	m_final_angle = 0;

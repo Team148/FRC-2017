@@ -165,7 +165,7 @@ void Blue::Boiler_GetGear_Shoot()
 
 
 
-		AddSequential(new Drive(96,130));
+		AddSequential(new Drive(88, 130));
 		AddSequential(new ArcadeDriveTurn(50));
 		AddSequential(new Drive(34,80));
 		AddParallel(new IntakeAutoGearScore());

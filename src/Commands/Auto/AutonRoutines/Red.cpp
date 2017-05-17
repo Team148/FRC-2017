@@ -116,7 +116,7 @@ void Red::Boiler_ShootHopper()
 
 	AddParallel(new SetTurretAngle(90));
 
-	AddSequential(new Drive(-91, 150));		//*** THESE BOYS
+	AddSequential(new Drive(-80, 150));		//*** THESE BOYS
 	AddSequential(new ArcadeDriveTurn(90)); //*** THESE BOYS
 
 	AddSequential(new Drive(-47, 150));
@@ -166,7 +166,7 @@ void Red::Boiler_GetGear_Shoot()
 
 
 
-		AddSequential(new Drive(96,130));
+		AddSequential(new Drive(88, 130));
 		AddSequential(new ArcadeDriveTurn(-50));
 		AddSequential(new Drive(34,80));
 		AddParallel(new IntakeAutoGearScore());
