@@ -12,6 +12,10 @@ TurnPID::TurnPID(float degrees) {
 void TurnPID::Initialize() {
 	//reset isFinished
 	m_isFinished = 0;
+
+	//Set Drivetrain to OpenLoop
+	Drivetrain::GetInstance()->configOpenLoop();
+
 	m_initalAngle = Drivetrain::GetInstance()->GetAngle();
 	m_setpoint += m_initalAngle;
 }
@@ -23,12 +27,22 @@ void TurnPID::Execute() {
 	float current_angle = Drivetrain::GetInstance()->GetAngle();
 
 	//calculate output
-	float curr_error = m_setpoint - current_angle;
+	float curr_err = m_setpoint - current_angle;
+	m_i_err+=curr_err;
+	float d_err = curr_err - prev_err;
+	float output = m_Kp * curr_err + m_Ki*m_i_err;
 
-	//convert to RPM
+
+
 	//SetLeft and SetRight
-	//Drivetrain::GetInstance()->SetLeft(loutputRPM);
-	//Drivetrain::GetInstance()->SetRight(routputRPM);
+	Drivetrain::GetInstance()->SetLeft(output);
+	Drivetrain::GetInstance()->SetRight(-output);
+
+	prev_err = curr_err;
+
+	//check if we're finished
+	if(abs(curr_err)<=DRIVE_TURN_TOLERANCE)
+		m_isFinished=true;
 }
 
 // Make this return true when this Command no longer needs to run execute()

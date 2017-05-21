@@ -19,23 +19,34 @@
 // constexpr int RANGE_FINDER_MODULE = 1;
 
 //CAN TALON IDs
-constexpr int DRIVE_LEFTMOTOR_1 	= 0;
-constexpr int DRIVE_LEFTMOTOR_2 	= 1;
-constexpr int DRIVE_LEFTMOTOR_3 	= 2;
-constexpr int DRIVE_RIGHTMOTOR_1	= 3;
-constexpr int DRIVE_RIGHTMOTOR_2 	= 4;
-constexpr int DRIVE_RIGHTMOTOR_3 	= 5;
+constexpr int DRIVE_LEFTMOTOR_1 	= 8;
+constexpr int DRIVE_LEFTMOTOR_2 	= 9;
+constexpr int DRIVE_LEFTMOTOR_3 	= 10;
+constexpr int DRIVE_RIGHTMOTOR_1	= 0;
+constexpr int DRIVE_RIGHTMOTOR_2 	= 1;
+constexpr int DRIVE_RIGHTMOTOR_3 	= 2;
 
-constexpr int SHOOTER_MOTOR_1 		= 6;
-constexpr int SHOOTER_MOTOR_2 		= 7;
+constexpr int SHOOTER_MOTOR_1 		= 3;
+constexpr int SHOOTER_MOTOR_2 		= 11;
+constexpr int FLASHLIGHT_SOLENOID	= 0;
+constexpr int VISION_LIGHT_SOLENOID = 2;
+constexpr int GEAR_LIGHT_SOLENOID 	= 3;
 
-constexpr int CONVEYOR_LOWER_MOTOR  = 8;
-constexpr int CONVEYOR_UPPER_MOTOR  = 9;
+constexpr int CONVEYOR_LOWER_MOTOR  = 4;
+constexpr int CONVEYOR_UPPER_MOTOR  = 5;
 
-constexpr int INTAKE_BALL_MOTOR_1	= 10;
-constexpr int INTAKE_BALL_MOTOR_2	= 11;
+constexpr int INTAKE_BALL_MOTOR_1	= 14;
 constexpr int INTAKE_GEAR_MOTOR		= 12;
 constexpr int INTAKE_ARM_MOTOR		= 13;
+constexpr int INTAKE_ARM_DOWN_LIMIT = 0;
+constexpr int INTAKE_ARM_UP_LIMIT	= 1;
+constexpr int INTAKE_BEAM_BREAK_AN_IN	= 7;
+
+constexpr int TURRET_MOTOR 			= 6;
+constexpr int TURRET_HOME_SWITCH	= 2;
+
+constexpr int CLIMBER_MOTOR 		= 15;
+constexpr int CLIMBER_MOTOR_2		= 7;
 
 
 #endif  // ROBOTMAP_H

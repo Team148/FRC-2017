@@ -9,12 +9,18 @@ Conveyor::Conveyor() : Subsystem("Conveyor") {
 	m_lowerMotor = new CANTalon(CONVEYOR_LOWER_MOTOR);
 	m_upperMotor = new CANTalon(CONVEYOR_UPPER_MOTOR);
 
-	m_lowerMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
-	m_upperMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
 
+
+	m_lowerMotor->SetTalonControlMode(CANTalon::TalonControlMode::kVoltageMode);
+	m_upperMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+
+
+	//m_lowerMotor->SetVoltageRampRate(48.0);
+	//m_upperMotor->SetVoltageRampRate(48.0);
 
 	m_lowerMotor->SetSafetyEnabled(false);
 	m_upperMotor->SetSafetyEnabled(false);
+
 }
 
 Conveyor* Conveyor::GetInstance() {
@@ -32,12 +38,14 @@ void Conveyor::InitDefaultCommand() {
 
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
-void Conveyor::SetLower(float voltage) {
+void Conveyor::SetAgitator(float voltage) {
 	m_lowerMotor->Set(voltage);
 
 }
-void Conveyor::SetUpper(float voltage) {
+void Conveyor::SetKicker(float voltage) {
 	m_upperMotor->Set(voltage);
+}
 
+void Conveyor::SetClimber(float voltage) {
 
 }

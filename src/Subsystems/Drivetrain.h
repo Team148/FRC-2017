@@ -18,28 +18,46 @@ private:
 	CANTalon* m_rightMotor3;
 
 	RobotDrive *m_drive;
-	PowerDistributionPanel* m_pdp;
+
 	ADXRS450_Gyro *m_gyro;
+
 
 	Drivetrain();
 	static Drivetrain *m_instance;
 
 	bool m_closedLoop = 0;
 public:
-
+	PowerDistributionPanel* m_pdp;
 	static Drivetrain* GetInstance();
 	void InitDefaultCommand();
 	void Arcade(float ystick, float xstick);
+	void Tank(float leftstick, float rightstick);
 	void SetBrakeMode(bool on);
+	void ResetGyro();
 	void SetLeft(float val);
 	void SetRight(float val);
+
 	void Reenable();
 	double GetAngle();
+	int GetEncoderVelocity();
+	double GetLeftVelocity();
+	double GetRightVelocity();
+	int GetLeftDistance();
+	int GetRightDistance();
+	double GetLeftThrottle();
+	double GetRightThrottle();
 
 	void configClosedLoop();
 	bool isClosedLoop();
 	void configOpenLoop();
 	float IPStoRPM(float val);
+	float RPMtoIPS(float val);
+	float RotationtoInch(float val);
+	float InchtoRotation(float val);
+	void ZeroSensors();
+	double GetRobotCurrent(double val);
+	double GetRobotPower(double val);
+	double GetRobotEnergy(double val);
 };
 
 #endif  // Drivetrain_H

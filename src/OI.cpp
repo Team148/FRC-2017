@@ -1,4 +1,9 @@
 #include "OI.h"
+#include "Commands/AutoGearScoreSub.h"
+#include "Commands/SetDrivetrainClosedLoop.h"
+#include "Commands/Auto/SetIntake.h"
+#include "Constants.h"
+
 
 #include <WPILib.h>
 
@@ -27,9 +32,42 @@ OI::OI() {
 	m_opButton5 = new JoystickButton(opStick, 5);
 	m_opButton6 = new JoystickButton(opStick, 6);
 
+	//DSI Controls
+	dsiBrickA = new Joystick(2);
+	dsiBrickB = new Joystick(3);
+
+	m_brickAselect1 = new JoystickButton(dsiBrickA, 1);
+	m_brickAselect2 = new JoystickButton(dsiBrickA, 2);
+	m_brickAselect3 = new JoystickButton(dsiBrickA, 3);
+	m_brickAselect4 = new JoystickButton(dsiBrickA, 4);
+	m_brickAselect5 = new JoystickButton(dsiBrickA, 5);
+	m_brickAselect6 = new JoystickButton(dsiBrickA, 6);
+	m_brickAselect7 = new JoystickButton(dsiBrickA, 7);
+	m_brickAselect8 = new JoystickButton(dsiBrickA, 8);
+
+	m_brickBselect1 = new JoystickButton(dsiBrickB, 1);
+	m_brickBselect2 = new JoystickButton(dsiBrickB, 2);
+	m_brickBselect3 = new JoystickButton(dsiBrickB, 3);
+	m_brickBselect4 = new JoystickButton(dsiBrickB, 4);
+	m_brickBselect5 = new JoystickButton(dsiBrickB, 5);
+	m_brickBselect6 = new JoystickButton(dsiBrickB, 6);
+	m_brickBselect7 = new JoystickButton(dsiBrickB, 7);
+	m_brickBselect8 = new JoystickButton(dsiBrickB, 8);
+
+	m_dsiSw1 = new JoystickButton(dsiBrickB, 9);
+	m_dsiSw2 = new JoystickButton(dsiBrickB, 10);
+	m_dsiSw3 = new JoystickButton(dsiBrickA, 9);
+	m_dsiSw4 = new JoystickButton(dsiBrickA, 10);
+	m_dsiSw5 = new JoystickButton(dsiBrickA, 11);
+
+	m_drvButton6->WhenPressed(new AutoGearScoreSub());
+	m_drvButton6->WhenReleased(new SetDrivetrainClosedLoop(false));
+	m_drvButton6->WhenReleased(new SetIntake(INTAKE_ARM_POSITION_UP));
 
 
 	//-----------------DRIVER CONTROLS---------------------
+
+	//m_drvButton3->WhileHeld(new )
 
 	//-----------------OPERATOR CONTROLS---------------------
 
@@ -47,21 +85,21 @@ OI* OI::GetInstance() {
 
 int OI::GetSelectorA() {
 	if(m_brickAselect1->Get())
-		return 1;
+		return 0;
 	if(m_brickAselect2->Get())
-		return 2;
+		return 1;
 	if(m_brickAselect3->Get())
-		return 3;
+		return 2;
 	if(m_brickAselect4->Get())
-		return 4;
+		return 3;
 	if(m_brickAselect5->Get())
-		return 5;
+		return 4;
 	if(m_brickAselect6->Get())
-		return 6;
+		return 5;
 	if(m_brickAselect7->Get())
-		return 7;
+		return 6;
 	if(m_brickAselect8->Get())
-		return 8;
+		return 7;
 
 	return 0;
 }

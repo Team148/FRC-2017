@@ -10,6 +10,8 @@ class Conveyor : public Subsystem {
 private:
 	CANTalon* m_lowerMotor;
 	CANTalon* m_upperMotor;
+	CANTalon* m_climberMotor;
+	CANTalon* m_climberMotor2;
 
 	Conveyor();
 	static Conveyor *m_instance;
@@ -17,8 +19,9 @@ private:
 public:
 	static Conveyor* GetInstance();
 	void InitDefaultCommand();
-	void SetLower(float voltage);
-	void SetUpper(float voltage);
+	void SetAgitator(float voltage);
+	void SetKicker(float voltage);
+	void SetClimber(float voltage);
 };
 
 #endif  // Conveyor_H
