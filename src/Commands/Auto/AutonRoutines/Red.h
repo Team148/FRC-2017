@@ -16,8 +16,9 @@ public:
 	void Boiler_GetGear_Shoot();
 
 	void Center_GetGear();
+	void Center_GetGear_Shoot();
 	void Center_GetTwoGear();
-	void Center_GetTwoGear_Noscore(bool isShooting);
+	void Center_GetTwoGear_Noscore();
 	void Center_GetTwoGear_Noscore_Shoot();
 
 

@@ -25,6 +25,7 @@ Shooter::Shooter() : Subsystem("Shooter") {
 
 	m_flashlight = new frc::Solenoid(FLASHLIGHT_SOLENOID);
 	m_ringlight = new frc::Solenoid(VISION_LIGHT_SOLENOID);
+	m_gearlight = new frc::Solenoid(GEAR_LIGHT_SOLENOID);
 }
 
 Shooter* Shooter::GetInstance() {
@@ -44,12 +45,12 @@ void Shooter::InitDefaultCommand() {
 
 void Shooter::ConfigureClosedLoop() {
 	m_Motor1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
-	m_Motor1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	m_Motor1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_Motor1->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	m_Motor2->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	m_Motor1->SetSensorDirection(true);
 	m_Motor1->SetClosedLoopOutputDirection(false);
-	m_Motor1->ConfigEncoderCodesPerRev(256);
+	//m_Motor1->ConfigEncoderCodesPerRev(256); // only for greyhill
 	m_Motor1->SetVelocityMeasurementPeriod(CANTalon::VelocityMeasurementPeriod::Period_50Ms);
 	m_Motor1->SetVelocityMeasurementWindow(32);
 	m_Motor1->SelectProfileSlot(0);
@@ -77,6 +78,10 @@ void Shooter::ConfigureOpenLoop() {
 void Shooter::SetOpenLoop(float value) {
 	m_Motor1->Set(value);
 }
+void Shooter::SetVoltageRamp(float value)
+{
+	m_Motor1->SetVoltageRampRate(value);
+}
 
 void Shooter::SetRPM(int rpm) {
 	m_rpm = rpm;
@@ -96,13 +101,41 @@ float Shooter::GetVoltage() {
 void Shooter::SetFlashlightOn(bool on)
 {
 	if(on)
+	{
 		SetRingLightOn(0);
-	m_flashlight->Set(on);
+		SetGearLight(0);
+		m_flashlight->Set(on);
+	}
+	else
+	{
+		m_flashlight->Set(false);
+	}
 }
 
 void Shooter::SetRingLightOn(bool on)
 {
 	if(on)
+	{
 		SetFlashlightOn(0);
-	m_ringlight->Set(on);
+		SetGearLight(0);
+		m_ringlight->Set(true);
+	}
+	else
+	{
+		m_ringlight->Set(false);
+	}
+}
+void Shooter::SetGearLight(bool on)
+{
+	if(on)
+	{
+		SetFlashlightOn(0);
+		SetRingLightOn(0);
+		m_gearlight->Set(true);
+	}
+	else
+	{
+		m_gearlight->Set(false);
+
+	}
 }

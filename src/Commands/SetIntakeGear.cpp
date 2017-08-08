@@ -10,6 +10,6 @@ SetIntakeGear::SetIntakeGear(float speed) {
 
 // Called once when the command executes
 void SetIntakeGear::Initialize() {
-	Intake::GetInstance()->SetGear(m_speed);
+	Intake::GetInstance()->SetGear(-m_speed);
 
 }

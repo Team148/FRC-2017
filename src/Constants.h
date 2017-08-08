@@ -8,7 +8,7 @@
 #define CONSTANTS_H
 
 //Drivetrain constants.
-constexpr double DRIVETRAIN_F = .95;
+constexpr double DRIVETRAIN_F = .95;//.95;
 constexpr double DRIVETRAIN_P = 1.5; // 1.5
 constexpr double DRIVETRAIN_I = 0.001; // 0.005
 //constexpr double DRIVETRAIN_I_ZONE_L = 128.0;
@@ -57,26 +57,31 @@ constexpr float TURRET_JOYSTICK_DEADBAND = 0.1;
 
 //Intake
 constexpr float INTAKE_ARM_ROTATIONS_PER_DEGREE = 84/18/360;
-constexpr float INTAKE_ARM_POSITION_P = 0.25;
-constexpr float INTAKE_ARM_POSITION_I = 0.0001;
-constexpr float INTAKE_ARM_POSITION_D = 5.0;
+constexpr float INTAKE_ARM_POSITION_P = 0.35;
+constexpr float INTAKE_ARM_POSITION_I = 0.000;
+constexpr float INTAKE_ARM_POSITION_D = 3.75;
 constexpr float INTAKE_ARM_POSITION_UP = 0.0;
-constexpr float INTAKE_ARM_GEAR_POSITION = -0.60;
+constexpr float INTAKE_ARM_GEAR_POSITION = -0.9; //was 0.6 before houston north
 constexpr float INTAKE_ARM_POSITION_DOWN = -1.450; // 1.383 1.463
 constexpr float INTAKE_ARM_DOWN_VOLTAGE = -12.0;
 constexpr float INTAKE_ARM_OPEN_LOOP_SPEED = 0.80;
 
 //Conveyer
-constexpr float CONVEYER_AGITATOR_VOLTAGE = 9.0;
+constexpr float CONVEYER_AGITATOR_VOLTAGE = 6.0;
 constexpr float CONVEYER_KICKER_VOLTAGE = -1.0;
 
 //Shooter
-constexpr float SHOOTER_F = 0.06; // 0.0575
-constexpr float SHOOTER_P = 0.3; // 0.3
-constexpr float SHOOTER_D = 0.0;
+constexpr float SHOOTER_F = 0.0333; // 0.0575
+constexpr float SHOOTER_P = 0.25; // 0.3
+constexpr float SHOOTER_D = 0.3;
 
-constexpr int SHOOTER_SET_POINT_A = 6400;
-constexpr int SHOOTER_SET_POINT_B = 6800;
+constexpr int SHOOTER_SET_POINT_A = 2700;
+constexpr int SHOOTER_SET_POINT_B = 3320; // 4185
+
+constexpr float SHOOTING_POSITION_BLUE = 7.0;
+constexpr float SHOOTING_POSITION_RED = -7.0;
+
+constexpr int SHOOTER_PRACTICE_FUDGE_FACTOR = 10;//-10;
 
 //AUTON
 
@@ -94,6 +99,8 @@ constexpr int	CENTER_GEAR = 10;
 constexpr int	CENTER_TWO_GEAR = 11;
 constexpr int 	CENTER_TWO_GEAR_NOSCORE = 12;
 constexpr int 	CENTER_TWO_GEAR_NOSCORE_SHOOT = 13;
+constexpr int	CENTER_GEAR_SHOOT = 14;
+
 
 
 constexpr int	RETRIEVAL_GEAR = 20;

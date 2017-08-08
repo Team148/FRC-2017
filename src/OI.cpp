@@ -1,6 +1,8 @@
 #include "OI.h"
 #include "Commands/AutoGearScoreSub.h"
 #include "Commands/SetDrivetrainClosedLoop.h"
+#include "Commands/Auto/SetIntake.h"
+#include "Constants.h"
 
 
 #include <WPILib.h>
@@ -60,6 +62,8 @@ OI::OI() {
 
 	m_drvButton6->WhenPressed(new AutoGearScoreSub());
 	m_drvButton6->WhenReleased(new SetDrivetrainClosedLoop(false));
+	m_drvButton6->WhenReleased(new SetIntake(INTAKE_ARM_POSITION_UP));
+
 
 	//-----------------DRIVER CONTROLS---------------------
 

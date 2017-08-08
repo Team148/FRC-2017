@@ -95,8 +95,6 @@ double Drivetrain::GetAngle() {
 }
 int Drivetrain::GetEncoderVelocity() {
 
-	std::cout << "Left enc: "<< m_leftMotor1->GetEncVel() << std::endl;
-	std::cout << "Right enc: " << m_rightMotor1->GetEncVel() << std::endl;
 	return (m_leftMotor1->GetEncVel() + m_rightMotor1->GetEncVel())/2;
 
 
@@ -120,8 +118,8 @@ void Drivetrain::configClosedLoop() {
 
 	m_leftMotor1->DisableNominalClosedLoopVoltage();
 	m_rightMotor1->DisableNominalClosedLoopVoltage();
-	m_leftMotor1->SetNominalClosedLoopVoltage(12.0f);
-	m_rightMotor1->SetNominalClosedLoopVoltage(12.0f);
+	m_leftMotor1->SetNominalClosedLoopVoltage(10.0f);
+	m_rightMotor1->SetNominalClosedLoopVoltage(10.0f);
 	//Setup Ramp Rate
 	//m_leftMotor1->SetVoltageRampRate(24);
 	//m_rightMotor1->SetVoltageRampRate(24);
@@ -217,4 +215,19 @@ float Drivetrain::RotationtoInch(float val) {
 
 float Drivetrain::InchtoRotation(float val) {
 	return val/(M_PI*DRIVETRAIN_WHEEL_DIAMETER);
+}
+
+double Drivetrain::GetRobotCurrent(double val) {
+	val = m_pdp->GetTotalCurrent();
+	return val;
+}
+
+double Drivetrain::GetRobotPower(double val) {
+	val = m_pdp->GetTotalPower();
+	return val;
+}
+
+double Drivetrain::GetRobotEnergy(double val) {
+	val = m_pdp->GetTotalEnergy();
+	return val;
 }
